@@ -1,4 +1,6 @@
-
+<?php
+    require_once('Connection.php');
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,7 +10,16 @@
     <title>Document</title>
 </head>
 <body>
+
+
+    <?
+
+
+    ?>
     
 </body>
 </html>
+
+
+
 

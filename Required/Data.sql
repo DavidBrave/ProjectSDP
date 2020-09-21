@@ -67,6 +67,10 @@ INSERT INTO `Major` (`Major_ID`, `Jurusan_ID`, `Major_Nama`) VALUES
 ('Mjr50101', 'Jrs501', 'Internet Technology'),
 ('Mjr50102', 'Jrs501', 'Computational Intelligence'),
 ('Mjr50103', 'Jrs501', 'Software Technology');
+INSERT INTO `Major` (`Major_ID`, `Jurusan_ID`, `Major_Nama`) VALUES
+('Mjr50201', 'Jrs502', 'Fotography'),
+('Mjr50202', 'Jrs502', 'Illustration'),
+('Mjr50203', 'Jrs502', 'Animation');
 
 
 -- Id = "Mtk" + 4 Digit Counter
@@ -80,5 +84,30 @@ INSERT INTO `Matkul` (`Matkul_ID`, `Matkul_Nama`, `Matkul_Standar`) VALUES
 ('Mtk0007', 'Struktur Data Lanjut', 55.0),
 ('Mtk0008', 'Program Komputer Aplikasi', 60.0);
 
+INSERT INTO `Matkul` (`Matkul_ID`, `Matkul_Nama`, `Matkul_Standar`) VALUES
+('Mtk0001', 'Matematika 1', 50.0),
+('Mtk0002', 'Matematika 2', 50.0),
+('Mtk0003', 'Algoritma dan Pemrograman 1', 55.0),
+('Mtk0004', 'Algoritma dan Pemrograman 2', 55.0),
+('Mtk0005', 'Intro To Programming', 55.0),
+('Mtk0006', 'Struktur Data', 55.0),
+('Mtk0007', 'Struktur Data Lanjut', 55.0),
+('Mtk0008', 'Program Komputer Aplikasi', 60.0);
+
+INSERT INTO `Matkul` (`Matkul_ID`, `Matkul_Nama`, `Matkul_Standar`) VALUES
+('Mtk0040', 'Menggambar 1', 50.0),
+('Mtk0041', 'Komputer Aplikasi 1', 5.0),
+('Mtk0042', 'Algoritma dan Pemrograman 1', 55.0),
+('Mtk0043', 'Algoritma dan Pemrograman 2', 55.0),
+('Mtk0044', 'Intro To Programming', 55.0),
+('Mtk0045', 'Struktur Data', 55.0),
+('Mtk0046', 'Struktur Data Lanjut', 55.0),
+('Mtk0047', 'Program Komputer Aplikasi', 60.0);
+
 -- NRP = Tahun Masuk + Bulan Masuk (07) + 3 Digit Jurusan + 4 Digit Counter
 -- Masuk Juli 2019, s1 Infor, 5421 = 19075015421
+
+
+
+
+
