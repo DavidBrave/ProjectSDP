@@ -140,7 +140,7 @@ INSERT INTO `Matkul` (`Matkul_ID`, `Matkul_Nama`, `Matkul_Standar`) VALUES
 
 -- NRP = 3 Digit Tahun Masuk + 3 Digit Jurusan + 4 Digit Counter
 -- Masuk Juli 2019, s1 Infor, 5421 = 2195010001
-INSERT INTO `Mahasiswa` (`Mahasiswa_ID`,`DosenWali_ID`,`DosenPembimbing_ID`,`Mahasiswa_Nama`,`Mahasiswa_JK`,`Mahasiswa_Alamat`,`Mahasiswa_Tgl`,`Mahasiswa_Agama`,`Mahasiswa_Email`,`Mahasiswa_NoTelp`,`Mahasiswa_Pass`) VALUES
+INSERT INTO `Mahasiswa` (`Mahasiswa_ID`,`Dosen_Wali_ID`,`DosenPembimbing_ID`,`Mahasiswa_Nama`,`Mahasiswa_JK`,`Mahasiswa_Alamat`,`Mahasiswa_Tgl`,`Mahasiswa_Agama`,`Mahasiswa_Email`,`Mahasiswa_NoTelp`,`Mahasiswa_Pass`) VALUES
 ('2143010001','198220071001','198920132001','Sun Jing Woo','M','Jl Bukit Darmo 12, Jawa Timur',TO_DATE('16/09/1998','DD/MM/YYYY'),'Hindu','iron@gmail.com','082340102001','ajin'),
 ('2143010001','198220071001','198920132001','Ichigaya Hajime','M','Psr Tanah Abang Fl C/I 30 Lt 1, Dki Jakarta',TO_DATE('18/10/1998','DD/MM/YYYY'),'Islam','hjme@gmail.com','082340102002','korosu'),
 ('2145010001','198220071001','198920132001','Subaru Erina','F','Jl Tebet Dlm VI 40, Dki Jakarta',TO_DATE('17/01/1998','DD/MM/YYYY'),'Kong Hu Cu','gogogo@gmail.com','082340102003','gohan'),
