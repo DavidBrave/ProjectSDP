@@ -108,13 +108,30 @@
     <script src="jquery.js"></script>
     <script>
         $(document).ready(function () {
-            
+            // $("#insert").click(function () {
+            //     $.ajax({
+            //         method : "post",
+            //         url : "insertMahasiswa.php",
+            //         data : {
+            //             nrp : $("#nrp").val(),
+            //             nama : $("#nama").val(),
+            //             dosen : $("#selector").val()
+            //         },
+            //         success : function (hasil) {
+            //             if(hasil == 1){
+            //                 alert("sukses");
+            //             }else{
+            //                 alert("gagal");
+            //             }
+            //         }
+            //     });
+            // });
         });
     </script>
 </head>
 <body>
     <div class="header">
-        <h3 style="margin-top:10px;">Welcome Admin</h3>
+        <h3 style="margin-top:10px;">Welcome <?=$_SESSION['user']['name']?></h3>
     </div>
     <div class="nav">
         <a href=""><div class="nav-text"><p>Mahasiswa</p></div></a>
@@ -140,7 +157,19 @@
                             }
                         ?>
                     </select>
-                    <input type="submit" value="Insert" name="btnInsert">
+                    <?php
+                        if(isset($_POST['insert'])){
+                            $nrp = $_POST['nrp'];
+                            $nama = $_POST['nama'];
+                            $dosen = $_POST['dosen'];
+                    
+                            $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen',null,'$nama',null,null,null,null,null,null,'$nrp')";
+                            $conn->query($query);
+                            echo $nrp.$nama.$dosen;
+                        }
+                    ?>
+                    <input type="submit" value="Insert" name="insert">
+                    <input type="submit" value="Update" name="update">
                 </form>
             </div>
         </div>
