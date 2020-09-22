@@ -1,13 +1,15 @@
 <?php
-    require_once('../conn.php');
+    require_once('../Required/Connection.php');
+?>
 
+<?php
     if(isset($_POST['btnInsert'])){
         $nrp = $_POST['nrp'];
         $nama = $_POST['nama'];
         $dosen = $_POST['dosen'];
 
         $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','','','','','','','')";
-        $conn->query($query);
+        $con->query($query);
     }
 ?>
 
@@ -132,7 +134,7 @@
                         <option value ="">Pilih Dosen</option>
                         <?php
                             $query = "SELECT * FROM Dosen WHERE Dosen_Jabatan = 'Dosen Wali'";
-                            $listdosen = $conn->query($query);
+                            $listdosen = $con->query($query);
                             foreach ($listdosen as $key => $value) {
                                 echo "<option value ='$value[Dosen_ID]'>$value[Dosen_ID]"."-"."$value[Dosen_Nama]</option>";
                             }
