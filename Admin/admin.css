@@ -1,0 +1,29 @@
+body{
+    display: grid;
+    grid-template-rows: 5% 95%;
+    margin: 0px;
+    height: 937px;
+    background-color: white;
+}
+#header{
+    position: sticky;
+    top: 0px;
+    z-index: 1;
+    background-color: rgb(109,49,144);
+    color: white;
+}
+#content{
+    display: grid;
+    grid-template-columns: 15% 85%;
+}
+#col-kanan{
+    overflow-y: scroll;
+    padding: 20px;
+}
+#col-kiri{
+    background-color: rgb(225,190,231);
+    text-align: center;
+}
+a{
+    color: black;
+}

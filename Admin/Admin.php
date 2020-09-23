@@ -9,6 +9,7 @@
     if(isset($_POST['btnLogout'])){
         unset($_SESSION['user']);
         header("location: ../login.php");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -56,6 +57,7 @@
     </div>
     <div id="content">
         <div id="col-kiri">
+            <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "#">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
@@ -81,37 +83,7 @@
                 <li><a href = "#">Insert Data Mata Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            <div id=content-kiri>
-                <form action="#" method="post">
-                    <p>NRP:</p><input type="text" name="nrp" id="nrp">
-                    <p>Nama:</p><input type="text" name="nama" id="nama">
-                    <p>NRP:</p>
-                    <select name="dosen" id="selector">
-                        <option value ="">Pilih Dosen</option>
-                        <?php
-                            $query = "SELECT * FROM Dosen WHERE Dosen_Jabatan = 'Dosen Wali'";
-                            $listdosen = $con->query($query);
-                            foreach ($listdosen as $key => $value) {
-                                echo "<option value ='$value[Dosen_ID]'>$value[Dosen_ID]"."-"."$value[Dosen_Nama]</option>";
-                            }
-                        ?>
-                    </select>
-                    <?php
-                        if(isset($_POST['insert'])){
-                            $nrp = $_POST['nrp'];
-                            $nama = $_POST['nama'];
-                            $dosen = $_POST['dosen'];
-                    
-                            $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen',null,'$nama',null,null,null,null,null,null,'$nrp')";
-                            $conn->query($query);
-                            echo $nrp.$nama.$dosen;
-                        }
-                    ?>
-                    <input type="submit" value="Insert" name="insert">
-                    <input type="submit" value="Update" name="update">
-                </form>
-            </div>
-        </div>
+        </div>    
         <div id="col-kanan">
             <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
             <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">
@@ -158,27 +130,27 @@
 
     // Draw the chart and set the chart values
     function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-    ['Job', 'Jumlah'],
-    ['Dosen', <?=$totalDosen?>],
-    ['Mahasiswa', <?=$totalMahasiswa?>],
-    ['Admin', <?=$totalAdministrator?>]
-    ]);
+        var data = google.visualization.arrayToDataTable([
+        ['Job', 'Jumlah'],
+        ['Dosen', <?=$totalDosen?>],
+        ['Mahasiswa', <?=$totalMahasiswa?>],
+        ['Admin', <?=$totalAdministrator?>]
+        ]);
 
-    // Optional; add a title and set the width and height of the chart
-    var options = {
-        'title':'Persentase', 
-        'width':600, 
-        'height':450,
-        slices: {
-            0: { color: 'green' },
-            1: { color: 'plum' },
-            2: { color: 'lightblue' }
-        }
-    };
+        // Optional; add a title and set the width and height of the chart
+        var options = {
+            'title':'Persentase', 
+            'width':600, 
+            'height':450,
+            slices: {
+                0: { color: 'green' },
+                1: { color: 'plum' },
+                2: { color: 'lightblue' }
+            }
+        };
 
-    // Display the chart inside the <div> element with id="piechart"
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-    chart.draw(data, options);
+        // Display the chart inside the <div> element with id="piechart"
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
     }
 </script>
