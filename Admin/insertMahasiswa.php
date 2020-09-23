@@ -6,7 +6,7 @@
         $nama = $_POST['nama'];
         $dosen = $_POST['dosen'];
 
-        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','','','','','','','$nrp')";
+        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen',null,'$nama',null,null,null,null,null,null,'$nrp')";
         $conn->query($query);
 
         if($conn){
