@@ -47,6 +47,36 @@
                             }
                         }
                     }
+
+                    $query = "SELECT * FROM Mahasiswa";
+                    $listmahasiswa = $conn->query($query);
+                    foreach ($listmahasiswa as $key => $value) {
+                        if($user == $value['Mahasiswa_ID']){
+                            if($pass == $value['Mahasiswa_Pass']){
+                                $_SESSION['user']['user'] = $value['Mahasiswa_ID'];
+                                $_SESSION['user']['name'] = $value['Mahasiswa_Nama'];
+                                $_SESSION['user']['pass'] = $value['Mahasiswa_Pass'];
+                                header("location: Admin/Mahasiswa.php");
+                            }else{
+                                echo "NRP / Password yang anda masukkan salah";
+                            }
+                        }
+                    }
+
+                    $query = "SELECT * FROM Dosen";
+                    $listdosen = $conn->query($query);
+                    foreach ($listdosen as $key => $value) {
+                        if($user == $value['Dosen_ID']){
+                            if($pass == $value['Dosen_Pass']){
+                                $_SESSION['user']['user'] = $value['Dosen_ID'];
+                                $_SESSION['user']['name'] = $value['Dosen_Nama'];
+                                $_SESSION['user']['pass'] = $value['Dosen_Pass'];
+                                header("location: Admin/Dosen.php");
+                            }else{
+                                echo "NRP / Password yang anda masukkan salah";
+                            }
+                        }
+                    }
                 }
             ?>
             <div class="row">
