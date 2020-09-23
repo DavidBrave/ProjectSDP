@@ -44,14 +44,8 @@
                         method : "post",
                         url : "generateNrp.php",
                         data : {
-                            //nama : $("#nama").val(),
+                            
                             jurusan : $("#jurusan").val().substr(1,3),
-                            //dosen : $("#dosen").val(),
-                            //tgl : $("#tgl").val(),
-                            //jk : $("input[name='group1']:checked").val(),
-                            //alamat : $("#alamat").val() + ", " + $("#kota").val() + ", " + $("#provinsi").val(),
-                            //agama : $("#agama").val(),
-                            //email : $("#email").val(),
                             nohp : $("#nohp").val(),
                             tahun : year1 + year2
                         },
@@ -75,6 +69,45 @@
                     alert("Data tidak boleh kosong!");
                 }
             });
+            $("#btnInsert").click(function () {
+                if($("#nrp").val() != "" && $("#pass").val() != ""){
+                    $.ajax({
+                        method : "post",
+                        url : "insertMahasiswa.php",
+                        data : {
+                            nrp : $("#nrp").val(),
+                            nama : $("#nama").val(),
+                            dosen : $("#dosen").val(),
+                            tgl : $("#tgl").val(),
+                            jk : $("input[name='group1']:checked").val(),
+                            alamat : $("#alamat").val() + ", " + $("#kota").val() + ", " + $("#provinsi").val(),
+                            agama : $("#agama").val(),
+                            email : $("#email").val(),
+                            nohp : $("#nohp").val(),
+                            pass : $("#pass").val()
+                        },
+                        success : function (hasil) {
+                            if(hasil == 1){
+                                alert("sukses");
+                            }else{
+                                alert("gagal");
+                            }
+                        }
+                    });
+                }
+                $("#nrp").val("");
+                $("#nama").val("");
+                $("#tgl").val("");
+                $("#alamat").val("");
+                $("#kota").val("");
+                $("#provinsi").val("");
+                $("#agama").val("");
+                $("#email").val("");
+                $("#nohp").val("");
+                $("#pass").val("");
+                $("input[name='group1'][value='M'").prop("checked",false);
+                $("input[name='group1'][value='F'").prop("checked",false);
+            });
          });
     </script>
 </head>
@@ -89,6 +122,7 @@
     </div>
     <div id="content">
         <div id="col-kiri">
+            <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "#">Data Mahasiswa</a></li>
                 <li><a href = "#">Insert Data Mahasiswa</a></li>
@@ -121,7 +155,7 @@
                 Nama Lengkap: <input type="text" id="nama">
                 <div class="input-field col s12">
                     <select name="jurusan" id="jurusan">
-                        <option value="" disabled selected>Pilih Jurusan</option>
+                        <option value="none" disabled selected>Pilih Jurusan</option>
                         <?php
                             $query = "SELECT * FROM Jurusan";
                             $listJurusan = $conn->query($query);
@@ -133,7 +167,7 @@
                 </div>
                 <div class="input-field col s12">
                     <select name="dosen" id="dosen">
-                        <option value="" disabled selected>Pilih Dosen Wali</option>
+                        <option value="none" disabled selected>Pilih Dosen Wali</option>
                         <?php
                             $query = "SELECT * FROM Dosen WHERE Dosen_Jabatan = 'Dosen Wali'";
                             $listDosen = $conn->query($query);

@@ -10,12 +10,12 @@
         echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan."000".$kdjurusan.$nohp."'>";
     }else if(mysqli_num_rows($list) > 9 && mysqli_num_rows($list) < 100){
         $kdjurusan = mysqli_num_rows($list) + 1;
-        echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan."00".$kdjurusan."'>";
+        echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan."00".$kdjurusan.$nohp."'>";
     }else if(mysqli_num_rows($list) > 99 && mysqli_num_rows($list) < 1000){
         $kdjurusan = mysqli_num_rows($list) + 1;
-        echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan."0".$kdjurusan."'>";
+        echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan."0".$kdjurusan.$nohp."'>";
     }else{
         $kdjurusan = mysqli_num_rows($list) + 1;
-        echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan.$kdjurusan."'>";
+        echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan.$kdjurusan.$nohp."'>";
     }
 ?>
