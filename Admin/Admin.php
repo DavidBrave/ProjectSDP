@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
     session_start();
     require_once('../conn.php');
 
@@ -10,20 +9,6 @@
     if(isset($_POST['btnLogout'])){
         unset($_SESSION['user']);
         header("location: ../login.php");
-=======
-    require_once('../Required/Connection.php');
-?>
-
-<?php
-    if(isset($_POST['btnInsert'])){
-        $nrp = $_POST['nrp'];
-        $nama = $_POST['nama'];
-        $dosen = $_POST['dosen'];
-
-        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','','','','','','','')";
-        $con->query($query);
->>>>>>> 11b422e48fb8bc34b90e51ff2802fdd641a73a9c
-    }
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +56,6 @@
     </div>
     <div id="content">
         <div id="col-kiri">
-<<<<<<< HEAD
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "#">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
@@ -97,7 +81,6 @@
                 <li><a href = "#">Insert Data Mata Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-=======
             <div id=content-kiri>
                 <form action="#" method="post">
                     <p>NRP:</p><input type="text" name="nrp" id="nrp">
@@ -128,7 +111,6 @@
                     <input type="submit" value="Update" name="update">
                 </form>
             </div>
->>>>>>> 11b422e48fb8bc34b90e51ff2802fdd641a73a9c
         </div>
         <div id="col-kanan">
             <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
