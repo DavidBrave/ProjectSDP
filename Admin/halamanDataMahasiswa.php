@@ -45,6 +45,28 @@
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#dataFullMahasiswa").load("daftarMahasiswa.php");
+
+            $("#btnSearch").click(function () {
+                $.ajax({
+                    method : "post",
+                    url : "daftarMahasiswa.php",
+                    data : {
+                        nama : $("#nama").val()
+                    },
+                    success : function (hasil) {
+                        $("#dataMahasiswa").html(hasil);
+                    }
+                });
+
+                if($("#dataFullMahasiswa").css('display') != "hidden"){
+                    $("#dataFullMahasiswa").toggle();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <div id="header">
@@ -85,72 +107,18 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>    
         <div id="col-kanan">
-            <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
-            <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">
-                <div id="dosen" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">DOSEN</p>
-                    <?php
-                        $query = "SELECT * FROM Dosen";
-                        $listDosen = $conn->query($query);
-                        $totalDosen = mysqli_num_rows($listDosen);
-                    ?>
-                    <p id="totalDosen" style="margin: 0px;">Jumlah: <?=$totalDosen?></p>
-                </div>
-                <div id="mahasiswa" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">MAHASISWA</p>
-                    <?php
-                        $query = "SELECT * FROM Mahasiswa";
-                        $listMahasiswa = $conn->query($query);
-                        $totalMahasiswa = mysqli_num_rows($listMahasiswa);
-                    ?>
-                    <p id="totalMahasiswa" style="margin: 0px;">Jumlah: <?=$totalMahasiswa?></p>
-                </div>
-                <div id="admin" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">ADMIN</p>
-                    <?php
-                        $query = "SELECT * FROM Administrator";
-                        $listAdministrator = $conn->query($query);
-                        $totalAdministrator = mysqli_num_rows($listAdministrator);
-                    ?>
-                    <p id="totalAdmin" style="margin: 0px;">Jumlah: <?=$totalAdministrator?></p>
-                </div>
-            </div>
-            <div id="piechart"></div>
+            <h3>List Mahasiswa</h3><br>
+            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
+            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
+                <i class="material-icons right">search</i>
+            </button>
+            <table id="dataMahasiswa" border="1" style="display: hidden">
+                
+            </table>
+            <table id="dataFullMahasiswa" border="1">
+                
+            </table>
         </div>
     </div>
 </body>
 </html>
-<script>
-    $("#btn").click(function () {
-        alert(<?=$totalAdministrator?>);
-    });
-    // Load google charts
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    // Draw the chart and set the chart values
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        ['Job', 'Jumlah'],
-        ['Dosen', <?=$totalDosen?>],
-        ['Mahasiswa', <?=$totalMahasiswa?>],
-        ['Admin', <?=$totalAdministrator?>]
-        ]);
-
-        // Optional; add a title and set the width and height of the chart
-        var options = {
-            'title':'Persentase', 
-            'width':600, 
-            'height':450,
-            slices: {
-                0: { color: 'green' },
-                1: { color: 'plum' },
-                2: { color: 'lightblue' }
-            }
-        };
-
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-    }
-</script>
