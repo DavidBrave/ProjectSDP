@@ -17,6 +17,6 @@
         die("Failed : ".mysqli_connect_error());
     }
 
-    echo "halo";
+    echo "hai";
 
 ?>
