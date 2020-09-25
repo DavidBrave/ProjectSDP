@@ -72,21 +72,26 @@
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown2" style="width: 100%; color: black;">Dosen<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown3" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "">Data Jurusan</a></li>
-                <li><a href = "">Insert Data Jurusan</a></li>
+                <li><a href = "halamanJurusan.php">Data Jurusan</a></li>
+                <li><a href = "insertDataJurusan.php">Insert Data Jurusan</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown3" style="width: 100%; color: black;">Jurusan<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown4" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "">Data Mata Kurikulum</a></li>
-                <li><a href = "">Insert Data Kurikulum</a></li>
+                <li><a href = "halamanKurikulum.php">Data Kurikulum</a></li>
+                <li><a href = "insertDataKurikulum.php">Insert Data Kurikulum</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown5" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "">Data Mata Kuliah</a></li>
-                <li><a href = "">Insert Data Mata Kuliah</a></li>
+                <li><a href = "halamanMataKuliah.php">Data Mata Kuliah</a></li>
+                <li><a href = "insertDataMataKuliah.php">Insert Data Mata Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>  
+            <ul id = "dropdown6" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanMajor.php">Data Major</a></li>
+                <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        </div> 
         <div id="col-kanan">
             <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
             <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">

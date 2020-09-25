@@ -1,6 +1,9 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
+    $nama = "";
+    $id = "";
+    $nilai = "";
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -11,22 +14,39 @@
         header("location: ../login.php");
     }
 
-    if(isset($_POST['nama'])){
+    if (isset($_POST['btnInsert'])) {
+        $id = "MK";
         $nama = $_POST['nama'];
-    }else{
-        $nama = "";
+        $nilai = $_POST['nilai'];
+
+        //Generate ID Matkul
+        if ($nilai != "" && $nama != "") {
+            $query = "SELECT Count(Matkul_ID) as jumlah FROM Matkul";
+            $result = $conn->query($query);
+            $ctr = 0;
+
+            foreach($result as $key => $value) {
+                $ctr = $value['jumlah'] + 1;
+            }
+
+            if ($ctr < 10) {
+                $id .= "000" . $ctr;
+            }
+            else if ($ctr < 100) {
+                $id .= "00" . $ctr;
+            }
+            else if ($ctr < 1000) {
+                $id .= "0" . $ctr;
+            }
+            else {
+                $id .= $ctr;
+            }
+            
+            //Proses Insert
+            $query = "INSERT INTO Matkul VALUES('$id', '$nama', '$nilai')";
+            $conn->query($query);
+        }
     }
-
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idDosen'];
-
-        //Delete Dosen
-        $query = "DELETE FROM Dosen WHERE Dosen_ID = '$id'";
-        $conn->query($query);
-    }
-
-    $query = "SELECT * FROM Dosen WHERE Dosen_Nama LIKE '%$nama%'";
-    $listDosen = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -39,22 +59,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
+
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -63,24 +68,14 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarDosen.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataDosen").html(hasil);
-                    }
-                });
-            });
-        });
+         $(document).ready(function() {
+            $('select').material_select();
+
+         });
     </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -121,44 +116,16 @@
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>   
+        </div> 
         <div id="col-kanan">
-            <h3>List Dosen</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataDosen" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listDosen) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Dosen</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Username</th>";
-                        echo "<th>Password</th>";
-                        echo "<th>Jabatan</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listDosen as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Dosen_ID]</td>";
-                    echo "<td>$value[Dosen_Nama]</td>";
-                    echo "<td>$value[Dosen_User]</td>";
-                    echo "<td>$value[Dosen_Pass]</td>";
-                    echo "<td>$value[Dosen_Jabatan]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
-                    echo "</tr>";
-                }
-            ?>
-            </table>
+            <div style="width: 50%;">
+                <form action = "" method = "post">
+                    <h3>Insert Data Mata Kuliah</h3><br>
+                    Nama Mata Kuliah: <input type="text" name="nama">
+                    Standar Nilai: <input type="text" name="nilai">
+                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
