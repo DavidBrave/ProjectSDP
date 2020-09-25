@@ -7,8 +7,8 @@
     $con_password = "pwtRRUcqFp";
     $con_database = "syrHdQKkXJ";
 
-    $con = new mysqli($con_servername, $con_username, $con_password, $con_database);
-    if ($con->connect_error) {
+    $conn = new mysqli($con_servername, $con_username, $con_password, $con_database);
+    if ($conn->connect_error) {
       die("Failed: " . $conn->connect_error);
     }
 

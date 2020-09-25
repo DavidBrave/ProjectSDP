@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once('../Required/Connection.php');
+    require_once('Required/Connection.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
