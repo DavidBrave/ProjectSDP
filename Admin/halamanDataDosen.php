@@ -10,6 +10,23 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    if(isset($_POST['nama'])){
+        $nama = $_POST['nama'];
+    }else{
+        $nama = "";
+    }
+
+    if (isset($_POST['btnDelete'])) {
+        $id = $_POST['idDosen'];
+
+        //Delete Dosen
+        $query = "DELETE FROM Dosen WHERE Dosen_ID = '$id'";
+        $conn->query($query);
+    }
+
+    $query = "SELECT * FROM Dosen WHERE Dosen_Nama LIKE '%$nama%'";
+    $listDosen = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -45,28 +62,6 @@
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#dataFullMahasiswa").load("daftarMahasiswa.php");
-
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarMahasiswa.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataMahasiswa").html(hasil);
-                    }
-                });
-
-                if($("#dataFullMahasiswa").css('display') != "hidden"){
-                    $("#dataFullMahasiswa").toggle();
-                }
-            });
-        });
-    </script>
 </head>
 <body>
 <div id="header">
@@ -107,16 +102,41 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>   
         <div id="col-kanan">
-            <h3>List Mahasiswa</h3><br>
+            <h3>List Dosen</h3><br>
             <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
             <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
                 <i class="material-icons right">search</i>
             </button>
-            <table id="dataMahasiswa" border="1" style="display: hidden">
-                
-            </table>
-            <table id="dataFullMahasiswa" border="1">
-                
+            <table border="1" style="display: hidden">
+            <tr>
+                <?php
+                    if(mysqli_num_rows($listDosen) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>NIP</th>";
+                        echo "<th>Nama</th>";
+                        echo "<th>Username</th>";
+                        echo "<th>Password</th>";
+                        echo "<th>Jabatan</th>";
+                        echo "<th>Update</th>";
+                        echo "<th>Delete</th>";
+                    }
+                ?>
+            </tr>
+
+            <?php
+                foreach ($listDosen as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Dosen_ID]</td>";
+                    echo "<td>$value[Dosen_Nama]</td>";
+                    echo "<td>$value[Dosen_User]</td>";
+                    echo "<td>$value[Dosen_Pass]</td>";
+                    echo "<td>$value[Dosen_Jabatan]</td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
+                    echo "</tr>";
+                }
+            ?>
             </table>
         </div>
     </div>

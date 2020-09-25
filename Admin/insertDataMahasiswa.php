@@ -129,26 +129,26 @@
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown2" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "#">Data Dosen</a></li>
-                <li><a href = "#">Insert Data Dosen</a></li>
+                <li><a href = "halamanDataDosen.php">Data Dosen</a></li>
+                <li><a href = "insertDataDosen.php">Insert Data Dosen</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Dosen<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown2" style="width: 100%; color: black;">Dosen<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown3" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "#">Data Jurusan</a></li>
-                <li><a href = "#">Insert Data Jurusan</a></li>
+                <li><a href = "">Data Jurusan</a></li>
+                <li><a href = "">Insert Data Jurusan</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Jurusan<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown3" style="width: 100%; color: black;">Jurusan<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown4" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "#">Data Mata Kurikulum</a></li>
-                <li><a href = "#">Insert Data Kurikulum</a></li>
+                <li><a href = "">Data Mata Kurikulum</a></li>
+                <li><a href = "">Insert Data Kurikulum</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             <ul id = "dropdown5" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "#">Data Mata Kuliah</a></li>
-                <li><a href = "#">Insert Data Mata Kuliah</a></li>
+                <li><a href = "">Data Mata Kuliah</a></li>
+                <li><a href = "">Insert Data Mata Kuliah</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Insert Data Mahasiswa</h3><br>
