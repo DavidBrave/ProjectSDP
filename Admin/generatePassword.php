@@ -1,5 +1,5 @@
 <?php
-    require_once("../conn.php");
+    require_once('../Required/Connection.php');
     $jurusan = $_POST['jurusan'];
     $tahun = $_POST['tahun'];
     $nohp = $_POST['nohp'];

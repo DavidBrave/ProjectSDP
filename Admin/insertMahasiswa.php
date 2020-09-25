@@ -1,5 +1,5 @@
 <?php
-    require_once("../conn.php");
+    require_once('../Required/Connection.php');
 
     if(isset($_POST['nrp'])){
         $nrp = $_POST['nrp'];

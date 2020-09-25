@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once('../conn.php');
+    require_once('../Required/Connection.php');
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
