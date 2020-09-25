@@ -16,7 +16,5 @@
     if (!$con_procedural) {
         die("Failed : ".mysqli_connect_error());
     }
-
-    echo "hai";
-
+    
 ?>
