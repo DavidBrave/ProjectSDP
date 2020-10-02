@@ -10,23 +10,6 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
-    }
-
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idMajor'];
-
-        //Delete Major
-        $query = "DELETE FROM Major WHERE Major_ID = '$id'";
-        $conn->query($query);
-    }
-
-    $query = "SELECT * FROM Major WHERE Major_Nama LIKE '%$nama%'";
-    $listMajor = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -64,18 +47,9 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarMajor.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataMajor").html(hasil);
-                    }
-                });
-            });
+            $("#dataFullJadwal").load("daftarJadwalKuliah.php");
+
+            
         });
     </script>
 </head>
@@ -128,38 +102,15 @@
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
-
+        
         </div>   
         <div id="col-kanan">
-            <h3>List Major</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataMajor" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listMajor) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Major</th>";
-                        echo "<th>Major</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listMajor as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Major_ID]</td>";
-                    echo "<td>$value[Major_Nama]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idMajor' value='$value[Major_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idMajor' value='$value[Major_ID]'></form></td>";
-                    echo "</tr>";
-                }
-            ?>
+            <h3>Daftar Jadwal Kuliah</h3><br>
+            <table id="dataJadwal" border="1" style="display: hidden">
+                
+            </table>
+            <table id="dataFullJadwal" border="1">
+                
             </table>
         </div>
     </div>
