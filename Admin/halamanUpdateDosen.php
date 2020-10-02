@@ -10,72 +10,16 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
-    }
-
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idDosen'];
-        $query = "DELETE FROM Sidang_Skripsi WHERE Dosen_Pengamat_ID = '$id'";
-        $conn->query($query);
-        $query = "UPDATE Mahasiswa SET Dosen_Wali_ID = '' WHERE Dosen_Wali_ID = '$id'";
-        $conn->query($query);
-        $query = "UPDATE Mahasiswa SET Dosen_Pembimbing_ID = '' WHERE Dosen_Pembimbing_ID = '$id'";
-        $conn->query($query);
-        $query = "DELETE FROM Dosen WHERE Dosen_ID = '$id'";
-        $conn->query($query);
-    }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idDosen'];
-        $query = "SELECT * FROM Dosen";
-        $listDosen = $conn->query($query);
-        foreach ($listDosen as $key => $value) {
-            if($value['Dosen_ID'] == $id){
-                $_SESSION['dosen']['id'] = $value['Dosen_ID'];
-                $_SESSION['dosen']['nama'] = $value['Dosen_Nama'];
-                $_SESSION['dosen']['username'] = $value['Dosen_User'];
-                $_SESSION['dosen']['password'] = $value['Dosen_Pass'];
-                $_SESSION['dosen']['jabatan'] = $value['Dosen_Jabatan'];
-            }
-        }
-        header("location: halamanUpdateDosen.php");
-    }
-
-    $query = "SELECT * FROM Dosen WHERE Dosen_Nama LIKE '%$nama%'";
-    $listDosen = $conn->query($query);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Update Dosen</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
-    <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
-    </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -84,23 +28,37 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarDosen.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataDosen").html(hasil);
-                    }
-                });
+            $('select').material_select();
+
+            $("#btnUpdate").click(function () {
+                if($("#nama").val() != "" && $("#username").val() != "" && $("#password").val() != "" && $("#jabatan").val() != ""){
+                    $.ajax({
+                        method : "post",
+                        url : "updateDosen.php",
+                        data : {
+                            id : $("#id").val(),
+                            nama : $("#nama").val(),
+                            username : $("#username").val(),
+                            password : $("#password").val(),
+                            jabatan : $("#jabatan").val()
+                        },
+                        success : function (hasil) {
+                            if(hasil == 1){
+                                alert("sukses");
+                            }else{
+                                alert("gagal");
+                            }
+                        }
+                    });
+                }else{
+                    alert("Data tidak boleh kosong!");
+                }
             });
         });
     </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -141,52 +99,49 @@
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
-            <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
-                <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
-            </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
-        
-        </div>   
+        </div> 
         <div id="col-kanan">
-            <h3>List Dosen</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataDosen" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listDosen) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Dosen</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Username</th>";
-                        echo "<th>Password</th>";
-                        echo "<th>Jabatan</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listDosen as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Dosen_ID]</td>";
-                    echo "<td>$value[Dosen_Nama]</td>";
-                    echo "<td>$value[Dosen_User]</td>";
-                    echo "<td>$value[Dosen_Pass]</td>";
-                    echo "<td>$value[Dosen_Jabatan]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
-                    echo "</tr>";
-                }
-            ?>
-            </table>
+            <div style="width: 50%;">
+                <h3>Update Data Dosen</h3><br>
+                ID: <input type="text" id="id" value="<?=$_SESSION['dosen']['id']?>" disabled><br>
+                Nama Lengkap: <input type="text" id="nama" value="<?=$_SESSION['dosen']['nama']?>"><br>
+                Username: <input type="text" id="username" value="<?=$_SESSION['dosen']['username']?>">
+                Password: <input type="text" id="password" value="<?=$_SESSION['dosen']['password']?>">
+                <div class="input-field col s12">
+                    <select name="jabatan" id="jabatan">
+                        <?php
+                            $query = "SELECT * FROM Dosen";
+                            $listDosen = $conn->query($query);
+                            foreach ($listDosen as $key => $value) {
+                                if($value['Dosen_ID'] == $_SESSION['dosen']['id']){
+                                    if($value['Dosen_Jabatan'] == "Dosen"){
+                                        echo "<option value='Dosen' selected>Dosen</option>";
+                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
+                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
+                                        echo "<option value='Rektor'>Rektor</option>";
+                                    }else if($value['Dosen_Jabatan'] == "Dosen Wali"){
+                                        echo "<option value='Dosen'>Dosen</option>";
+                                        echo "<option value='Dosen Wali' selected>Dosen Wali</option>";
+                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
+                                        echo "<option value='Rektor'>Rektor</option>";
+                                    }else if($value['Dosen_Jabatan'] == "Wakil Rektor"){
+                                        echo "<option value='Dosen'>Dosen</option>";
+                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
+                                        echo "<option value='Wakil Rektor' selected>Wakil Rektor</option>";
+                                        echo "<option value='Rektor'>Rektor</option>";
+                                    }else if($value['Dosen_Jabatan'] == "Rektor"){
+                                        echo "<option value='Dosen'>Dosen</option>";
+                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
+                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
+                                        echo "<option value='Rektor' selected>Rektor</option>";
+                                    }
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update</button>
+            </div>
         </div>
     </div>
 </body>
