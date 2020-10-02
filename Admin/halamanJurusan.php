@@ -20,9 +20,46 @@
     if (isset($_POST['btnDelete'])) {
         $id = $_POST['idJurusan'];
 
-        //Delete Jurusan
-        $query = "DELETE FROM Jurusan WHERE Jurusan_ID = '$id'";
-        $conn->query($query);
+        $query = "SELECT * FROM Matkul_Kurikulum";
+        $listMk = $conn->query($query);
+        $adaJurusan = false;
+        foreach ($listMk as $key => $value) {
+            if($value['Jurusan_ID'] == $id){
+                $mkId = $value['Matkul_Kurikulum_ID'];
+                $query = "SELECT * FROM Kelas";
+                $listKelas = $conn->query($query);
+                foreach ($listKelas as $key => $value) {
+                    if($value['Matkulkurikulum_ID'] == $mkId){
+                        $adaJurusan = true;
+                    }
+                }
+            }
+        }
+
+        if(!$adaJurusan){
+            $query = "DELETE FROM Major WHERE Jurusan_ID = '$id'";
+            $conn->query($query);
+            $query = "DELETE FROM Matkul_Kurikulum WHERE Jurusan_ID = '$id'";
+            $conn->query($query);
+            $query = "DELETE FROM Jurusan WHERE Jurusan_ID = '$id'";
+            $conn->query($query);
+        }else{
+            echo "<script>alert('Tidak bisa hapus jurusan')</script>";
+        }
+        
+    }
+
+    if(isset($_POST['btnUpdate'])){
+        $id = $_POST['idJurusan'];
+        $query = "SELECT * FROM Jurusan";
+        $listJurusan = $conn->query($query);
+        foreach ($listJurusan as $key => $value) {
+            if($value['Jurusan_ID'] == $id){
+                $_SESSION['jurusan']['id'] = $value['Jurusan_ID'];
+                $_SESSION['jurusan']['nama'] = $value['Jurusan_Nama'];
+            }
+        }
+        header("location: halamanUpdateJurusan.php");
     }
 
     $query = "SELECT * FROM Jurusan WHERE Jurusan_Nama LIKE '%$nama%'";
