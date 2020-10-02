@@ -10,6 +10,40 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    if(isset($_POST['btnDelete'])){
+        $id = $_POST['hidNrp'];
+        $query = "DELETE FROM Mahasiswa WHERE Mahasiswa_ID = '$id'";
+        $conn->query($query);
+    }
+
+    if(isset($_POST['btnUpdate'])){
+        $id = $_POST['hidNrp'];
+        $query = "SELECT * FROM Mahasiswa";
+        $listMahasiswa = $conn->query($query);
+        foreach ($listMahasiswa as $key => $value) {
+            if($value['Mahasiswa_ID'] == $id){
+                $_SESSION['mahasiswa']['id'] = $value['Mahasiswa_ID'];
+                $_SESSION['mahasiswa']['wali'] = $value['Dosen_Wali_ID'];
+                $_SESSION['mahasiswa']['pembimbing'] = $value['Dosen_Pembimbing_ID'];
+                $_SESSION['mahasiswa']['nama'] = $value['Mahasiswa_Nama'];
+                $_SESSION['mahasiswa']['jk'] = $value['Mahasiswa_JK'];
+                $_SESSION['mahasiswa']['alamat'] = $value['Mahasiswa_Alamat'];
+                $_SESSION['mahasiswa']['tgl'] = $value['Mahasiswa_Tgl'];
+                $_SESSION['mahasiswa']['agama'] = $value['Mahasiswa_Agama'];
+                $_SESSION['mahasiswa']['email'] = $value['Mahasiswa_Email'];
+                $_SESSION['mahasiswa']['noHp'] = $value['Mahasiswa_NoTelp'];
+                $query = "SELECT * FROM Jurusan";
+                $listJurusan = $conn->query($query);
+                foreach ($listJurusan as $key => $value) {
+                    if(substr($value['Jurusan_ID'],1,3) == substr($id,3,3)){
+                        $_SESSION['mahasiswa']['jurusan'] = $value['Jurusan_Nama'];
+                    }
+                }
+            }
+        }
+        header("location: halamanUpdateMahasiswa.php");
+    }
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +81,9 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#dataFullMahasiswa").load("daftarMahasiswa.php");
+            setInterval(function () {
+                $("#dataFullMahasiswa").load("daftarMahasiswa.php");
+            },500);
 
             $("#btnSearch").click(function () {
                 $.ajax({
