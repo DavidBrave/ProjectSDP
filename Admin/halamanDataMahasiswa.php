@@ -13,8 +13,21 @@
 
     if(isset($_POST['btnDelete'])){
         $id = $_POST['hidNrp'];
-        $query = "DELETE FROM Mahasiswa WHERE Mahasiswa_ID = '$id'";
-        $conn->query($query);
+        $query = "SELECT * FROM Mahasiswa";
+        $listMahasiswa = $conn->query($query);
+        foreach ($listMahasiswa as $key => $value) {
+            $nrp = $value['Mahasiswa_ID'];
+            $query = "DELETE FROM Sidang_Skripsi WHERE Mahasiswa_ID ='$id'";
+            $conn->query($query);
+            $query = "DELETE FROM Chat WHERE Mahasiswa_ID ='$id'";
+            $conn->query($query);
+            $query = "DELETE FROM Absen WHERE Mahasiswa_ID ='$id'";
+            $conn->query($query);
+            $query = "DELETE FROM Pengambilan WHERE Mahasiswa_ID ='$id'";
+            $conn->query($query);
+            $query = "DELETE FROM Mahasiswa WHERE Mahasiswa_ID = '$id'";
+            $conn->query($query);
+        }
     }
 
     if(isset($_POST['btnUpdate'])){

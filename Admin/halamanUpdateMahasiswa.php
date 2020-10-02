@@ -179,7 +179,55 @@
                     </label>
                 </p>
                 Alamat: <input type="text" id="alamat" value="<?=$_SESSION['mahasiswa']['alamat']?>">
-                Agama: <input type="text" id="agama" value="<?=$_SESSION['mahasiswa']['agama']?>">
+                <div class="input-field col s12">
+                    <select name="agama" id="agama">
+                        <?php
+                            if($_SESSION['mahasiswa']['agama'] == "Katolik"){
+                                echo "<option value='Katolik' selected>Katolik</option>";
+                                echo "<option value='Kristen'>Kristen</option>";
+                                echo "<option value='Kong Hu Cu'>Kong Hu Cu</option>";
+                                echo "<option value='Buddha'>Buddha</option>";
+                                echo "<option value='Hindu'>Hindu</option>";
+                                echo "<option value='Islam'>Islam</option>";
+                            }else if($_SESSION['mahasiswa']['agama'] == "Kristen"){
+                                echo "<option value='Katolik'>Katolik</option>";
+                                echo "<option value='Kristen' selected>Kristen</option>";
+                                echo "<option value='Kong Hu Cu'>Kong Hu Cu</option>";
+                                echo "<option value='Buddha'>Buddha</option>";
+                                echo "<option value='Hindu'>Hindu</option>";
+                                echo "<option value='Islam'>Islam</option>";
+                            }else if($_SESSION['mahasiswa']['agama'] == "Kong Hu Cu"){
+                                echo "<option value='Katolik'>Katolik</option>";
+                                echo "<option value='Kristen'>Kristen</option>";
+                                echo "<option value='Kong Hu Cu' selected>Kong Hu Cu</option>";
+                                echo "<option value='Buddha'>Buddha</option>";
+                                echo "<option value='Hindu'>Hindu</option>";
+                                echo "<option value='Islam'>Islam</option>";
+                            }else if($_SESSION['mahasiswa']['agama'] == "Buddha"){
+                                echo "<option value='Katolik'>Katolik</option>";
+                                echo "<option value='Kristen'>Kristen</option>";
+                                echo "<option value='Kong Hu Cu'>Kong Hu Cu</option>";
+                                echo "<option value='Buddha' selected>Buddha</option>";
+                                echo "<option value='Hindu'>Hindu</option>";
+                                echo "<option value='Islam'>Islam</option>";
+                            }else if($_SESSION['mahasiswa']['agama'] == "Islam"){
+                                echo "<option value='Katolik'>Katolik</option>";
+                                echo "<option value='Kristen'>Kristen</option>";
+                                echo "<option value='Kong Hu Cu'>Kong Hu Cu</option>";
+                                echo "<option value='Buddha'>Buddha</option>";
+                                echo "<option value='Hindu'>Hindu</option>";
+                                echo "<option value='Islam' selected>Islam</option>";
+                            }else if($_SESSION['mahasiswa']['agama'] == "Hindu"){
+                                echo "<option value='Katolik'>Katolik</option>";
+                                echo "<option value='Kristen'>Kristen</option>";
+                                echo "<option value='Kong Hu Cu'>Kong Hu Cu</option>";
+                                echo "<option value='Buddha'>Buddha</option>";
+                                echo "<option value='Hindu' selected>Hindu</option>";
+                                echo "<option value='Islam'>Islam</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
                 Email: <input type="text" id="email" value="<?=$_SESSION['mahasiswa']['email']?>">
                 No Hp: <input type="text" id="nohp" value="<?=$_SESSION['mahasiswa']['noHp']?>">
                 <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update</button>
