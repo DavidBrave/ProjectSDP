@@ -13,7 +13,7 @@
         $nohp = $_POST['nohp'];
         $pass = $_POST['pass'];
 
-        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen',null,'$nama','$jk','$alamat','$tgl','$agama','$email','$nohp','$pass')";
+        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','$jk','$alamat','$tgl','$agama','$email','$nohp','$pass','')";
         $conn->query($query);
 
         if($conn){

@@ -65,7 +65,7 @@
             }
             
             //Proses Insert
-            $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan')";
+            $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan','')";
             $conn->query($query);
         }
         else {
