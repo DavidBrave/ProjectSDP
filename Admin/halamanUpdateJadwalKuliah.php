@@ -34,7 +34,7 @@
          $(document).ready(function() {
             $('select').material_select();
 
-            $("#btnInsert").click(function () {
+            $("#btnUpdate").click(function () {
                 $valid_input = true;
                 if ($("#kelas") == "" || $("#kelas") == null) {
                     $valid_input = false;
@@ -61,10 +61,12 @@
 
                 if ($valid_input == true) {
 
+                    //alert($("#jadwal_id").val());
+
                     $.ajax({
                         method : "post",
-                        url : "insertJadwal.php",
-                        async : false,
+                        url : "updateJadwal.php",
+                        async: false,
                         data : {
                             id : $("#jadwal_id").val(),
                             kelas : $("#kelas").val(),
@@ -74,16 +76,13 @@
                         },
                         
                     }).done(function(data){
-                        alert("Input Jadwal Kuliah Berhasil");
+                        alert("Jadwal Kuliah Berhasil Diperbaharui");
                     }).fail(function(){
-                        alert("Input Jadwal Kuliah Gagal");
+                        alert("Jadwal Kuliah Gagal Diperbaharui");
                     });;
-
 
                 }
                 
-                location.reload();
-                return false;
             });
          });
     </script>
@@ -144,28 +143,11 @@
 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <h3>Insert Jadwal Kuliah</h3><br>
+                <h3>Update Jadwal Kuliah</h3><br>
 
-                <?php
-                    $id_count = 0;
-                    $jadwal_query = "SELECT * FROM Jadwal_Kuliah";
-                    $list_jadwal = $conn->query($jadwal_query);
+                ID: <input type="text" name="jadwal_id" id="jadwal_id" value="<?=$_SESSION['jadwal']['id']?>" disabled><br>
 
-                    while ($jadwal = $list_jadwal->fetch_assoc()) {
-
-                        $ctr = null;
-                        $ctr = substr($jadwal['Jadwal_ID'], 3, 4);
-
-                        if ($id_count < (int) $ctr ) {
-                            $id_count = (int) $ctr;
-                        }
-                    }
-                    $id_count += 1;
-                    $id_count = "JDL".str_pad($id_count, 4, "0", STR_PAD_LEFT);
-
-                    echo("<input style='display: none;' type='hidden' name='jadwal_id' id='jadwal_id' value='".$id_count."'>");
-
-                ?>
+                
 
                 
 
@@ -199,11 +181,19 @@
                                 $matkul = $conn->query($matkul_query);
                                 $matkul = $matkul->fetch_assoc();
 
-                                echo("<option value='$kelas[Kelas_ID]'>".
+                                if($kelas['Kelas_ID'] == $_SESSION['jadwal']['kelas']){
+                                    echo("<option value='$kelas[Kelas_ID]' selected>".
                                     $kelas['Kelas_Nama']." - ".$dosen['Dosen_Nama']." - "
                                     .$matkul['Matkul_Nama']." - Periode ".$periode." Semester ".$semester
                                 
                                 ."</option>");
+                                }else{
+                                    echo("<option value='$kelas[Kelas_ID]'>".
+                                    $kelas['Kelas_Nama']." - ".$dosen['Dosen_Nama']." - "
+                                    .$matkul['Matkul_Nama']." - Periode ".$periode." Semester ".$semester
+                                
+                                ."</option>");
+                                }
 
                             }
                             
@@ -213,21 +203,60 @@
                 </div>
                 <div class="input-field col s12">
                     <select name="hari" id="hari">
-                        <option value="none" disabled selected>Pilih Hari</option>
-                        <option value='monday'>Senin</option>
-                        <option value='tuesday'>Selasa</option>
-                        <option value='wednesday'>Rabu</option>
-                        <option value='thursday'>Kamis</option>
-                        <option value='friday'>Jumat</option>
-                        <option value='saturday'>Sabtu</option>
+                        <?php
+                            //echo('<option value="none" disabled selected>Pilih Hari</option>');
+                            if ($_SESSION['jadwal']['hari'] == "monday") {
+                                echo('<option value="monday" selected>Senin</option>');
+                            }
+                            else {
+                                echo('<option value="monday">Senin</option>');
+                            }
+                            
+                            if ($_SESSION['jadwal']['hari'] == "tuesday") {
+                                echo('<option value="tuesday" selected>Selasa</option>');
+                            }
+                            else {
+                                echo('<option value="tuesday">Selasa</option>');
+                            }
+                            
+                            if ($_SESSION['jadwal']['hari'] == "wednesday") {
+                                echo('<option value="wednesday" selected>Rabu</option>');
+                            }
+                            else {
+                                echo('<option value="wednesday">Rabu</option>');
+                            }
+                            
+                            if ($_SESSION['jadwal']['hari'] == "thursday") {
+                                echo('<option value="thursday" selected>Kamis</option>');
+                            }
+                            else {
+                                echo('<option value="thursday">Kamis</option>');
+                            }
+                            
+                            if ($_SESSION['jadwal']['hari'] == "friday") {
+                                echo('<option value="friday" selected>Jumat</option>');
+                            }
+                            else {
+                                echo('<option value="friday">Jumat</option>');
+                            }
+                            
+                            if ($_SESSION['jadwal']['hari'] == "saturday") {
+                                echo('<option value="saturday" selected>Sabtu</option>');
+                            }
+                            else {
+                                echo('<option value="saturday">Sabtu</option>');
+                            }
+                            
+                        ?>
+                        
                     </select>
                 </div>
                 Jadwal Mulai
-                <input type="time" name="waktu_mulai" id="waktu_mulai">
+                <input type="time" name="waktu_mulai" id="waktu_mulai" value="<?php echo($_SESSION['jadwal']['mulai']) ?>">
                 Jadwal Selesai
-                <input type="time" name="waktu_selesai" id="waktu_selesai">
+                <input type="time" name="waktu_selesai" id="waktu_selesai" value="<?php echo($_SESSION['jadwal']['selesai']) ?>">
 
-                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnInsert">Insert</button>
+                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update</button>
             </div>
         </div>
     </div>

@@ -10,59 +10,27 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
-    }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idKurikulum'];
-
-        // $message = $id;
-        // echo "<script type='text/javascript'>alert('$message');</script>";
-
-        $query = "SELECT * FROM Kurikulum";
-        $list_kurikulum = $conn->query($query);
-        foreach ($list_kurikulum as $key => $value) {
-            if($value['Kurikulum_ID'] == $id){
-                $_SESSION['kurikulum']['id'] = $value['Kurikulum_ID'];
-                $_SESSION['kurikulum']['nama'] = $value['Kurikulum_Nama'];
-            }
-        }
-        header("location: halamanUpdateKurikulum.php");
-    }
-
-    $query = "SELECT * FROM Kurikulum WHERE Kurikulum_Nama LIKE '%$nama%'";
-    $listKurikulum = $conn->query($query);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Update Dosen</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
-        .kotak{
+        #photo{
             width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
+            height: 200px;
+            border-radius: 10px;
+            background-color: lightgray;
+            text-align: center;
+            padding-top: 40px;
+            background-position: center;
+            background-size: cover;
+            background-image: none;
         }
     </style>
     <script src="jquery.js"></script>
@@ -72,55 +40,29 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-
-        //function saat click delete
-        function DeleteClick(clicked_id)
-        {
-            //minta result lewat confirmation alert
-            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
-                
-
-            //kalo result = true, atau pilih yes, hapus
-            if (result) {
-
-                var berhasil = true;
-                $.ajax({
-                    method : "post",
-                    url : "deleteKurikulum.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("Data Dihapus");
-                }).fail(function(data){
-                    alert("Data Gagal Dihapus");
-                });;
-
-
-                
-            }
-            else {
-                alert("Data Tidak Dihapus")
-            }
-
-            location.reload();
-            return false;
-        }
-
         $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarKurikulum.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataKurikulum").html(hasil);
-                    }
-                });
+            $('select').material_select();
+
+            $("#btnUpdate").click(function () {
+                if($("#nama").val() != ""){
+                    $.ajax({
+                        method : "post",
+                        url : "updateKurikulum.php",
+                        data : {
+                            id : $("#id").val(),
+                            nama : $("#nama").val()
+                        },
+                        success : function (hasil) {
+                            if(hasil == 1){
+                                alert("Kurikulum Berhasil Diperbaharui");
+                            }else{
+                                alert("Pembaharuan Gagal");
+                            }
+                        }
+                    });
+                }else{
+                    alert("Data tidak boleh kosong!");
+                }
             });
 
             
@@ -128,7 +70,7 @@
     </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -177,38 +119,15 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
         
-        </div>   
+        </div> 
         <div id="col-kanan">
-            <h3>List Kurikulum</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataKurikulum" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listKurikulum) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Kurikulum</th>";
-                        echo "<th>Nama Kurikulum</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listKurikulum as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Kurikulum_ID]</td>";
-                    echo "<td>$value[Kurikulum_Nama]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' id='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idKurikulum' id='$value[Kurikulum_ID]' value='$value[Kurikulum_ID]'></form></td>";
-                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Kurikulum_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idKurikulum' id='$value[Kurikulum_ID]' value='$value[Kurikulum_ID]'></form></td>";
-                    echo "</tr>";
-                }
-            ?>
-            </table>
+            <div style="width: 50%;">
+                <h3>Update Data Kurikulum</h3><br>
+                ID: <input type="text" id="id" value="<?=$_SESSION['kurikulum']['id']?>" disabled><br>
+                Nama Kurikulum: <input type="text" id="nama" value="<?=$_SESSION['kurikulum']['nama']?>"><br>
+               
+                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
+            </div>
         </div>
     </div>
 </body>
