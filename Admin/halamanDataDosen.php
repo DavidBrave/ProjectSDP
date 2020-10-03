@@ -40,6 +40,7 @@
                 $_SESSION['dosen']['username'] = $value['Dosen_User'];
                 $_SESSION['dosen']['password'] = $value['Dosen_Pass'];
                 $_SESSION['dosen']['jabatan'] = $value['Dosen_Jabatan'];
+                $_SESSION['dosen']['photo'] = $value['Dosen_Photo'];
             }
         }
         header("location: halamanUpdateDosen.php");

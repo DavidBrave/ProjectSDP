@@ -12,8 +12,9 @@
         $email = $_POST['email'];
         $nohp = $_POST['nohp'];
         $pass = $_POST['pass'];
+        $photo = $_POST['photo'];
 
-        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','$jk','$alamat','$tgl','$agama','$email','$nohp','$pass','')";
+        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','$jk','$alamat','$tgl','$agama','$email','$nohp','$pass','$photo')";
         $conn->query($query);
 
         if($conn){

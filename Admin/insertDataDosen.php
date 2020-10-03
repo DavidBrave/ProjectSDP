@@ -35,6 +35,7 @@
 
         //Generate NIP Dosen
         if ($tanggal != "" && $nama != "" && $jabatan != "" && $username != "" && $password != "" && $jk != "") {
+            $photo = $_POST['hidFile'];
             $tahun = substr($tanggal, 0, 4);
             $bulan = substr($tanggal, 5, 2);
             $tgl = substr($tanggal, 8, 2);
@@ -65,7 +66,7 @@
             }
             
             //Proses Insert
-            $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan','')";
+            $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan', '$photo')";
             $conn->query($query);
         }
         else {
@@ -86,7 +87,16 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
-
+        #photo{
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            background-color: lightgray;
+            text-align: center;
+            padding-top: 40px;
+            background-position: center;
+            background-size: cover;
+        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -97,6 +107,28 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#btnUpload").click(function () {
+                var fd = new FormData();
+                var files = $('#file')[0].files[0];
+                fd.append('file',files);
+
+                $.ajax({
+                    url: 'upload.php',
+                    type: 'post',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(response){
+                        if(response != 0){
+                            $("#photo").css("background-image","url(../Photo/" + response + ")"); 
+                            $("#hidFile").val(response);
+                        }else{
+                            alert('file not uploaded');
+                        }
+                    },
+                });
+            });
          });
     </script>
 </head>
@@ -154,8 +186,13 @@
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <form action = "" method = "post">
-                    <h3>Insert Data Dosen</h3><br>
+                <h3>Insert Data Dosen</h3><br>
+                <div id="photo">
+                    
+                </div><br>
+                <input type="file" name="file" id="file">
+                <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpload">Upload<i class="material-icons right">file_upload</i></button><br><br>
+                <form action = "#" method = "post">
                     Nama Lengkap: <input type="text" name="nama">
                     Tanggal Lahir: <input type="date" name="tgl">
                     Jenis Kelamin: 
@@ -184,7 +221,8 @@
 
                     Username: <input type="text" name="username"><br>
                     Password: <input type="text" name="password">
-                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+                    <input type="hidden" id="hidFile" name="hidFile">
+                    <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
                 </form>
             </div>
         </div>

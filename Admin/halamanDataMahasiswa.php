@@ -46,6 +46,7 @@
                 $_SESSION['mahasiswa']['agama'] = $value['Mahasiswa_Agama'];
                 $_SESSION['mahasiswa']['email'] = $value['Mahasiswa_Email'];
                 $_SESSION['mahasiswa']['noHp'] = $value['Mahasiswa_NoTelp'];
+                $_SESSION['mahasiswa']['photo'] = $value['Mahasiswa_Photo'];
                 $query = "SELECT * FROM Jurusan";
                 $listJurusan = $conn->query($query);
                 foreach ($listJurusan as $key => $value) {

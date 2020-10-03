@@ -10,9 +10,10 @@
     $agama = $_POST['agama'];
     $email = $_POST['email'];
     $noHp = $_POST['noHp'];
+    $photo = $_POST['photo'];
 
     $query = "UPDATE Mahasiswa SET Mahasiswa_Nama = '$nama', Dosen_Wali_ID = '$wali', Dosen_Pembimbing_ID = '$pembimbing', Mahasiswa_Tgl = '$tgl', 
-    Mahasiswa_Alamat = '$alamat', Mahasiswa_Agama = '$agama', Mahasiswa_Email = '$email', Mahasiswa_NoTelp = '$noHp' WHERE Mahasiswa_ID = '$nrp'";
+    Mahasiswa_Alamat = '$alamat', Mahasiswa_Agama = '$agama', Mahasiswa_Email = '$email', Mahasiswa_NoTelp = '$noHp', Mahasiswa_Photo = '$photo' WHERE Mahasiswa_ID = '$nrp'";
     $conn->query($query);
 
     if($conn){
@@ -24,6 +25,7 @@
         $_SESSION['mahasiswa']['agama'] = $agama;
         $_SESSION['mahasiswa']['email'] = $email;
         $_SESSION['mahasiswa']['noHp'] = $noHp;
+        $_SESSION['mahasiswa']['photo'] = $photo;
         echo "1";
     }else{
         echo "0";

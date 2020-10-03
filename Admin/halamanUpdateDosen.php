@@ -20,6 +20,19 @@
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
+    <style>
+        #photo{
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            background-color: lightgray;
+            text-align: center;
+            padding-top: 40px;
+            background-position: center;
+            background-size: cover;
+            background-image: none;
+        }
+    </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -40,7 +53,8 @@
                             nama : $("#nama").val(),
                             username : $("#username").val(),
                             password : $("#password").val(),
-                            jabatan : $("#jabatan").val()
+                            jabatan : $("#jabatan").val(),
+                            photo : $("#hidFile").val()
                         },
                         success : function (hasil) {
                             if(hasil == 1){
@@ -53,6 +67,33 @@
                 }else{
                     alert("Data tidak boleh kosong!");
                 }
+            });
+
+            $("#btnUpload").click(function () {
+                var fd = new FormData();
+                var files = $('#file')[0].files[0];
+                fd.append('file',files);
+
+                $.ajax({
+                    url: 'upload.php',
+                    type: 'post',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function(response){
+                        if(response != 0){
+                            $("#photo").css("background-image","url(../Photo/" + response + ")"); 
+                            $("#hidFile").val(response);
+                        }else{
+                            alert('file not uploaded');
+                        }
+                    },
+                });
+            });
+
+            $("#btnRemove").click(function () {
+                $("#hidFile").val("");
+                $("#photo").css("background-image","none");
             });
         });
     </script>
@@ -103,6 +144,13 @@
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Update Data Dosen</h3><br>
+                <div id="photo" style="background-image: url('../Photo/<?=$_SESSION['dosen']['photo']?>');">
+                    
+                </div><br>
+                <input type="file" name="file" id="file">
+                <input type="hidden" id="hidFile"><br><br>
+                <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpload">Upload<i class="material-icons right">file_upload</i></button>
+                <button class="btn waves-effect red darken-3" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnRemove">Remove<i class="material-icons right">delete</i></button><br><br><br><br>
                 ID: <input type="text" id="id" value="<?=$_SESSION['dosen']['id']?>" disabled><br>
                 Nama Lengkap: <input type="text" id="nama" value="<?=$_SESSION['dosen']['nama']?>"><br>
                 Username: <input type="text" id="username" value="<?=$_SESSION['dosen']['username']?>">
@@ -140,7 +188,7 @@
                         ?>
                     </select>
                 </div>
-                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update</button>
+                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>
     </div>
