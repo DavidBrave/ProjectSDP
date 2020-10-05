@@ -25,6 +25,19 @@
         $conn->query($query);
     }
 
+    if(isset($_POST['btnUpdate'])){
+        $id = $_POST['idMajor'];
+        $query = "SELECT * FROM Major";
+        $listJurusan = $conn->query($query);
+        foreach ($listJurusan as $key => $value) {
+            if($value['Major_ID'] == $id){
+                $_SESSION['major']['id'] = $value['Major_ID'];
+                $_SESSION['major']['nama'] = $value['Major_Nama'];
+            }
+        }
+        header("location: halamanUpdateMajor.php");
+    }
+
     $query = "SELECT * FROM Major WHERE Major_Nama LIKE '%$nama%'";
     $listMajor = $conn->query($query);
 ?>
