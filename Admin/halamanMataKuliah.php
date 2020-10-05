@@ -25,6 +25,20 @@
         $conn->query($query);
     }
 
+    if(isset($_POST['btnUpdate'])){
+        $id = $_POST['idMatkul'];
+        $query = "SELECT * FROM Matkul";
+        $listJurusan = $conn->query($query);
+        foreach ($listJurusan as $key => $value) {
+            if($value['Matkul_ID'] == $id){
+                $_SESSION['matkul']['id'] = $value['Matkul_ID'];
+                $_SESSION['matkul']['nama'] = $value['Matkul_Nama'];
+                $_SESSION['matkul']['standar'] = $value['Matkul_Standar'];
+            }
+        }
+        header("location: halamanUpdateMatkul.php");
+    }
+
     $query = "SELECT * FROM Matkul WHERE Matkul_Nama LIKE '%$nama%'";
     $listMatkul = $conn->query($query);
 ?>
