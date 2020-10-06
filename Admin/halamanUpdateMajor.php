@@ -112,18 +112,15 @@
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
             <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
                 <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
-        
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <h3>Update Data Kurikulum</h3><br>
+                <h3>Update Data Major</h3><br>
                 ID: <input type="text" id="id" value="<?=$_SESSION['major']['id']?>" disabled><br>
                 Nama Major: <input type="text" id="nama" value="<?=$_SESSION['major']['nama']?>"><br>
                 <div class="input-field col s12">

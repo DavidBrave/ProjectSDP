@@ -12,11 +12,6 @@
     $conn->query($query);
 
     if($conn){
-        $_SESSION['dosen']['nama'] = $nama;
-        $_SESSION['dosen']['username'] = $username;
-        $_SESSION['dosen']['password'] = $password;
-        $_SESSION['dosen']['jabatan'] = $jabatan;
-        $_SESSION['dosen']['photo'] = $photo;
         echo "1";
     }else{
         echo "0";

@@ -160,6 +160,11 @@
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
+                <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>   
         <div id="col-kanan">
             <h3>List Mahasiswa</h3><br>

@@ -44,23 +44,20 @@
             $('select').material_select();
 
             $("#btnUpdate").click(function () {
-                if($("#nama").val() != "" && $("#username").val() != "" && $("#password").val() != "" && $("#jabatan").val() != ""){
+                if($("#nama").val() != ""){
                     $.ajax({
                         method : "post",
-                        url : "updateDosen.php",
+                        url : "updateMatkul.php",
                         data : {
                             id : $("#id").val(),
                             nama : $("#nama").val(),
-                            username : $("#username").val(),
-                            password : $("#password").val(),
-                            jabatan : $("#jabatan").val(),
-                            photo : $("#hidFile").val()
+                            standar : $("#standar").val()
                         },
                         success : function (hasil) {
                             if(hasil == 1){
-                                alert("sukses");
+                                alert("Matkul Berhasil Diperbaharui");
                             }else{
-                                alert("gagal");
+                                alert("Pembaharuan Gagal");
                             }
                         }
                     });
@@ -69,32 +66,7 @@
                 }
             });
 
-            $("#btnUpload").click(function () {
-                var fd = new FormData();
-                var files = $('#file')[0].files[0];
-                fd.append('file',files);
-
-                $.ajax({
-                    url: 'upload.php',
-                    type: 'post',
-                    data: fd,
-                    contentType: false,
-                    processData: false,
-                    success: function(response){
-                        if(response != 0){
-                            $("#photo").css("background-image","url(../Photo/" + response + ")"); 
-                            $("#hidFile").val(response);
-                        }else{
-                            alert('file not uploaded');
-                        }
-                    },
-                });
-            });
-
-            $("#btnRemove").click(function () {
-                $("#hidFile").val("");
-                $("#photo").css("background-image","none");
-            });
+            
         });
     </script>
 </head>
@@ -148,51 +120,11 @@
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <h3>Update Data Dosen</h3><br>
-                <div id="photo" style="background-image: url('../Photo/<?=$_SESSION['dosen']['photo']?>');">
-                    
-                </div><br>
-                <input type="file" name="file" id="file">
-                <input type="hidden" id="hidFile"><br><br>
-                <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpload">Upload<i class="material-icons right">file_upload</i></button>
-                <button class="btn waves-effect red darken-3" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnRemove">Remove<i class="material-icons right">delete</i></button><br><br><br><br>
-                ID: <input type="text" id="id" value="<?=$_SESSION['dosen']['id']?>" disabled><br>
-                Nama Lengkap: <input type="text" id="nama" value="<?=$_SESSION['dosen']['nama']?>"><br>
-                Username: <input type="text" id="username" value="<?=$_SESSION['dosen']['username']?>">
-                Password: <input type="text" id="password" value="<?=$_SESSION['dosen']['password']?>">
-                <div class="input-field col s12">
-                    <select name="jabatan" id="jabatan">
-                        <?php
-                            $query = "SELECT * FROM Dosen";
-                            $listDosen = $conn->query($query);
-                            foreach ($listDosen as $key => $value) {
-                                if($value['Dosen_ID'] == $_SESSION['dosen']['id']){
-                                    if($value['Dosen_Jabatan'] == "Dosen"){
-                                        echo "<option value='Dosen' selected>Dosen</option>";
-                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
-                                        echo "<option value='Rektor'>Rektor</option>";
-                                    }else if($value['Dosen_Jabatan'] == "Dosen Wali"){
-                                        echo "<option value='Dosen'>Dosen</option>";
-                                        echo "<option value='Dosen Wali' selected>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
-                                        echo "<option value='Rektor'>Rektor</option>";
-                                    }else if($value['Dosen_Jabatan'] == "Wakil Rektor"){
-                                        echo "<option value='Dosen'>Dosen</option>";
-                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor' selected>Wakil Rektor</option>";
-                                        echo "<option value='Rektor'>Rektor</option>";
-                                    }else if($value['Dosen_Jabatan'] == "Rektor"){
-                                        echo "<option value='Dosen'>Dosen</option>";
-                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
-                                        echo "<option value='Rektor' selected>Rektor</option>";
-                                    }
-                                }
-                            }
-                        ?>
-                    </select>
-                </div>
+                <h3>Update Data Mata Kuliah</h3><br>
+                ID: <input type="text" id="id" value="<?=$_SESSION['matkul']['id']?>" disabled><br>
+                Nama Matkul: <input type="text" id="nama" value="<?=$_SESSION['matkul']['nama']?>"><br>
+                Nilai Standar: <input type="text" id="standar" value="<?=$_SESSION['matkul']['standar']?>"><br>
+                
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>

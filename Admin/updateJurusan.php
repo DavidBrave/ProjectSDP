@@ -8,7 +8,6 @@
     $conn->query($query);
 
     if($conn){
-        $_SESSION['jurusan']['nama'] = $nama;
         echo "1";
     }else{
         echo "0";

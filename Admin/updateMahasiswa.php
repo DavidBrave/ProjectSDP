@@ -17,15 +17,6 @@
     $conn->query($query);
 
     if($conn){
-        $_SESSION['mahasiswa']['wali'] = $wali;
-        $_SESSION['mahasiswa']['pembimbing'] = $pembimbing;
-        $_SESSION['mahasiswa']['nama'] = $nama;
-        $_SESSION['mahasiswa']['alamat'] = $alamat;
-        $_SESSION['mahasiswa']['tgl'] = $tgl;
-        $_SESSION['mahasiswa']['agama'] = $agama;
-        $_SESSION['mahasiswa']['email'] = $email;
-        $_SESSION['mahasiswa']['noHp'] = $noHp;
-        $_SESSION['mahasiswa']['photo'] = $photo;
         echo "1";
     }else{
         echo "0";

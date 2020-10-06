@@ -23,6 +23,10 @@
         //Delete Major
         $query = "DELETE FROM Major WHERE Major_ID = '$id'";
         $conn->query($query);
+
+        echo '<script language = "javascript">';
+        echo "alert('Berhasil Delete')";
+        echo '</script>';
     }
 
     if(isset($_POST['btnUpdate'])){

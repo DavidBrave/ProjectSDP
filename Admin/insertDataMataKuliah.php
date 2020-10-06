@@ -45,6 +45,21 @@
             //Proses Insert
             $query = "INSERT INTO Matkul VALUES('$id', '$nama', '$nilai')";
             $conn->query($query);
+
+            if($conn){
+                echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert')";
+            echo '</script>';
+            }else{
+                echo '<script language = "javascript">';
+            echo "alert('Gagal Insert')";
+            echo '</script>';
+            }
+        }
+        else {
+            echo '<script language = "javascript">';
+            echo "alert('Semua Field Harus Diisi')";
+            echo '</script>';
         }
     }
 ?>

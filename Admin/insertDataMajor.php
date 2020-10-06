@@ -41,6 +41,21 @@
             //Proses Insert
             $query = "INSERT INTO Major VALUES('$id', '$jurusan', '$nama')";
             $conn->query($query);
+
+            if($conn){
+                echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert')";
+            echo '</script>';
+            }else{
+                echo '<script language = "javascript">';
+            echo "alert('Gagal Insert')";
+            echo '</script>';
+            }
+        }
+        else {
+            echo '<script language = "javascript">';
+            echo "alert('Semua Field Harus Diisi')";
+            echo '</script>';
         }
     }
 ?>

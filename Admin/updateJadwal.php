@@ -17,12 +17,5 @@
         }else{
             echo 0;
         }
-
-        if (isset($_SESSION['jadwal'])) {
-            $_SESSION['jadwal']['kelas'] = $kelas;
-            $_SESSION['jadwal']['hari'] = $hari;
-            $_SESSION['jadwal']['mulai'] = $mulai;
-            $_SESSION['jadwal']['selesai'] = $selesai;
-        }
     }
 ?>

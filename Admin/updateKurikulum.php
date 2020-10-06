@@ -8,8 +8,6 @@
     $conn->query($query);
 
     if($conn){
-        $_SESSION['kurikulum']['id'] = $id;
-        $_SESSION['kurikulum']['nama'] = $nama;
         echo "1";
     }else{
         echo "0";

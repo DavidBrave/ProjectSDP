@@ -43,6 +43,10 @@
             $conn->query($query);
             $query = "DELETE FROM Jurusan WHERE Jurusan_ID = '$id'";
             $conn->query($query);
+
+            echo '<script language = "javascript">';
+            echo "alert('Berhasil Delete')";
+            echo '</script>';
         }else{
             echo "<script>alert('Tidak bisa hapus jurusan')</script>";
         }

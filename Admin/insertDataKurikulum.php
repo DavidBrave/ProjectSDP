@@ -38,6 +38,16 @@
             //Proses Insert
             $query = "INSERT INTO Kurikulum VALUES('$id', '$nama')";
             $conn->query($query);
+
+            if($conn){
+                echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert')";
+            echo '</script>';
+            }else{
+                echo '<script language = "javascript">';
+            echo "alert('Gagal Insert')";
+            echo '</script>';
+            }
         }
         else {
             echo '<script language = "javascript">';

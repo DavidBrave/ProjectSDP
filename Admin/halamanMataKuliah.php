@@ -23,6 +23,10 @@
         //Delete Matkul
         $query = "DELETE FROM Matkul WHERE Matkul_ID = '$id'";
         $conn->query($query);
+
+        echo '<script language = "javascript">';
+        echo "alert('Berhasil Delete')";
+        echo '</script>';
     }
 
     if(isset($_POST['btnUpdate'])){
