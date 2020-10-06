@@ -1,9 +1,6 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-?>
-
-<?php
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -12,6 +9,18 @@
     if(isset($_POST['btnLogout'])){
         unset($_SESSION['user']);
         header("location: ../login.php");
+    }
+
+    if (isset($_POST['btnSubmit'])) {
+        if(isset($_POST['kelas']) || isset($_POST['mahasiswa'])){
+            $kelas = $_POST['kelas'];
+            $mahasiswa = $_POST['mahasiswa'];
+            $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_ID = '$mahasiswa'";
+            $conn->query($query);
+            echo "<script>alert('Berhasil')</script>";
+        }else{
+            echo "<script>alert('Inputan harus dipilih')</script>";
+        }
     }
 ?>
 
@@ -25,22 +34,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
+
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -48,9 +42,14 @@
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <script>
+         $(document).ready(function() {
+            $('select').material_select();
+         });
+    </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -91,83 +90,47 @@
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            
+        
             <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
                 <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            
-            <a class = "btn dropdown-button blue lighten-2" href = "pengambilanMahasiswa.php" style="width: 100%; color: black;">Pembagian Kelas</a>
 
+        
         </div> 
         <div id="col-kanan">
-            <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
-            <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">
-                <div id="dosen" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">DOSEN</p>
-                    <?php
-                        $query = "SELECT * FROM Dosen";
-                        $listDosen = $conn->query($query);
-                        $totalDosen = mysqli_num_rows($listDosen);
-                    ?>
-                    <p id="totalDosen" style="margin: 0px;">Jumlah: <?=$totalDosen?></p>
-                </div>
-                <div id="mahasiswa" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">MAHASISWA</p>
-                    <?php
-                        $query = "SELECT * FROM Mahasiswa";
-                        $listMahasiswa = $conn->query($query);
-                        $totalMahasiswa = mysqli_num_rows($listMahasiswa);
-                    ?>
-                    <p id="totalMahasiswa" style="margin: 0px;">Jumlah: <?=$totalMahasiswa?></p>
-                </div>
-                <div id="admin" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">ADMIN</p>
-                    <?php
-                        $query = "SELECT * FROM Administrator";
-                        $listAdministrator = $conn->query($query);
-                        $totalAdministrator = mysqli_num_rows($listAdministrator);
-                    ?>
-                    <p id="totalAdmin" style="margin: 0px;">Jumlah: <?=$totalAdministrator?></p>
-                </div>
+            <div style="width: 50%;">
+                <form action = "" method = "post">
+                    <h3>Pembagian Kelas</h3><br>
+                    <div class="input-field col s12">
+                        <select name="mahasiswa">
+                            <option value="none" disabled selected>Pilih Mahasiswa</option>
+                            <?php
+                                $query = "SELECT * FROM Pengambilan WHERE Kelas_ID = ''";
+                                $listPengambilan = $conn->query($query);
+                                foreach ($listPengambilan as $key => $value) {
+                                    echo "<option value='$value[Mahasiswa_ID]'>" . $value['Mahasiswa_ID'] . "</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="input-field col s12">
+                        <select name="kelas">
+                            <option value="none" disabled selected>Pilih Kelas</option>
+                            <?php
+                                $query = "SELECT * FROM Kelas";
+                                $listKelas = $conn->query($query);
+                                foreach ($listKelas as $key => $value) {
+                                    echo "<option value='$value[Kelas_ID]'>" . $value['Kelas_Nama'] . "</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnSubmit">Submit</button>
+                </form>
             </div>
-            <div id="piechart"></div>
         </div>
     </div>
 </body>
 </html>
-<script>
-    $("#btn").click(function () {
-        alert(<?=$totalAdministrator?>);
-    });
-    // Load google charts
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    // Draw the chart and set the chart values
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        ['Job', 'Jumlah'],
-        ['Dosen', <?=$totalDosen?>],
-        ['Mahasiswa', <?=$totalMahasiswa?>],
-        ['Admin', <?=$totalAdministrator?>]
-        ]);
-
-        // Optional; add a title and set the width and height of the chart
-        var options = {
-            'title':'Persentase', 
-            'width':600, 
-            'height':450,
-            slices: {
-                0: { color: 'green' },
-                1: { color: 'plum' },
-                2: { color: 'lightblue' }
-            }
-        };
-
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-    }
-</script>
