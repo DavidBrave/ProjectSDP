@@ -2,6 +2,11 @@
 
     //Jangan Diubah
 
+    // $con_servername = "localhost";
+    // $con_username = "root";
+    // $con_password = "";
+    // $con_database = "project_sdp";
+
     // $con_servername = "37.59.55.185";
     // $con_username = "syrHdQKkXJ";
     // $con_password = "pwtRRUcqFp";

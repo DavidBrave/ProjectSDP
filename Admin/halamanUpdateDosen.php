@@ -58,9 +58,10 @@
                         },
                         success : function (hasil) {
                             if(hasil == 1){
-                                alert("sukses");
+                                alert("Update Data Dosen Berhasil");
+                                window.location.replace("/projectsdp/Admin/halamanDataDosen.php");
                             }else{
-                                alert("gagal");
+                                alert("Update Data Dosen Gagal");
                             }
                         }
                     });
@@ -96,6 +97,18 @@
                 $("#photo").css("background-image","none");
             });
         });
+
+        function TogglePassword() { 
+            var input_password = document.getElementById("password"); 
+            if (input_password.type === "password") { 
+                input_password.type = "text";
+                document.getElementById("text_showHide").innerHTML = "Hide Password";
+            } 
+            else { 
+                input_password.type = "password";
+                document.getElementById("text_showHide").innerHTML = "Show Password";
+            } 
+        } 
     </script>
 </head>
 <body>
@@ -159,7 +172,7 @@
                 ID: <input type="text" id="id" value="<?=$_SESSION['dosen']['id']?>" disabled><br>
                 Nama Lengkap: <input type="text" id="nama" value="<?=$_SESSION['dosen']['nama']?>"><br>
                 Username: <input type="text" id="username" value="<?=$_SESSION['dosen']['username']?>">
-                Password: <input type="text" id="password" value="<?=$_SESSION['dosen']['password']?>">
+                
                 <div class="input-field col s12">
                     <select name="jabatan" id="jabatan">
                         <?php
@@ -193,6 +206,14 @@
                         ?>
                     </select>
                 </div>
+
+                Password: <input type="password" id="password" value="<?=$_SESSION['dosen']['password']?>">
+                <div>
+                    <input type="checkbox" id="hide_pass" onclick="TogglePassword()">
+                    <label for="hide_pass"><b id="text_showHide">Show Password</b></label>
+                </div>
+                <br>
+
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>

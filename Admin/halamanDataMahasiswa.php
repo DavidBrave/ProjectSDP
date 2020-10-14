@@ -2,6 +2,7 @@
     session_start();
     require_once('../Required/Connection.php');
 
+
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
     } 
@@ -47,6 +48,7 @@
                 $_SESSION['mahasiswa']['email'] = $value['Mahasiswa_Email'];
                 $_SESSION['mahasiswa']['noHp'] = $value['Mahasiswa_NoTelp'];
                 $_SESSION['mahasiswa']['photo'] = $value['Mahasiswa_Photo'];
+                $_SESSION['mahasiswa']['password'] = $value['Mahasiswa_Pass'];
                 $query = "SELECT * FROM Jurusan";
                 $listJurusan = $conn->query($query);
                 foreach ($listJurusan as $key => $value) {

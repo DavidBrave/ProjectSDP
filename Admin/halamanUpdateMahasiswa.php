@@ -45,6 +45,12 @@
 
             $("#btnUpdate").click(function () {
                 if($("#nama").val() != "" && $("#wali").val() != "" && $("#tgl").val() != "" && $("#alamat").val() != "" && $("#agama").val() != "" && $("#email").val() != "" && $("#nohp").val() != ""){
+
+                    $gender = "F";
+                    if(document.getElementById('male').checked) {
+                        $gender = "M";
+                    }
+
                     $.ajax({
                         method : "post",
                         url : "updateMahasiswa.php",
@@ -54,6 +60,8 @@
                             wali : $("#wali").val(),
                             pembimbing : $("#pembimbing").val(),
                             tgl : $("#tgl").val(),
+                            gender : $gender,
+                            password : $("#password").val(),
                             alamat : $("#alamat").val(),
                             agama : $("#agama").val(),
                             email : $("#email").val(),
@@ -62,9 +70,13 @@
                         },
                         success : function (hasil) {
                             if(hasil == 1){
-                                alert("sukses");
+                                alert("Update Mahasiswa Berhasil");
+
+                                //href = click link, replace = redirect
+                                //window.location.href = '/halamanDataMahasiswa.php';
+                                window.location.replace("/projectsdp/Admin/halamanDataMahasiswa.php");
                             }else{
-                                alert("gagal");
+                                alert("Update Mahasiswa Gagal");
                             }
                         }
                     });
@@ -100,6 +112,19 @@
                 $("#photo").css("background-image","none");
             });
         });
+
+        function TogglePassword() { 
+            var input_password = document.getElementById("password"); 
+            if (input_password.type === "password") { 
+                input_password.type = "text";
+                document.getElementById("text_showHide").innerHTML = "Hide Password";
+            } 
+            else { 
+                input_password.type = "password";
+                document.getElementById("text_showHide").innerHTML = "Show Password";
+            } 
+        } 
+
     </script>
 </head>
 <body>
@@ -171,9 +196,9 @@
                             $listDosen = $conn->query($query);
                             foreach ($listDosen as $key => $value) {
                                 if($value['Dosen_ID'] == $_SESSION['mahasiswa']['wali']){
-                                    echo "<option value='$value[Dosen_ID]' selected>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
+                                    echo "<option value='$value[Dosen_ID]' selected>".$value['Dosen_ID']." - ".$value['Dosen_Nama']."</option>";
                                 }else{
-                                    echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
+                                    echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']." - ".$value['Dosen_Nama']."</option>";
                                 }
                             }
                         ?>
@@ -188,14 +213,14 @@
                                 $query = "SELECT * FROM Dosen";
                                 $listDosen = $conn->query($query);
                                 foreach ($listDosen as $key => $value) {
-                                    echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
+                                    echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']." - ".$value['Dosen_Nama']."</option>";
                                 }
                             }else{
                                 $query = "SELECT * FROM Dosen";
                                 $listDosen = $conn->query($query);
                                 foreach ($listDosen as $key => $value) {
                                     if($value['Dosen_ID'] == $_SESSION['mahasiswa']['pembimbing']){
-                                        echo "<option value='$value[Dosen_ID]' selected>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
+                                        echo "<option value='$value[Dosen_ID]' selected>".$value['Dosen_ID']." - ".$value['Dosen_Nama']."</option>";
                                     }else{
                                         echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
                                     }
@@ -211,9 +236,9 @@
                     <label>
                         <?php
                             if($_SESSION['mahasiswa']['jk'] == 'M'){ 
-                                echo "<input name='group1' type='radio' value='M' checked disabled/>";
+                                echo "<input name='group1' id='male' type='radio' value='M' checked/>";
                             }else{
-                                echo "<input name='group1' type='radio' value='M' disabled/>";
+                                echo "<input name='group1' id='male' type='radio' value='M'/>";
                             }
                         ?>
                         <span>Laki-laki</span>
@@ -223,9 +248,9 @@
                     <label>
                         <?php
                             if($_SESSION['mahasiswa']['jk'] == 'F'){ 
-                                echo "<input name='group1' type='radio' value='F' checked disabled/>";
+                                echo "<input name='group1' type='radio' value='F' checked>";
                             }else{
-                                echo "<input name='group1' type='radio' value='F' disabled/>";
+                                echo "<input name='group1' type='radio' value='F'/>";
                             }
                         ?>
                         <span>Perempuan</span>
@@ -281,8 +306,14 @@
                         ?>
                     </select>
                 </div>
-                Email: <input type="text" id="email" value="<?=$_SESSION['mahasiswa']['email']?>">
-                No Hp: <input type="text" id="nohp" value="<?=$_SESSION['mahasiswa']['noHp']?>">
+                Email : <input type="text" id="email" value="<?=$_SESSION['mahasiswa']['email']?>">
+                No Hp : <input type="text" id="nohp" value="<?=$_SESSION['mahasiswa']['noHp']?>">
+                Password : <input type="password" id="password" value="<?=$_SESSION['mahasiswa']['password']?>">
+                <div>
+                    <input type="checkbox" id="hide_pass" onclick="TogglePassword()">
+                    <label for="hide_pass"><b id="text_showHide">Show Password</b></label>
+                </div>
+                <br>
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>
