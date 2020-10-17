@@ -143,6 +143,27 @@
                 });
             });
          });
+
+        function GetEventTarget(e) {
+            e = e || window.event;
+            return e.target || e.srcElement; 
+        }
+
+        function UbahJurusan() {
+            
+            var list_jurusan = document.getElementById("jurusan");
+            var jurusan_dipilih = list_jurusan.options[list_jurusan.selectedIndex].value;
+            
+
+            var generated_nrp = document.getElementById('nrp').value;
+            if (generated_nrp != "") {
+
+                nrp_baru = generated_nrp.substr(0, 3) + jurusan_dipilih.substr(1) + generated_nrp.substr(6);
+                document.getElementById('nrp').value = nrp_baru;
+            }
+            
+        }
+
     </script>
 </head>
 <body>
@@ -201,13 +222,14 @@
                 <h3>Insert Data Mahasiswa</h3><br>
                 Nama Lengkap: <input type="text" id="nama">
                 <div class="input-field col s12">
-                    <select name="jurusan" id="jurusan">
+                    <select name="jurusan" id="jurusan" onchange="UbahJurusan();">
                         <option value="none" disabled selected>Pilih Jurusan</option>
                         <?php
                             $query = "SELECT * FROM Jurusan";
                             $listJurusan = $conn->query($query);
                             foreach ($listJurusan as $key => $value) {
                                 echo "<option value='$value[Jurusan_ID]'>".$value['Jurusan_ID']."-".$value['Jurusan_Nama']."</option>";
+
                             }
                         ?>
                     </select>
