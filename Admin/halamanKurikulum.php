@@ -93,9 +93,9 @@
                     },
 
                 }).done(function(data){
-                    alert("Data Dihapus");
+                    alert("Data Kurikulum dengan ID " + clicked_id + " Berhasil Dihapus");
                 }).fail(function(data){
-                    alert("Data Gagal Dihapus");
+                    alert("Data Kurikulum dengan ID " + clicked_id + " Gagal Dihapus");
                 });;
 
 

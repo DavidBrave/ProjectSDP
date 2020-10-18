@@ -21,11 +21,18 @@
         $id = $_POST['idMajor'];
 
         //Delete Major
+        $nama = "";
+        $query = "SELECT * FROM Major WHERE Major_ID = '$id'";
+        $temp = $conn->query($query);
+        foreach($temp as $key => $value) {
+            $nama = $temp['Major_Nama'];
+        }
+
         $query = "DELETE FROM Major WHERE Major_ID = '$id'";
         $conn->query($query);
 
         echo '<script language = "javascript">';
-        echo "alert('Berhasil Delete')";
+        echo "alert('Berhasil Delete Major $nama')";
         echo '</script>';
     }
 

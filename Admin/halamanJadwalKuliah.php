@@ -85,9 +85,9 @@
                     },
                     
                 }).done(function(data){
-                    alert("Data Dihapus");
+                    alert("Jadwal Kuliah dengan ID " + clicked_id + " Berhasil Dihapus");
                 }).fail(function(data){
-                    alert("Data Gagal Dihapus");
+                    alert("Jadwal Kuliah dengan ID " + clicked_id + "  Gagal Dihapus");
                 });
 
 

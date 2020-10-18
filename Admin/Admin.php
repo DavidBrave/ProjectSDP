@@ -139,7 +139,7 @@
 </html>
 <script>
     $("#btn").click(function () {
-        alert(<?=$totalAdministrator?>);
+        alert('Total administrator : ' + <?=$totalAdministrator?>);
     });
     // Load google charts
     google.charts.load('current', {'packages':['corechart']});

@@ -41,12 +41,12 @@
 
             if($conn){
                 echo '<script language = "javascript">';
-            echo "alert('Berhasil Insert')";
-            echo '</script>';
+                echo "alert('Berhasil Insert Kurikulum $nama')";
+                echo '</script>';
             }else{
                 echo '<script language = "javascript">';
-            echo "alert('Gagal Insert')";
-            echo '</script>';
+                echo "alert('Gagal Insert Kurikulum $nama')";
+                echo '</script>';
             }
         }
         else {

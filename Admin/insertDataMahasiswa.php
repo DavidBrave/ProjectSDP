@@ -98,10 +98,11 @@
                             photo : $("#hidFile").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
                             if(hasil == 1){
-                                alert("sukses");
+                                alert("Berhasil Insert Data Mahasiswa " + nama);
                             }else{
-                                alert("gagal");
+                                alert("Gagal Insert Data Mahasiswa " + nama);
                             }
                         }
                     });

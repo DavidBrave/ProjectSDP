@@ -57,11 +57,12 @@
                             photo : $("#hidFile").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
                             if(hasil == 1){
-                                alert("Update Data Dosen Berhasil");
+                                alert("Update Data Dosen " + nama + " Berhasil");
                                 window.location.replace("/projectsdp/Admin/halamanDataDosen.php");
                             }else{
-                                alert("Update Data Dosen Gagal");
+                                alert("Update Data Dosen " + nama + " Gagal");
                             }
                         }
                     });

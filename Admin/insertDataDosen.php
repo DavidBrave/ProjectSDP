@@ -68,6 +68,9 @@
             //Proses Insert
             $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan', '$photo')";
             $conn->query($query);
+            echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert Dosen $nama')";
+            echo '</script>';
         }
         else {
             echo '<script language = "javascript">';

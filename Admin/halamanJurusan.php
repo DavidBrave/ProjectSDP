@@ -37,6 +37,13 @@
         }
 
         if(!$adaJurusan){
+            $nama = "";
+            $query = "SELECT * FROM Jurusan WHERE Jurusan_ID = '$id'";
+            $temp = $conn->query($query);
+            foreach($temp as $key => $value) {
+                $nama = $temp['Jurusan_Nama'];
+            }
+
             $query = "DELETE FROM Major WHERE Jurusan_ID = '$id'";
             $conn->query($query);
             $query = "DELETE FROM Matkul_Kurikulum WHERE Jurusan_ID = '$id'";
@@ -45,7 +52,7 @@
             $conn->query($query);
 
             echo '<script language = "javascript">';
-            echo "alert('Berhasil Delete')";
+            echo "alert('Berhasil Delete Jurusan $nama')";
             echo '</script>';
         }else{
             echo "<script>alert('Tidak bisa hapus jurusan')</script>";

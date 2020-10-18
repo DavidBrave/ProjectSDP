@@ -18,9 +18,13 @@
         $conn->query($query);
 
         if($conn){
-            echo 1;
+            echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert Mahasiswa $nama')";
+            echo '</script>';
         }else{
-            echo 0;
+            echo '<script language = "javascript">';
+            echo "alert('Gagal Insert Mahasiswa $nama')";
+            echo '</script>';
         }
     }
 ?>

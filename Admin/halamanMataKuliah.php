@@ -21,11 +21,18 @@
         $id = $_POST['idMatkul'];
 
         //Delete Matkul
+        $nama = "";
+        $query = "SELECT * FROM Matkul WHERE Matkul_ID = '$id'";
+        $temp = $conn->query($query);
+        foreach($temp as $key => $value) {
+            $nama = $temp['Matkul_Nama'];
+        }
+
         $query = "DELETE FROM Matkul WHERE Matkul_ID = '$id'";
         $conn->query($query);
 
         echo '<script language = "javascript">';
-        echo "alert('Berhasil Delete')";
+        echo "alert('Berhasil Delete Mata Kuliah $nama')";
         echo '</script>';
     }
 
