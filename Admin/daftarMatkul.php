@@ -33,4 +33,6 @@
         echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idMatkul' value='$value[Matkul_ID]'></form></td>";
         echo "</tr>";
     }
+
+    $conn->close();
 ?>

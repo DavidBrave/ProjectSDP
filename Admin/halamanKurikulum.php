@@ -207,6 +207,8 @@
                     echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Kurikulum_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idKurikulum' id='$value[Kurikulum_ID]' value='$value[Kurikulum_ID]'></form></td>";
                     echo "</tr>";
                 }
+
+                $conn->close();
             ?>
             </table>
         </div>

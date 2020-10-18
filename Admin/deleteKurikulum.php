@@ -8,13 +8,11 @@
         $query = "SELECT * FROM Kurikulum WHERE Kurikulum_ID = '$id'";
         $temp = $conn->query($query);
         foreach($temp as $key => $value) {
-            $nama = $temp['Kurikulum_Nama'];
+            $nama = $value['Kurikulum_Nama'];
         }
 
         $query = "DELETE FROM Kurikulum WHERE Kurikulum_ID = '$id'";
         $conn->query($query);
-
-        
 
         $message = "Gagal Delete";
         if($conn){
@@ -28,4 +26,6 @@
         
         echo "<script type='text/javascript'>alert('$message');</script>";
     }
+
+    $conn->close();
 ?>

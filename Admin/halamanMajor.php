@@ -21,18 +21,18 @@
         $id = $_POST['idMajor'];
 
         //Delete Major
-        $nama = "";
+        $name = "";
         $query = "SELECT * FROM Major WHERE Major_ID = '$id'";
         $temp = $conn->query($query);
         foreach($temp as $key => $value) {
-            $nama = $temp['Major_Nama'];
+            $name = $value['Major_Nama'];
         }
 
         $query = "DELETE FROM Major WHERE Major_ID = '$id'";
         $conn->query($query);
 
         echo '<script language = "javascript">';
-        echo "alert('Berhasil Delete Major $nama')";
+        echo "alert('Berhasil Delete Major $name')";
         echo '</script>';
     }
 
@@ -183,6 +183,8 @@
                     echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idMajor' value='$value[Major_ID]'></form></td>";
                     echo "</tr>";
                 }
+
+                $conn->close();
             ?>
             </table>
         </div>

@@ -71,6 +71,8 @@
             echo '<script language = "javascript">';
             echo "alert('Berhasil Insert Dosen $nama')";
             echo '</script>';
+
+            $conn->close();
         }
         else {
             echo '<script language = "javascript">';

@@ -55,6 +55,8 @@
             echo '</script>';
         }
     }
+
+    $conn->close();
 ?>
 
 <!DOCTYPE html>

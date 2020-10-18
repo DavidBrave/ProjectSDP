@@ -18,4 +18,6 @@
         $kdjurusan = mysqli_num_rows($list) + 1;
         echo "<input disabled type='text' id='nrp' value='".$tahun.$jurusan.$kdjurusan."'>";
     }
+
+    $conn->close();
 ?>

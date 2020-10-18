@@ -21,4 +21,6 @@
             echo '</script>';
         }
     }
+    
+    $conn->close();
 ?>

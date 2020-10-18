@@ -18,4 +18,6 @@
         $kdjurusan = mysqli_num_rows($list) + 1;
         echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan.$kdjurusan.$nohp."'>";
     }
+
+    $conn->close();
 ?>

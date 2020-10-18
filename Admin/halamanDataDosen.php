@@ -19,6 +19,13 @@
 
     if (isset($_POST['btnDelete'])) {
         $id = $_POST['idDosen'];
+        $nama = "";
+        $query = "SELECT * FROM Dosen WHERE Dosen_ID = '$id'";
+        $temp = $conn->query($query);
+        foreach($temp as $key => $value) {
+            $nama = $value['Dosen_Nama'];
+        }
+
         $query = "DELETE FROM Sidang_Skripsi WHERE Dosen_Pengamat_ID = '$id'";
         $conn->query($query);
         $query = "UPDATE Mahasiswa SET Dosen_Wali_ID = '' WHERE Dosen_Wali_ID = '$id'";
@@ -27,6 +34,10 @@
         $conn->query($query);
         $query = "DELETE FROM Dosen WHERE Dosen_ID = '$id'";
         $conn->query($query);
+
+        echo '<script language = "javascript">';
+        echo "alert('Berhasil Delete Dosen $nama')";
+        echo '</script>';
     }
 
     if(isset($_POST['btnUpdate'])){
@@ -188,6 +199,8 @@
                     echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
                     echo "</tr>";
                 }
+
+                $conn->close();
             ?>
             </table>
         </div>

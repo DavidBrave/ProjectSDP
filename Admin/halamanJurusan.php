@@ -37,11 +37,11 @@
         }
 
         if(!$adaJurusan){
-            $nama = "";
+            $name = "";
             $query = "SELECT * FROM Jurusan WHERE Jurusan_ID = '$id'";
             $temp = $conn->query($query);
             foreach($temp as $key => $value) {
-                $nama = $temp['Jurusan_Nama'];
+                $name = $value['Jurusan_Nama'];
             }
 
             $query = "DELETE FROM Major WHERE Jurusan_ID = '$id'";
@@ -52,12 +52,12 @@
             $conn->query($query);
 
             echo '<script language = "javascript">';
-            echo "alert('Berhasil Delete Jurusan $nama')";
+            echo "alert('Berhasil Delete Jurusan $name')";
             echo '</script>';
         }else{
             echo "<script>alert('Tidak bisa hapus jurusan')</script>";
         }
-        
+
     }
 
     if(isset($_POST['btnUpdate'])){
@@ -207,6 +207,8 @@
                     echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idJurusan' value='$value[Jurusan_ID]'></form></td>";
                     echo "</tr>";
                 }
+
+                $conn->close();
             ?>
             </table>
         </div>
