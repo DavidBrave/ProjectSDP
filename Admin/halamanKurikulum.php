@@ -20,9 +20,6 @@
     if(isset($_POST['btnUpdate'])){
         $id = $_POST['idKurikulum'];
 
-        // $message = $id;
-        // echo "<script type='text/javascript'>alert('$message');</script>";
-
         $query = "SELECT * FROM Kurikulum";
         $list_kurikulum = $conn->query($query);
         foreach ($list_kurikulum as $key => $value) {
@@ -77,12 +74,10 @@
         function DeleteClick(clicked_id)
         {
             //minta result lewat confirmation alert
+            var nama = $("#Nama" + clicked_id).val();
             var result = confirm("Apakah Yakin Ingin Menghapus Data?");
-                
-
             //kalo result = true, atau pilih yes, hapus
             if (result) {
-
                 var berhasil = true;
                 $.ajax({
                     method : "post",
@@ -93,16 +88,10 @@
                     },
 
                 }).done(function(data){
-                    alert("Data Kurikulum dengan ID " + clicked_id + " Berhasil Dihapus");
+                    alert("Data Kurikulum " + nama + " Berhasil Dihapus");
                 }).fail(function(data){
-                    alert("Data Kurikulum dengan ID " + clicked_id + " Gagal Dihapus");
+                    alert("Data Kurikulum " + nama + " Gagal Dihapus");
                 });;
-
-
-                
-            }
-            else {
-                alert("Data Tidak Dihapus")
             }
 
             location.reload();
@@ -204,7 +193,7 @@
                     echo "<td>$value[Kurikulum_ID]</td>";
                     echo "<td>$value[Kurikulum_Nama]</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' id='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idKurikulum' id='$value[Kurikulum_ID]' value='$value[Kurikulum_ID]'></form></td>";
-                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Kurikulum_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idKurikulum' id='$value[Kurikulum_ID]' value='$value[Kurikulum_ID]'></form></td>";
+                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Kurikulum_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Kurikulum_ID]' value='$value[Kurikulum_Nama]'</form></td>";
                     echo "</tr>";
                 }
 

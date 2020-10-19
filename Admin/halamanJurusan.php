@@ -17,49 +17,6 @@
         $nama = "";
     }
 
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idJurusan'];
-
-        $query = "SELECT * FROM Matkul_Kurikulum";
-        $listMk = $conn->query($query);
-        $adaJurusan = false;
-        foreach ($listMk as $key => $value) {
-            if($value['Jurusan_ID'] == $id){
-                $mkId = $value['Matkul_Kurikulum_ID'];
-                $query = "SELECT * FROM Kelas";
-                $listKelas = $conn->query($query);
-                foreach ($listKelas as $key => $value) {
-                    if($value['Matkulkurikulum_ID'] == $mkId){
-                        $adaJurusan = true;
-                    }
-                }
-            }
-        }
-
-        if(!$adaJurusan){
-            $name = "";
-            $query = "SELECT * FROM Jurusan WHERE Jurusan_ID = '$id'";
-            $temp = $conn->query($query);
-            foreach($temp as $key => $value) {
-                $name = $value['Jurusan_Nama'];
-            }
-
-            $query = "DELETE FROM Major WHERE Jurusan_ID = '$id'";
-            $conn->query($query);
-            $query = "DELETE FROM Matkul_Kurikulum WHERE Jurusan_ID = '$id'";
-            $conn->query($query);
-            $query = "DELETE FROM Jurusan WHERE Jurusan_ID = '$id'";
-            $conn->query($query);
-
-            echo '<script language = "javascript">';
-            echo "alert('Berhasil Delete Jurusan $name')";
-            echo '</script>';
-        }else{
-            echo "<script>alert('Tidak bisa hapus jurusan')</script>";
-        }
-
-    }
-
     if(isset($_POST['btnUpdate'])){
         $id = $_POST['idJurusan'];
         $query = "SELECT * FROM Jurusan";
@@ -125,6 +82,33 @@
                 });
             });
         });
+
+        function DeleteClick(clicked_id)
+        {
+            //minta result lewat confirmation alert
+            var nama = $("#Nama" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
+            //kalo result = true, atau pilih yes, hapus
+            if (result) {
+                var berhasil = true;
+                $.ajax({
+                    method : "post",
+                    url : "deleteJurusan.php",
+                    async : false,
+                    data : {
+                        id : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("Data Jurusan " + nama + " Berhasil Dihapus");
+                }).fail(function(data){
+                    alert("Data Jurusan " + nama + " Gagal Dihapus");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -204,7 +188,7 @@
                     echo "<td>$value[Jurusan_ID]</td>";
                     echo "<td>$value[Jurusan_Nama]</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idJurusan' value='$value[Jurusan_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idJurusan' value='$value[Jurusan_ID]'></form></td>";
+                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Jurusan_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Jurusan_ID]' value='$value[Jurusan_Nama]'</form></td>";
                     echo "</tr>";
                 }
 
