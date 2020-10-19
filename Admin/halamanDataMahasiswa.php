@@ -97,9 +97,7 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            setInterval(function () {
-                $("#dataFullMahasiswa").load("daftarMahasiswa.php");
-            },500);
+            $("#dataMahasiswa").load("daftarMahasiswa.php");
 
             $("#btnSearch").click(function () {
                 $.ajax({
@@ -112,10 +110,6 @@
                         $("#dataMahasiswa").html(hasil);
                     }
                 });
-
-                if($("#dataFullMahasiswa").css('display') != "hidden"){
-                    $("#dataFullMahasiswa").toggle();
-                }
             });
         });
     </script>
@@ -174,10 +168,7 @@
             <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
                 <i class="material-icons right">search</i>
             </button>
-            <table id="dataMahasiswa" border="1" style="display: hidden">
-                
-            </table>
-            <table id="dataFullMahasiswa" border="1">
+            <table id="dataMahasiswa" border="1">
                 
             </table>
         </div>
