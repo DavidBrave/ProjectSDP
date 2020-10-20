@@ -29,4 +29,6 @@
     }else{
         echo "0";
     }
+
+    $conn->close();
 ?>

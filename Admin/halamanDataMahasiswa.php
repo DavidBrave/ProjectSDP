@@ -12,25 +12,6 @@
         header("location: ../login.php");
     }
 
-    if(isset($_POST['btnDelete'])){
-        $id = $_POST['hidNrp'];
-        $query = "SELECT * FROM Mahasiswa";
-        $listMahasiswa = $conn->query($query);
-        foreach ($listMahasiswa as $key => $value) {
-            $nrp = $value['Mahasiswa_ID'];
-            $query = "DELETE FROM Sidang_Skripsi WHERE Mahasiswa_ID ='$id'";
-            $conn->query($query);
-            $query = "DELETE FROM Chat WHERE Mahasiswa_ID ='$id'";
-            $conn->query($query);
-            $query = "DELETE FROM Absen WHERE Mahasiswa_ID ='$id'";
-            $conn->query($query);
-            $query = "DELETE FROM Pengambilan WHERE Mahasiswa_ID ='$id'";
-            $conn->query($query);
-            $query = "DELETE FROM Mahasiswa WHERE Mahasiswa_ID = '$id'";
-            $conn->query($query);
-        }
-    }
-
     if(isset($_POST['btnUpdate'])){
         $id = $_POST['hidNrp'];
         $query = "SELECT * FROM Mahasiswa";
@@ -51,9 +32,9 @@
                 $_SESSION['mahasiswa']['password'] = $value['Mahasiswa_Pass'];
                 $query = "SELECT * FROM Jurusan";
                 $listJurusan = $conn->query($query);
-                foreach ($listJurusan as $key => $value) {
-                    if(substr($value['Jurusan_ID'],1,3) == substr($id,3,3)){
-                        $_SESSION['mahasiswa']['jurusan'] = $value['Jurusan_Nama'];
+                foreach ($listJurusan as $key2 => $value2) {
+                    if(substr($value2['Jurusan_ID'],1,3) == substr($id,3,3)){
+                        $_SESSION['mahasiswa']['jurusan'] = $value2['Jurusan_Nama'];
                     }
                 }
             }
@@ -97,9 +78,7 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            setInterval(function () {
-                $("#dataFullMahasiswa").load("daftarMahasiswa.php");
-            },500);
+            $("#dataMahasiswa").load("daftarMahasiswa.php");
 
             $("#btnSearch").click(function () {
                 $.ajax({
@@ -112,12 +91,35 @@
                         $("#dataMahasiswa").html(hasil);
                     }
                 });
-
-                if($("#dataFullMahasiswa").css('display') != "hidden"){
-                    $("#dataFullMahasiswa").toggle();
-                }
             });
         });
+
+        function DeleteClick(clicked_id)
+        {
+            //minta result lewat confirmation alert
+            var nama = $("#Nama" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
+            //kalo result = true, atau pilih yes, hapus
+            if (result) {
+                var berhasil = true;
+                $.ajax({
+                    method : "post",
+                    url : "deleteMahasiswa.php",
+                    async : false,
+                    data : {
+                        id : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("Data Mahasiswa " + nama + " Berhasil Dihapus");
+                }).fail(function(data){
+                    alert("Data Mahasiswa " + nama + " Gagal Dihapus");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -174,11 +176,8 @@
             <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
                 <i class="material-icons right">search</i>
             </button>
-            <table id="dataMahasiswa" border="1" style="display: hidden">
-                
-            </table>
-            <table id="dataFullMahasiswa" border="1">
-                
+            <table id="dataMahasiswa" border="1">
+            
             </table>
         </div>
     </div>

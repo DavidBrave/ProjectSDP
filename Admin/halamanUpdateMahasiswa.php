@@ -69,14 +69,15 @@
                             photo : $("#hidFile").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
                             if(hasil == 1){
-                                alert("Update Mahasiswa Berhasil");
+                                alert("Update Mahasiswa " + nama + " Berhasil");
 
                                 //href = click link, replace = redirect
                                 //window.location.href = '/halamanDataMahasiswa.php';
                                 window.location.replace("/projectsdp/Admin/halamanDataMahasiswa.php");
                             }else{
-                                alert("Update Mahasiswa Gagal");
+                                alert("Update Mahasiswa " + nama + " Gagal");
                             }
                         }
                     });

@@ -44,12 +44,12 @@
 
             if($conn){
                 echo '<script language = "javascript">';
-            echo "alert('Berhasil Insert')";
-            echo '</script>';
+                echo "alert('Berhasil Insert Major $nama')";
+                echo '</script>';
             }else{
                 echo '<script language = "javascript">';
-            echo "alert('Gagal Insert')";
-            echo '</script>';
+                echo "alert('Gagal Insert Major $nama')";
+                echo '</script>';
             }
         }
         else {
@@ -58,6 +58,8 @@
             echo '</script>';
         }
     }
+
+    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -160,3 +162,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['major']);
+    unset($_SESSION['temp']['major']);
+?>

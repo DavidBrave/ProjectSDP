@@ -12,9 +12,15 @@
         $conn->query($query);
 
         if($conn){
-            echo 1;
+            echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert Jadwal Kuliah dengan ID $id')";
+            echo '</script>';
         }else{
-            echo 0;
+            echo '<script language = "javascript">';
+            echo "alert('Gagal Insert Jadwal Kuliah dengan ID $id')";
+            echo '</script>';
         }
     }
+    
+    $conn->close();
 ?>

@@ -32,4 +32,6 @@
         echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Jadwal_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='hidId' value='$value[Jadwal_ID]'></form></td>";
         echo "</tr>";
     }
+
+    $conn->close();
 ?>

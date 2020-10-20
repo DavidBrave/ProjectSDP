@@ -74,9 +74,11 @@
                         },
                         
                     }).done(function(data){
-                        alert("Input Jadwal Kuliah Berhasil");
+                        var idJadwal = $("#jadwal_id").val();
+                        alert("Input Jadwal Kuliah dengan ID " + idJadwal + " Berhasil");
                     }).fail(function(){
-                        alert("Input Jadwal Kuliah Gagal");
+                        var idJadwal = $("#jadwal_id").val();
+                        alert("Input Jadwal Kuliah dengan ID " + idJadwal + " Gagal");
                     });;
 
 

@@ -46,12 +46,12 @@
 
             if($conn){
                 echo '<script language = "javascript">';
-            echo "alert('Berhasil Insert')";
-            echo '</script>';
+                echo "alert('Berhasil Insert Jurusan $nama')";
+                echo '</script>';
             }else{
                 echo '<script language = "javascript">';
-            echo "alert('Gagal Insert')";
-            echo '</script>';
+                echo "alert('Gagal Insert Jurusan $nama')";
+                echo '</script>';
             }
             
         }
@@ -61,6 +61,8 @@
             echo '</script>';
         }
     }
+
+    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -143,7 +145,7 @@
             <div style="width: 50%;">
                 <form action = "" method = "post">
                     <h3>Insert Data Jurusan</h3><br>
-                    Nama Jurusan: <input type="text" name="nama">
+                    Nama Jurusan: <input type="text" name="nama" required>
 
                     <div class="input-field col s12">
                         <select name="tingkat">
@@ -164,3 +166,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['jurusan']);
+    unset($_SESSION['temp']['jurusan']);
+?>
