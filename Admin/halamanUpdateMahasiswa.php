@@ -19,7 +19,7 @@
     <title>Update Mahasiswa</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin2.css">
     <style>
         #photo{
             width: 200px;
@@ -175,6 +175,24 @@
                 <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <ul id = "dropdown8" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanMatkulKurikulum.php">Data Matkul Kurikulum</a></li>
+                <li><a href = "insertMatkulKurikulum.php">Insert Data Matkul Kurikulum</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown8" style="width: 100%; color: black;">Matkul Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+            <ul id = "dropdown9" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataPraktikum.php">Data Praktikum</a></li>
+                <li><a href = "insertDataPraktikum.php">Insert Data Praktikum</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+            <ul id = "dropdown10" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataKelas.php">Data Kelas</a></li>
+                <li><a href = "insertDataKelas.php">Insert Data Kelas</a></li>
+                <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">

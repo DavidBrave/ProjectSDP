@@ -10,60 +10,17 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
-    }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idDosen'];
-        $query = "SELECT * FROM Dosen";
-        $listDosen = $conn->query($query);
-        foreach ($listDosen as $key => $value) {
-            if($value['Dosen_ID'] == $id){
-                $_SESSION['dosen']['id'] = $value['Dosen_ID'];
-                $_SESSION['dosen']['nama'] = $value['Dosen_Nama'];
-                $_SESSION['dosen']['username'] = $value['Dosen_User'];
-                $_SESSION['dosen']['password'] = $value['Dosen_Pass'];
-                $_SESSION['dosen']['jabatan'] = $value['Dosen_Jabatan'];
-                $_SESSION['dosen']['photo'] = $value['Dosen_Photo'];
-            }
-        }
-        header("location: halamanUpdateDosen.php");
-    }
-
-    $query = "SELECT * FROM Dosen WHERE Dosen_Nama LIKE '%$nama%'";
-    $listDosen = $conn->query($query);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Update Matkul Kurikulum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -73,50 +30,37 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#btnSearch").click(function () {
+            $('select').material_select();
+
+            $("#btnUpdate").click(function () {
                 $.ajax({
                     method : "post",
-                    url : "daftarDosen.php",
+                    url : "updateMatkulKurikulum.php",
                     data : {
-                        nama : $("#nama").val()
+                        id : $("#id").val(),
+                        matkul : $("#matkul").val(),
+                        jurusan : $("#jurusan").val(),
+                        major : $("#major").val(),
+                        kurikulum : $("#kurikulum").val(),
+                        periode : $("#periode").val(),
+                        semester : $("#semester").val(),
+                        sks : $("#sks").val()
                     },
                     success : function (hasil) {
-                        $("#dataDosen").html(hasil);
+                        var id = $("#id").val();
+                        if(hasil == 1){
+                            alert("Matkul Kurikulum " + id + " Berhasil Diperbaharui");
+                        }else{
+                            alert("Pembaharuan Gagal");
+                        }
                     }
                 });
             });
         });
-
-        function DeleteClick(clicked_id)
-        {
-            //minta result lewat confirmation alert
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
-            //kalo result = true, atau pilih yes, hapus
-            if (result) {
-                var berhasil = true;
-                $.ajax({
-                    method : "post",
-                    url : "deleteDosen.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("Data Dosen " + nama + " Berhasil Dihapus");
-                }).fail(function(data){
-                    alert("Data Dosen " + nama + " Gagal Dihapus");
-                });;
-            }
-
-            location.reload();
-            return false;
-        }
     </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -182,49 +126,107 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
-        </div>   
+        
+        </div> 
         <div id="col-kanan">
-            <h3>List Dosen</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataDosen" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listDosen) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Dosen</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Username</th>";
-                        //Ganti Data Lain ato hapus
-                        //echo "<th>Password</th>";
-                        echo "<th>Jabatan</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listDosen as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Dosen_ID]</td>";
-                    echo "<td>$value[Dosen_Nama]</td>";
-                    echo "<td>$value[Dosen_User]</td>";
-                    //Ganti Data Lain ato hapus
-                    //echo "<td>$value[Dosen_Pass]</td>";
-                    echo "<td>$value[Dosen_Jabatan]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
-                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Dosen_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Dosen_ID]' value='$value[Dosen_Nama]'</form></td>";
-                    echo "</tr>";
-                }
-
-                $conn->close();
-            ?>
-            </table>
+            <div style="width: 50%;">
+                <h3>Update Data Matkul Kurikulum</h3><br>
+                ID: <input type="text" id="id" value="<?=$_SESSION['matkulKurikulum']['id']?>" disabled><br>
+                Matkul: 
+                <div class="input-field col s12">
+                    <select name="matkul" id="matkul">
+                        <?php
+                            $query = "SELECT * FROM Matkul";
+                            $listMatkul = $conn->query($query);
+                            foreach ($listMatkul as $key => $value) {
+                                if($value['Matkul_ID'] == $_SESSION['matkulKurikulum']['matkul']){
+                                    echo "<option value='$value[Matkul_ID]' selected>".$value['Matkul_ID']." - ".$value['Matkul_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Matkul_ID]'>".$value['Matkul_ID']." - ".$value['Matkul_Nama']."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                Jurusan: 
+                <div class="input-field col s12">
+                    <select name="jurusan" id="jurusan">
+                        <?php
+                            $query = "SELECT * FROM Jurusan";
+                            $listJurusan = $conn->query($query);
+                            foreach ($listJurusan as $key => $value) {
+                                if($value['Jurusan_ID'] == $_SESSION['matkulKurikulum']['jurusan']){
+                                    echo "<option value='$value[Jurusan_ID]' selected>".$value['Jurusan_ID']." - ".$value['Jurusan_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Jurusan_ID]'>".$value['Jurusan_ID']." - ".$value['Jurusan_Nama']."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                Major: 
+                <div class="input-field col s12">
+                    <select name="major" id="major">
+                        <?php
+                            if($_SESSION['matkulKurikulum']['major'] == ""){
+                                echo "<option value=''>Pilih Major</option>";
+                                $query = "SELECT * FROM Major";
+                                $listMajor = $conn->query($query);
+                                foreach ($listMajor as $key => $value) {
+                                    echo "<option value='$value[Major_ID]'>".$value['Major_ID']." - ".$value['Major_Nama']."</option>";
+                                }
+                            }else{
+                                $query = "SELECT * FROM Major";
+                                $listMajor = $conn->query($query);
+                                foreach ($listMajor as $key => $value) {
+                                    if($value['Major_ID'] == $_SESSION['matkulKurikulum']['major']){
+                                        echo "<option value='$value[Major_ID]' selected>".$value['Major_ID']." - ".$value['Major_Nama']."</option>";
+                                    }else{
+                                        echo "<option value='$value[Major_ID]'>".$value['Major_ID']." - ".$value['Major_Nama']."</option>";
+                                    }
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                Kurikulum: 
+                <div class="input-field col s12">
+                    <select name="kurikulum" id="kurikulum">
+                        <?php
+                            $query = "SELECT * FROM Kurikulum";
+                            $listKurikulum = $conn->query($query);
+                            foreach ($listKurikulum as $key => $value) {
+                                if($value['Kurikulum_ID'] == $_SESSION['matkulKurikulum']['kurikulum']){
+                                    echo "<option value='$value[Kurikulum_ID]' selected>".$value['Kurikulum_ID']." - ".$value['Kurikulum_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Kurikulum_ID]'>".$value['Kurikulum_ID']." - ".$value['Kurikulum_Nama']."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                Periode: 
+                <div class="input-field col s12">
+                    <select name="periode" id="periode">
+                        <?php
+                            $query = "SELECT * FROM Periode";
+                            $listPeriode = $conn->query($query);
+                            foreach ($listPeriode as $key => $value) {
+                                if($value['Periode_ID'] == $_SESSION['matkulKurikulum']['periode']){
+                                    echo "<option value='$value[Periode_ID]' selected>".$value['Periode_ID']." - ".$value['Periode_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Periode_ID]'>".$value['Periode_ID']." - ".$value['Periode_Nama']."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                <p>Semester : </p>
+                <input type="number" id="semester" min="0" value="<?=$_SESSION['matkulKurikulum']['semester']?>">
+                <p>SKS : </p>
+                <input type="number" id="sks" min="0" max="3" value="<?=$_SESSION['matkulKurikulum']['sks']?>">
+                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
+            </div>
         </div>
     </div>
 </body>
