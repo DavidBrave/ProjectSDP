@@ -113,6 +113,30 @@
             location.reload();
             return false;
         }
+
+        function DeleteJabatan(id_dosen,id_jabatan)
+        {
+            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
+            if (result) 
+            {
+                var berhasil = true;
+                $.ajax({
+                    method : "post",
+                    url : "deleteJabatanDosen.php",
+                    async : false,
+                    data : {
+                        id_dosen : id_dosen,
+                        id_jabatan : id_jabatan
+                    },
+                }).done(function(data){
+                    alert("Data Jabatan Dosen Berhasil Dihapus");
+                }).fail(function(data){
+                    alert("Data Jabatan Dosen Gagal Dihapus");
+                });;
+            }
+            location.reload();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -198,7 +222,19 @@
                     echo "<td>$value[Dosen_User]</td>";
                     //Ganti Data Lain ato hapus
                     //echo "<td>$value[Dosen_Pass]</td>";
-                    echo "<td>$value[Dosen_Jabatan]</td>";
+                    echo "<td>";
+                        echo"<table>";
+                            $query="SELECT * FROM Jabatan_Dosen jd,Jabatan j WHERE j.Jabatan_ID=jd.Jabatan_ID AND Dosen_ID=$value[Dosen_ID]";
+                            $listJabatanDosen = $conn->query($query);
+                            foreach ($listJabatanDosen as $key=>$value2)
+                            {
+                                echo"<tr>";
+                                    echo"<td>$value2[Jabatan_Nama]</td>";
+                                    echo"<td><button class='btn waves-effect red darken-3' type='submit' name='btnDeleteJabatan' id='$value[Dosen_ID]' onClick='DeleteJabatan(`$value2[Dosen_ID]`,`$value2[Jabatan_ID]`)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button></td>";
+                                echo"</tr>";
+                            }
+                        echo"</table>";
+                    echo"</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
                     echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Dosen_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Dosen_ID]' value='$value[Dosen_Nama]'</form></td>";
                     echo "</tr>";
