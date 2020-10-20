@@ -72,6 +72,16 @@
             echo "alert('Berhasil Insert Dosen $nama')";
             echo '</script>';
 
+            $query="SELECT * FROM Jabatan WHERE Jabatan_Nama='$jabatan'";
+            $result = $conn->query($query);
+            foreach($result as $key => $value) {
+                $jabatan = $value['Jabatan_ID'];
+            }
+            $query = "INSERT INTO Jabatan_Dosen VALUES('$nip', '$jabatan')";
+            $conn->query($query);
+
+            
+
             $conn->close();
         }
         

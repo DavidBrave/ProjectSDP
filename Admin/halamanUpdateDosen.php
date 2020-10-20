@@ -54,6 +54,7 @@
                             username : $("#username").val(),
                             password : $("#password").val(),
                             jabatan : $("#jabatan").val(),
+                            jabatan2 : $('#jabatan2').val(),
                             photo : $("#hidFile").val()
                         },
                         success : function (hasil) {
@@ -214,6 +215,17 @@
                     <label for="hide_pass"><b id="text_showHide">Show Password</b></label>
                 </div>
                 <br>
+
+                Tambah Jabatan : <br>
+                <div class="input-field col s12">
+                        <select name="jabatan2">
+                            <option value="none" disabled selected>Pilih Jabatan</option>
+                            <option value='Dosen'>Dosen</option>
+                            <option value='Dosen Wali'>Dosen Wali</option>
+                            <option value='Rektor'>Rektor</option>
+                            <option value='Wakil Rektor'>Wakil Rektor</option>
+                        </select>
+                    </div>
 
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
