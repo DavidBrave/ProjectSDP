@@ -123,6 +123,17 @@
                                 document.getElementById('rbF').checked = false;
                                 document.getElementById('content-nrp').innerHTML = "";
                                 document.getElementById('content-pass').innerHTML = "";
+                                ocument.getElementById('msgNama').hidden = true;
+                                ocument.getElementById('msgNama').hidden = true;
+                                document.getElementById('msgAlamat').hidden = true;
+                                document.getElementById('msgEmail').hidden = true;
+                                document.getElementById('msgNohp').hidden = true;
+                                document.getElementById('msgKota').hidden = true;
+                                document.getElementById('msgDosen').hidden = true;
+                                document.getElementById('msgJurusan').hidden = true;
+                                document.getElementById('msgAgama').hidden = true;
+                                document.getElementById('msgProvinsi').hidden = true;
+                                document.getElementById('msgJK').hidden = true;
                             }else{
                                 alert("Gagal Insert Data Mahasiswa " + nama);
                                 if (nama == "" || nama == null) {
@@ -136,7 +147,7 @@
                                     document.getElementById('msgTanggal').hidden = false;
                                 }
                                 else {
-                                    document.getElementById('msgTanggal').hidden = true;
+                                    ocument.getElementById('msgNama').hidden = true;
                                 }
 
                                 if (alamat == "" || alamat == null) {
