@@ -74,10 +74,41 @@
 
             $conn->close();
         }
-        else {
-            echo '<script language = "javascript">';
-            echo "alert('Semua Field Harus Diisi')";
-            echo '</script>';
+        
+        //Validate
+        $validate = false;
+        if ($tanggal == "") {
+            $_SESSION['validate']['dosen']['tanggal'] = "Tanggal harus diisi";
+            $validate = true;
+        }
+        if ($nama == "") {
+            $_SESSION['validate']['dosen']['nama'] = "Nama harus diisi";
+            $validate = true;
+        }
+        if ($username == "") {
+            $_SESSION['validate']['dosen']['username'] = "Username harus diisi";
+            $validate = true;
+        }
+        if ($password == "") {
+            $_SESSION['validate']['dosen']['password'] = "Password harus diisi";
+            $validate = true;
+        }
+        if ($jk == "") {
+            $_SESSION['validate']['dosen']['jk'] = "Jenis Kelamin harus diisi";
+            $validate = true;
+        }
+        if ($jabatan == "") {
+            $_SESSION['validate']['dosen']['jabatan'] = "Jabatan harus diisi";
+            $validate = true;
+        }
+
+        if ($validate) {
+            $_SESSION['temp']['dosen']['tanggal'] = $tanggal;
+            $_SESSION['temp']['dosen']['nama'] = $nama;
+            $_SESSION['temp']['dosen']['username'] = $username;
+            $_SESSION['temp']['dosen']['password'] = $password;
+            $_SESSION['temp']['dosen']['jk'] = $jk;
+            $_SESSION['temp']['dosen']['jabatan'] = $jabatan;
         }
     }
 ?>
@@ -198,34 +229,132 @@
                 <input type="file" name="file" id="file">
                 <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpload">Upload<i class="material-icons right">file_upload</i></button><br><br>
                 <form action = "#" method = "post">
-                    Nama Lengkap: <input type="text" name="nama">
+                    Nama Lengkap: <input type="text" name="nama"
+                    value = "<?php if (isset($_SESSION['temp']['dosen']['nama'])) {echo $_SESSION['temp']['dosen']['nama'];}?>">
+                    <?php
+                        if (isset($_SESSION['validate']['dosen']['nama'])) {
+                            $message = $_SESSION['validate']['dosen']['nama'];
+                            echo "<label style = 'color:Red'>$message</label><br>";
+                        }
+                    ?>
                     Tanggal Lahir: <input type="date" name="tgl">
+                    <?php
+                        if (isset($_SESSION['validate']['dosen']['tanggal'])) {
+                            $message = $_SESSION['validate']['dosen']['tanggal'];
+                            echo "<label style = 'color:Red'>$message</label><br>";
+                        }
+                    ?>
                     Jenis Kelamin: 
                     <p>
                         <label>
-                            <input name="gender" type="radio" value="M"/>
+                            <input name="gender" type="radio" value="M"
+                                <?php
+                                    if (isset($_SESSION['temp']['dosen']['jk'])) {
+                                        if ($_SESSION['temp']['dosen']['jk'] == "M") {
+                                            echo "checked";
+                                        }
+                                    }
+                                ?>
+                            >
                             <span>Laki-laki</span>
                         </label>
                         </p>
                         <p>
                         <label>
-                            <input name="gender" type="radio" value="F"/>
+                            <input name="gender" type="radio" value="F"
+                                <?php
+                                    if (isset($_SESSION['temp']['dosen']['jk'])) {
+                                        if ($_SESSION['temp']['dosen']['jk'] == "F") {
+                                            echo "checked";
+                                        }
+                                    }
+                                ?>
+                            >
                             <span>Perempuan</span>
                         </label>
                     </p>
 
+                    <?php
+                        if (isset($_SESSION['validate']['dosen']['jk'])) {
+                            $message = $_SESSION['validate']['dosen']['jk'];
+                            echo "<label style = 'color:Red'>$message</label><br>";
+                        }
+                    ?>
+
                     <div class="input-field col s12">
                         <select name="jabatan">
-                            <option value="none" disabled selected>Pilih Jabatan</option>
-                            <option value='Dosen'>Dosen</option>
-                            <option value='Dosen Wali'>Dosen Wali</option>
-                            <option value='Rektor'>Rektor</option>
-                            <option value='Wakil Rektor'>Wakil Rektor</option>
+                            <option value="none" disabled 
+                                <?php
+                                    if (!isset($_SESSION['temp']['dosen'])) {
+                                        echo "selected";
+                                    }
+                                ?>
+                            >Pilih Jabatan</option>
+                            <option value='Dosen'
+                                <?php
+                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
+                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Dosen") {
+                                            echo "selected";
+                                        }
+                                    }
+                                ?>
+                            >Dosen</option>
+                            <option value='Dosen Wali'
+                                <?php
+                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
+                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Dosen Wali") {
+                                            echo "selected";
+                                        }
+                                    }
+                                ?>
+                            >Dosen Wali</option>
+                            <option value='Rektor'
+                                <?php
+                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
+                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Rektor") {
+                                            echo "selected";
+                                        }
+                                    }
+                                ?>
+                            >Rektor</option>
+                            <option value='Wakil Rektor'
+                                <?php
+                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
+                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Wakil Rektor") {
+                                            echo "selected";
+                                        }
+                                    }
+                                ?>
+                            >Wakil Rektor</option>
                         </select>
                     </div>
 
-                    Username: <input type="text" name="username"><br>
-                    Password: <input type="text" name="password">
+                    <?php
+                        if (isset($_SESSION['validate']['dosen']['jabatan'])) {
+                            $message = $_SESSION['validate']['dosen']['jabatan'];
+                            echo "<label style = 'color:Red'>$message</label><br>";
+                        }
+                    ?>
+
+                    Username: <input type="text" name="username"
+                    value = "<?php if (isset($_SESSION['temp']['dosen']['username'])) {echo $_SESSION['temp']['dosen']['username'];}?>">
+
+                    <?php
+                        if (isset($_SESSION['validate']['dosen']['username'])) {
+                            $message = $_SESSION['validate']['dosen']['username'];
+                            echo "<label style = 'color:Red'>$message</label><br>";
+                        }
+                    ?>
+
+                    Password: <input type="text" name="password"
+                    value = "<?php if (isset($_SESSION['temp']['dosen']['password'])) { echo $_SESSION['temp']['dosen']['password']; } ?>">
+
+                    <?php
+                        if (isset($_SESSION['validate']['dosen']['password'])) {
+                            $message = $_SESSION['validate']['dosen']['password'];
+                            echo "<label style = 'color:Red'>$message</label><br>";
+                        }
+                    ?>
                     <input type="hidden" id="hidFile" name="hidFile">
                     <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
                 </form>
@@ -234,3 +363,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['dosen']);
+    unset($_SESSION['temp']['dosen']);
+?>

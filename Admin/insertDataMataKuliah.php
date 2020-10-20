@@ -155,3 +155,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['matkul']);
+    unset($_SESSION['temp']['matkul']);
+?>

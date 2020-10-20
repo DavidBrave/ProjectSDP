@@ -147,3 +147,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['kurikulum']);
+    unset($_SESSION['temp']['kurikulum']);
+?>

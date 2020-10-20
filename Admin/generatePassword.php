@@ -19,5 +19,6 @@
         echo "<input disabled type='text' id='pass' value='".$tahun.$jurusan.$kdjurusan.$nohp."'>";
     }
 
+
     $conn->close();
 ?>

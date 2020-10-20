@@ -145,7 +145,7 @@
             <div style="width: 50%;">
                 <form action = "" method = "post">
                     <h3>Insert Data Jurusan</h3><br>
-                    Nama Jurusan: <input type="text" name="nama">
+                    Nama Jurusan: <input type="text" name="nama" required>
 
                     <div class="input-field col s12">
                         <select name="tingkat">
@@ -166,3 +166,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['jurusan']);
+    unset($_SESSION['temp']['jurusan']);
+?>

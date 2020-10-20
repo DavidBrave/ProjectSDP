@@ -162,3 +162,8 @@
     </div>
 </body>
 </html>
+
+<?php
+    unset($_SESSION['validate']['major']);
+    unset($_SESSION['temp']['major']);
+?>
