@@ -9,7 +9,7 @@ body{
     position: sticky;
     top: 0px;
     z-index: 1;
-    background-color: rgb(109,49,144);
+    background-color: rgb(55, 104, 197);
     color: white;
 }
 #content{
@@ -21,7 +21,7 @@ body{
     padding: 20px;
 }
 #col-kiri{
-    background-color: rgb(225,190,231);
+    background-color: rgb(140, 180, 243);
     text-align: center;
 }
 a{

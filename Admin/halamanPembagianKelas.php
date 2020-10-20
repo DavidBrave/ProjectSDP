@@ -11,16 +11,20 @@
         header("location: ../login.php");
     }
 
-    if (isset($_POST['btnSubmit'])) {
-        if(isset($_POST['kelas']) || isset($_POST['mahasiswa'])){
-            $kelas = $_POST['kelas'];
-            $mahasiswa = $_POST['mahasiswa'];
-            $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_ID = '$mahasiswa'";
-            $conn->query($query);
-            echo "<script>alert('Berhasil')</script>";
-        }else{
-            echo "<script>alert('Inputan harus dipilih')</script>";
+    if(isset($_POST['btnInsert'])){
+        $kelas = $_POST['kelas'];
+        $mahasiswa = $_POST['mahasiswa'];
+        $query = "SELECT Kelas_Kapasitas FROM Kelas WHERE Kelas_ID = '$kelas'";
+        $kapasitas = $conn->query($query);
+        foreach ($kapasitas as $key => $value) {
+            $count = $value['Kelas_Kapasitas'];
         }
+        $count = $count-1;
+        $query = "UPDATE Kelas SET Kelas_Kapasitas = $count WHERE Kelas_Id = '$kelas'";
+        $conn->query($query);
+
+        $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_Id = '$mahasiswa'";
+        $conn->query($query);
     }
 ?>
 
@@ -29,7 +33,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Pembagian Kelas</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
@@ -43,9 +47,23 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
             $('select').material_select();
-         });
+
+            $('#kelas').change(function () {
+                $.ajax({
+                    method : 'post',
+                    url : 'daftarAmbilMahasiswa.php',
+                    data : {
+                        id : $('#kelas').val()
+                    },
+                    success : function (hasil) {
+                        $("#content-mahasiswa").html(hasil);
+                        $("#temp").hide();
+                    }
+                });
+            });
+        });
     </script>
 </head>
 <body>
@@ -115,37 +133,33 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
+             
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <form action = "" method = "post">
-                    <h3>Pembagian Kelas</h3><br>
+                <h3>Pembagian Kelas</h3><br>
+                <form action="#" method="post">
+                    <p>Kelas : </p>
                     <div class="input-field col s12">
-                        <select name="mahasiswa">
-                            <option value="none" disabled selected>Pilih Mahasiswa</option>
-                            <?php
-                                $query = "SELECT * FROM Pengambilan WHERE Kelas_ID = ''";
-                                $listPengambilan = $conn->query($query);
-                                foreach ($listPengambilan as $key => $value) {
-                                    echo "<option value='$value[Mahasiswa_ID]'>" . $value['Mahasiswa_ID'] . "</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="input-field col s12">
-                        <select name="kelas">
+                        <select name="kelas" id="kelas">
                             <option value="none" disabled selected>Pilih Kelas</option>
                             <?php
-                                $query = "SELECT * FROM Kelas";
+                                $query = "SELECT kls.Kelas_ID, kls.Kelas_Nama, kls.Matkulkurikulum_ID, mk.Matkul_Nama, j.Jurusan_Nama, kls.Kelas_Ruangan, kls.Kelas_Kapasitas FROM Kelas kls, Matkul_Kurikulum mkl, Matkul mk, Jurusan j
+                                WHERE kls.Matkulkurikulum_ID = mkl.Matkul_Kurikulum_ID AND mkl.Matkul_ID = mk.Matkul_ID AND mkl.Jurusan_ID = j.Jurusan_ID";
                                 $listKelas = $conn->query($query);
                                 foreach ($listKelas as $key => $value) {
-                                    echo "<option value='$value[Kelas_ID]'>" . $value['Kelas_Nama'] . "</option>";
+                                    echo "<option value='$value[Kelas_ID]'>[ ".$value['Kelas_Nama']." ] ".$value['Matkul_Nama']." - ".$value['Jurusan_Nama']." - ".$value['Kelas_Ruangan']." - ".$value['Kelas_Kapasitas']."</option>";
                                 }
                             ?>
                         </select>
                     </div>
-                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnSubmit">Submit</button>
+                    <p>Mahasiswa : </p>
+                    <div class="input-field col s12" id="content-mahasiswa">
+                        <select name="temp" id="temp" disabled>
+                            <option value="none" selected>Pilih Mahasiswa</option>
+                        </select>
+                    </div>
+                    <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnInsert">Insert</button>
                 </form>
             </div>
         </div>

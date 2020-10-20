@@ -11,17 +11,48 @@
         header("location: ../login.php");
     }
 
-    if (isset($_POST['btnSubmit'])) {
-        if(isset($_POST['kelas']) || isset($_POST['mahasiswa'])){
-            $kelas = $_POST['kelas'];
-            $mahasiswa = $_POST['mahasiswa'];
-            $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_ID = '$mahasiswa'";
-            $conn->query($query);
-            echo "<script>alert('Berhasil')</script>";
-        }else{
-            echo "<script>alert('Inputan harus dipilih')</script>";
-        }
+    if(isset($_POST['nama'])){
+        $nama = $_POST['nama'];
+    }else{
+        $nama = "";
     }
+
+    if (isset($_POST['btnDelete'])) {
+        $id = $_POST['idPraktikum'];
+
+        $query = "UPDATE Matkul_Kurikulum SET Praktikum_ID = '' WHERE Praktikum_ID = '$id'";
+        $conn->query($query);
+
+        $query = "DELETE FROM Praktikum WHERE Praktikum_ID = '$id'";
+        $conn->query($query);
+
+        echo '<script language = "javascript">';
+        echo "alert('Berhasil Delete Praktikum $id')";
+        echo '</script>';
+    }
+
+    if(isset($_POST['btnUpdate'])){
+        $id = $_POST['praktikumId'];
+        $query = "SELECT * FROM Praktikum";
+        $listPraktikum = $conn->query($query);
+        foreach ($listPraktikum as $key => $value) {
+            if($value['Praktikum_ID'] == $id){
+                $_SESSION['praktikum']['id'] = $value['Praktikum_ID'];
+                $_SESSION['praktikum']['matkulkurikulum'] = $value['Matkulkurikulum_ID'];
+                $_SESSION['praktikum']['nama'] = $value['Praktikum_Nama'];
+                $_SESSION['praktikum']['hari'] = $value['Praktikum_Hari'];
+                $_SESSION['praktikum']['ruangan'] = $value['Praktikum_Ruangan'];
+                $_SESSION['praktikum']['mulai'] = $value['Praktikum_Jam_Mulai'];
+                $_SESSION['praktikum']['selesai'] = $value['Praktikum_Jam_Selesai'];
+                $_SESSION['praktikum']['kapasitas'] = $value['Praktikum_Kapasitas'];
+                $_SESSION['praktikum']['standar'] = $value['Praktikum_Standar'];
+            }
+        }
+        header("location: halamanUpdatePraktikum.php");
+    }
+
+    $query = "SELECT * FROM Praktikum WHERE Praktikum_Nama LIKE '%$nama%'";
+    $listPraktikum = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -29,12 +60,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Praktikum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
+        .kotak{
+            width: 200px;
+            height: 100px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #dosen{
+            background-color: green;
+        }
+        #mahasiswa{
+            background-color: plum;
+        }
+        #admin{
+            background-color: lightblue;
+        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -43,13 +89,24 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-         $(document).ready(function() {
-            $('select').material_select();
-         });
+        $(document).ready(function () {
+            $("#btnSearch").click(function () {
+                $.ajax({
+                    method : "post",
+                    url : "daftarPraktikum.php",
+                    data : {
+                        nama : $("#nama").val()
+                    },
+                    success : function (hasil) {
+                        $("#dataPraktikum").html(hasil);
+                    }
+                });
+            });
+        });
     </script>
 </head>
 <body>
-    <div id="header">
+<div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -115,39 +172,83 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
-        </div> 
+
+        </div>   
         <div id="col-kanan">
-            <div style="width: 50%;">
-                <form action = "" method = "post">
-                    <h3>Pembagian Kelas</h3><br>
-                    <div class="input-field col s12">
-                        <select name="mahasiswa">
-                            <option value="none" disabled selected>Pilih Mahasiswa</option>
-                            <?php
-                                $query = "SELECT * FROM Pengambilan WHERE Kelas_ID = ''";
-                                $listPengambilan = $conn->query($query);
-                                foreach ($listPengambilan as $key => $value) {
-                                    echo "<option value='$value[Mahasiswa_ID]'>" . $value['Mahasiswa_ID'] . "</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="input-field col s12">
-                        <select name="kelas">
-                            <option value="none" disabled selected>Pilih Kelas</option>
-                            <?php
-                                $query = "SELECT * FROM Kelas";
-                                $listKelas = $conn->query($query);
-                                foreach ($listKelas as $key => $value) {
-                                    echo "<option value='$value[Kelas_ID]'>" . $value['Kelas_Nama'] . "</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnSubmit">Submit</button>
-                </form>
-            </div>
+            <h3>List Praktikum</h3><br>
+            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
+            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
+                <i class="material-icons right">search</i>
+            </button>
+            
+            <table id = "dataPraktikum" border="1" style="display: hidden">
+            <tr>
+                <?php
+                    if(mysqli_num_rows($listPraktikum) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>ID Praktikum</th>";
+                        echo "<th>Nama Praktikum</th>";
+                        echo "<th>Mata Kuliah</th>";
+                        echo "<th>Jurusan</th>";
+                        echo "<th>Hari</th>";
+                        echo "<th>Ruangan</th>";
+                        echo "<th>Waktu</th>";
+                        echo "<th>Kapasitas</th>";
+                        echo "<th>Update</th>";
+                        echo "<th>Delete</th>";
+                    }
+                ?>
+            </tr>
+
+            <?php
+                foreach ($listPraktikum as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Praktikum_ID]</td>";
+                    echo "<td>$value[Praktikum_Nama]</td>";
+                    $praktikumId = $value['Praktikum_ID'];
+                    $matkulKurikulumId = $value['Matkulkurikulum_ID'];
+                    $hari = $value['Praktikum_Hari'];
+                    $ruangan = $value['Praktikum_Ruangan'];
+                    $waktu = substr($value['Praktikum_Jam_Mulai'],0,5)." - ".substr($value['Praktikum_Jam_Selesai'],0,5);
+                    $kapasitas = $value['Praktikum_Kapasitas'];
+                   
+                    $query = "SELECT * FROM Matkul_Kurikulum WHERE Matkul_Kurikulum_ID = '$matkulKurikulumId'";
+                    $listMatkulKurikulum = $conn->query($query);
+                    foreach ($listMatkulKurikulum as $key) {
+                        $idMatkul = $key['Matkul_ID'];
+                        $idJurusan = $key['Jurusan_ID'];
+
+                        $query = "SELECT * FROM Matkul";
+                        $listMatkul = $conn->query($query);
+                        foreach ($listMatkul as $key => $value) {
+                            if($value['Matkul_ID'] == $idMatkul){
+                                $namaMatkul = $value['Matkul_Nama'];
+                            }
+                        }
+
+                        $query = "SELECT * FROM Jurusan";
+                        $listJurusan = $conn->query($query);
+                        foreach ($listJurusan as $key => $value) {
+                            if($value['Jurusan_ID'] == $idJurusan){
+                                $namaJurusan = $value['Jurusan_Nama'];
+                            }
+                        }
+                    }
+                    echo "<td>$namaMatkul</td>";
+                    echo "<td>$namaJurusan</td>";
+                    echo "<td>$hari</td>";
+                    echo "<td>$ruangan</td>";
+                    echo "<td>$waktu</td>";
+                    echo "<td>$kapasitas</td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='praktikumId' value='$praktikumId'></form></td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='praktikumId' value='$praktikumId'></form></td>";
+                    echo "</tr>";
+                }
+
+                $conn->close();
+            ?>
+            </table>
         </div>
     </div>
 </body>

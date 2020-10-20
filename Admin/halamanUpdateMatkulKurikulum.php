@@ -11,18 +11,16 @@
         header("location: ../login.php");
     }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Update Matkul Kurikulum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -31,63 +29,34 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-         $(document).ready(function() {
+        $(document).ready(function () {
             $('select').material_select();
 
-            $("#btnInsert").click(function () {
-                $valid_input = true;
-                if ($("#kelas") == "" || $("#kelas") == null) {
-                    $valid_input = false;
-                    alert("Kelas Belum Dipilih");
-                }
-                else {
-                    if ($("#hari") == "" || $("#hari") == null) {
-                        $valid_input = false;
-                        alert("Hari Belum Dipilih");
-                    }
-                    else {
-                        if ($("#waktu_mulai") == "" || $("#waktu_mulai") == null) {
-                            $valid_input = false;
-                            alert("Waktu Mulai Belum Terisi");
+            $("#btnUpdate").click(function () {
+                $.ajax({
+                    method : "post",
+                    url : "updateMatkulKurikulum.php",
+                    data : {
+                        id : $("#id").val(),
+                        matkul : $("#matkul").val(),
+                        jurusan : $("#jurusan").val(),
+                        major : $("#major").val(),
+                        kurikulum : $("#kurikulum").val(),
+                        periode : $("#periode").val(),
+                        semester : $("#semester").val(),
+                        sks : $("#sks").val()
+                    },
+                    success : function (hasil) {
+                        var id = $("#id").val();
+                        if(hasil == 1){
+                            alert("Matkul Kurikulum " + id + " Berhasil Diperbaharui");
+                        }else{
+                            alert("Pembaharuan Gagal");
                         }
-                        else {
-                            if ($("#waktu_selesai") == "" || $("#waktu_selesai") == null) {
-                                $valid_input = false;
-                                alert("Waktu Selesai Belum Terisi");
-                            }
-                        }
                     }
-                }
-
-                if ($valid_input == true) {
-
-                    $.ajax({
-                        method : "post",
-                        url : "insertJadwal.php",
-                        async : false,
-                        data : {
-                            id : $("#jadwal_id").val(),
-                            kelas : $("#kelas").val(),
-                            hari : $("#hari").val(),
-                            mulai : $("#waktu_mulai").val(),
-                            selesai : $("#waktu_selesai").val()
-                        },
-                        
-                    }).done(function(data){
-                        var idJadwal = $("#jadwal_id").val();
-                        alert("Input Jadwal Kuliah dengan ID " + idJadwal + " Berhasil");
-                    }).fail(function(){
-                        var idJadwal = $("#jadwal_id").val();
-                        alert("Input Jadwal Kuliah dengan ID " + idJadwal + " Gagal");
-                    });;
-
-
-                }
-                
-                location.reload();
-                return false;
+                });
             });
-         });
+        });
     </script>
 </head>
 <body>
@@ -132,7 +101,7 @@
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
+        
             <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
                 <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
@@ -157,97 +126,106 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
+        
         </div> 
-
-         
-
         <div id="col-kanan">
             <div style="width: 50%;">
-                <h3>Insert Jadwal Kuliah</h3><br>
-
-                <?php
-                    $id_count = 0;
-                    $jadwal_query = "SELECT * FROM Jadwal_Kuliah";
-                    $list_jadwal = $conn->query($jadwal_query);
-
-                    while ($jadwal = $list_jadwal->fetch_assoc()) {
-
-                        $ctr = null;
-                        $ctr = substr($jadwal['Jadwal_ID'], 3, 4);
-
-                        if ($id_count < (int) $ctr ) {
-                            $id_count = (int) $ctr;
-                        }
-                    }
-                    $id_count += 1;
-                    $id_count = "JDL".str_pad($id_count, 4, "0", STR_PAD_LEFT);
-
-                    echo("<input style='display: none;' type='hidden' name='jadwal_id' id='jadwal_id' value='".$id_count."'>");
-
-                ?>
-
-                
-
+                <h3>Update Data Matkul Kurikulum</h3><br>
+                ID: <input type="text" id="id" value="<?=$_SESSION['matkulKurikulum']['id']?>" disabled><br>
+                Matkul: 
                 <div class="input-field col s12">
-                    <select name="kelas" id="kelas">
-                        <option value="none" disabled selected>Pilih Kelas</option>
+                    <select name="matkul" id="matkul">
                         <?php
-                            $kelas_query = "SELECT * FROM Kelas";
-                            $list_kelas = $conn->query($kelas_query);
-
-                            //Query kelas yang ada
-                            while ($kelas = $list_kelas->fetch_assoc()) {
-
-                                //ambil nama dosen sesuai id dosen
-                                $dosen_query = "SELECT * FROM Dosen WHERE Dosen_ID = '$kelas[DosenPengajar_ID]'";
-                                $dosen = $conn->query($dosen_query);
-                                $dosen = $dosen->fetch_assoc();
-
-                                //ambil mata kuliah yang diajar
-                                $matkul_kurikulum_query = "SELECT * FROM Matkul_Kurikulum WHERE Matkul_Kurikulum_ID = '$kelas[Matkulkurikulum_ID]'";
-                                $matkul_kurikulum = $conn->query($matkul_kurikulum_query);
-                                $matkul_kurikulum = $matkul_kurikulum->fetch_assoc();
-                                //ambil semester dan periode matkulnya
-                                $semester = $matkul_kurikulum['Semester'];
-                                $periode = $matkul_kurikulum['Periode_ID'];
-
-                                $periode = substr($periode, 0, 4)." / ".substr($periode, 4, 4);
-
-
-                                $matkul_query = "SELECT * FROM Matkul WHERE Matkul_ID = '$matkul_kurikulum[Matkul_ID]'";
-                                $matkul = $conn->query($matkul_query);
-                                $matkul = $matkul->fetch_assoc();
-
-                                echo("<option value='$kelas[Kelas_ID]'>".
-                                    $kelas['Kelas_Nama']." - ".$dosen['Dosen_Nama']." - "
-                                    .$matkul['Matkul_Nama']." - Periode ".$periode." Semester ".$semester
-                                
-                                ."</option>");
-
+                            $query = "SELECT * FROM Matkul";
+                            $listMatkul = $conn->query($query);
+                            foreach ($listMatkul as $key => $value) {
+                                if($value['Matkul_ID'] == $_SESSION['matkulKurikulum']['matkul']){
+                                    echo "<option value='$value[Matkul_ID]' selected>".$value['Matkul_ID']." - ".$value['Matkul_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Matkul_ID]'>".$value['Matkul_ID']." - ".$value['Matkul_Nama']."</option>";
+                                }
                             }
-                            
-                            
                         ?>
                     </select>
                 </div>
+                Jurusan: 
                 <div class="input-field col s12">
-                    <select name="hari" id="hari">
-                        <option value="none" disabled selected>Pilih Hari</option>
-                        <option value='monday'>Senin</option>
-                        <option value='tuesday'>Selasa</option>
-                        <option value='wednesday'>Rabu</option>
-                        <option value='thursday'>Kamis</option>
-                        <option value='friday'>Jumat</option>
-                        <option value='saturday'>Sabtu</option>
+                    <select name="jurusan" id="jurusan">
+                        <?php
+                            $query = "SELECT * FROM Jurusan";
+                            $listJurusan = $conn->query($query);
+                            foreach ($listJurusan as $key => $value) {
+                                if($value['Jurusan_ID'] == $_SESSION['matkulKurikulum']['jurusan']){
+                                    echo "<option value='$value[Jurusan_ID]' selected>".$value['Jurusan_ID']." - ".$value['Jurusan_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Jurusan_ID]'>".$value['Jurusan_ID']." - ".$value['Jurusan_Nama']."</option>";
+                                }
+                            }
+                        ?>
                     </select>
                 </div>
-                Jadwal Mulai
-                <input type="time" name="waktu_mulai" id="waktu_mulai">
-                Jadwal Selesai
-                <input type="time" name="waktu_selesai" id="waktu_selesai">
-
-                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnInsert">Insert</button>
+                Major: 
+                <div class="input-field col s12">
+                    <select name="major" id="major">
+                        <?php
+                            if($_SESSION['matkulKurikulum']['major'] == ""){
+                                echo "<option value=''>Pilih Major</option>";
+                                $query = "SELECT * FROM Major";
+                                $listMajor = $conn->query($query);
+                                foreach ($listMajor as $key => $value) {
+                                    echo "<option value='$value[Major_ID]'>".$value['Major_ID']." - ".$value['Major_Nama']."</option>";
+                                }
+                            }else{
+                                $query = "SELECT * FROM Major";
+                                $listMajor = $conn->query($query);
+                                foreach ($listMajor as $key => $value) {
+                                    if($value['Major_ID'] == $_SESSION['matkulKurikulum']['major']){
+                                        echo "<option value='$value[Major_ID]' selected>".$value['Major_ID']." - ".$value['Major_Nama']."</option>";
+                                    }else{
+                                        echo "<option value='$value[Major_ID]'>".$value['Major_ID']." - ".$value['Major_Nama']."</option>";
+                                    }
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                Kurikulum: 
+                <div class="input-field col s12">
+                    <select name="kurikulum" id="kurikulum">
+                        <?php
+                            $query = "SELECT * FROM Kurikulum";
+                            $listKurikulum = $conn->query($query);
+                            foreach ($listKurikulum as $key => $value) {
+                                if($value['Kurikulum_ID'] == $_SESSION['matkulKurikulum']['kurikulum']){
+                                    echo "<option value='$value[Kurikulum_ID]' selected>".$value['Kurikulum_ID']." - ".$value['Kurikulum_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Kurikulum_ID]'>".$value['Kurikulum_ID']." - ".$value['Kurikulum_Nama']."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                Periode: 
+                <div class="input-field col s12">
+                    <select name="periode" id="periode">
+                        <?php
+                            $query = "SELECT * FROM Periode";
+                            $listPeriode = $conn->query($query);
+                            foreach ($listPeriode as $key => $value) {
+                                if($value['Periode_ID'] == $_SESSION['matkulKurikulum']['periode']){
+                                    echo "<option value='$value[Periode_ID]' selected>".$value['Periode_ID']." - ".$value['Periode_Nama']."</option>";
+                                }else{
+                                    echo "<option value='$value[Periode_ID]'>".$value['Periode_ID']." - ".$value['Periode_Nama']."</option>";
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+                <p>Semester : </p>
+                <input type="number" id="semester" min="0" value="<?=$_SESSION['matkulKurikulum']['semester']?>">
+                <p>SKS : </p>
+                <input type="number" id="sks" min="0" max="3" value="<?=$_SESSION['matkulKurikulum']['sks']?>">
+                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>
     </div>
