@@ -54,7 +54,6 @@
                         method : "post",
                         url : "generateNrp.php",
                         data : {
-                            
                             jurusan : $("#jurusan").val().substr(1,3),
                             nohp : $("#nohp").val(),
                             tahun : year1 + year2
@@ -120,10 +119,10 @@
                                 document.getElementById('email').value = "";
                                 document.getElementById('nohp').value = "";
                                 document.getElementById('kota').value = "";
-                                document.getElementById('dosen').selectedIndex = 0;
-                                document.getElementById('jurusan').selectedIndex = 0;
-                                document.getElementById('agama').selectedIndex = 0;
-                                document.getElementById('provinsi').selectedIndex = 0;
+                                document.getElementById('rbM').checked = false;
+                                document.getElementById('rbF').checked = false;
+                                document.getElementById('content-nrp').innerHTML = "";
+                                document.getElementById('content-pass').innerHTML = "";
                             }else{
                                 alert("Gagal Insert Data Mahasiswa " + nama);
                                 if (nama == "" || nama == null) {
@@ -347,12 +346,11 @@
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Insert Data Mahasiswa</h3><br>
-                Nama Lengkap: <input type="text" id="nama"
-                value = "<?php if (isset($_SESSION['temp']['mahasiswa']['nama'])) {echo $_SESSION['temp']['mahasiswa']['nama'];}?>">
+                Nama Lengkap: <input type="text" id="nama">
                 <label id='msgNama' style = 'color:Red' hidden>Nama Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="jurusan" id="jurusan" onchange="UbahJurusan();">
-                        <option value="none" disabled selected>Pilih Jurusan</option>
+                        <option value="none" id="defaultJurusan" disabled selected>Pilih Jurusan</option>
                         <?php
                             $query = "SELECT * FROM Jurusan";
                             $listJurusan = $conn->query($query);
@@ -365,9 +363,9 @@
                 <label id='msgJurusan' style = 'color:Red' hidden>Jurusan Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="dosen" id="dosen">
-                        <option value="none" disabled selected>Pilih Dosen Wali</option>
+                        <option value="none" id="defaultDosen" disabled selected>Pilih Dosen Wali</option>
                         <?php
-                            $query = "SELECT d.Dosen_Nama,d.Dosen_ID FROM Dosen d,Jabatan_Dosen jd WHERE jd.Jabatan_ID='JBT0005'";
+                            $query = "SELECT distinct d.Dosen_Nama,d.Dosen_ID FROM Dosen d,Jabatan_Dosen jd WHERE jd.Jabatan_ID='JBT0005'";
                             $listDosen = $conn->query($query);
                             foreach ($listDosen as $key => $value) {
                                 echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
@@ -382,13 +380,13 @@
                 Jenis Kelamin: 
                 <p>
                     <label>
-                        <input name="group1" type="radio" value="M">
+                        <input id="rbM" name="group1" type="radio" value="M">
                         <span>Laki-laki</span>
                     </label>
                     </p>
                     <p>
                     <label>
-                        <input name="group1" type="radio" value="F">
+                        <input id="rbF" name="group1" type="radio" value="F">
                         <span>Perempuan</span>
                     </label>
                 </p>
@@ -397,7 +395,7 @@
                 <label id='msgAlamat' style = 'color:Red' hidden>Alamat Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="provinsi" id="provinsi">
-                        <option value="none" disabled selected>Pilih Provinsi</option>
+                        <option value="none" id="defaultProvinsi" disabled selected>Pilih Provinsi</option>
                         <option value="Nanggroe Aceh Darussalam">Nanggroe Aceh Darussalam</option>
                         <option value="Sumatera Utara">Sumatera Utara</option>
                         <option value="Sumatera Barat">Sumatera Barat</option>
@@ -439,7 +437,7 @@
                 <label id='msgKota' style = 'color:Red' hidden>Kota Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="agama" id="agama">
-                        <option value="none" disabled selected>Pilih Agama</option>
+                        <option value="none" id="defaultAgama" disabled selected>Pilih Agama</option>
                         <option value="Katolik">Katolik</option>
                         <option value="Kristen">Kristen</option>
                         <option value="Buddha">Buddha</option>
