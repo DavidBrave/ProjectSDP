@@ -238,7 +238,7 @@
                     <select name="dosen" id="dosen">
                         <option value="none" disabled selected>Pilih Dosen Wali</option>
                         <?php
-                            $query = "SELECT d.Dosen_Nama,d.Dosen_ID FROM Dosen d,Jabatan_Dosen jd WHERE jd.Jabatan_ID='JBT0005'";
+                            $query = "SELECT d.Dosen_Nama,d.Dosen_ID FROM Dosen d,Jabatan_Dosen jd WHERE jd.Jabatan_ID='JBT0005' AND d.Dosen_ID=jd.Dosen_ID";
                             $listDosen = $conn->query($query);
                             foreach ($listDosen as $key => $value) {
                                 echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";

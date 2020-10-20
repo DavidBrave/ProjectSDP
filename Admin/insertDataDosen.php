@@ -9,7 +9,7 @@
     $password = "";
     $jk = "";
     $tgl = "";
-
+    $id_jabatan="";
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -68,16 +68,14 @@
             //Proses Insert
             $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan', '$photo')";
             $conn->query($query);
-            echo "alert('Insert Dosen Berhasil')";
 
             //insert jabatan_dosen
-            $query="SELECT Jabatan_ID FROM Jabatan WHERE Jabatan_Nama=$jabatan ";
+            $query="SELECT Jabatan_ID FROM Jabatan WHERE Jabatan_Nama='$jabatan'";
             $result = $conn->query($query);
-            $id_jabatan="";
             foreach($result as $key => $value) {
-                $id_jabatan = $value['Jabatan_Nama'];
+                $id_jabatan = $value['Jabatan_ID'];
             }
-            $query = "INSERT INTO Jabatan_Dosen VALUES('$nip', '$id_jabatan')";
+            $query = "INSERT INTO Jabatan_Dosen VALUES('$nip', '$id_jabatan','')";
             $conn->query($query);
         }
         else {
@@ -223,7 +221,7 @@
                     <div class="input-field col s12">
                         <select name="jabatan">
                             <option value="none" disabled selected>Pilih Jabatan</option>
-                            <option value='Dosen'>Dosen</option>
+                            <option value='Dosen Pengajar'>Dosen</option>
                             <option value='Dosen Wali'>Dosen Wali</option>
                             <option value='Rektor'>Rektor</option>
                             <option value='Wakil Rektor'>Wakil Rektor</option>
