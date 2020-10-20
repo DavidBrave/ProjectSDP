@@ -237,17 +237,37 @@
         }
 
         function UbahJurusan() {
-            
-            var list_jurusan = document.getElementById("jurusan");
-            var jurusan_dipilih = list_jurusan.options[list_jurusan.selectedIndex].value;
-            
-
-            var generated_nrp = document.getElementById('nrp').value;
-            if (generated_nrp != "") {
-                nrp_baru = generated_nrp.substr(0, 3) + jurusan_dipilih.substr(1) + generated_nrp.substr(6);
-                document.getElementById('nrp').value = nrp_baru;
-            }
-            
+            if($("#nama").val() != "" && $("#jurusan").val() != "" && $("#dosen").val() != "" && $("#tgl").val() != "" && $("input[name='group1']:checked").val() != "" && $("#alamat").val() != "" && $("#provinsi").val() != "" && $("#kota").val() != "" && $("#agama").val() != "" && $("#email").val() != "" && $("#nohp").val() != "") {
+                    var d = new Date();
+                    var year = d.getFullYear() + "";
+                    var year1 = year.substr(0,1);
+                    var year2 = year.substr(2,2);
+                    $.ajax({
+                        method : "post",
+                        url : "generateNrp.php",
+                        data : {
+                            
+                            jurusan : $("#jurusan").val().substr(1,3),
+                            nohp : $("#nohp").val(),
+                            tahun : year1 + year2
+                        },
+                        success : function (hasil) {
+                            $("#content-nrp").html(hasil);
+                        }
+                    });
+                    $.ajax({
+                        method : "post",
+                        url : "generatePassword.php",
+                        data : {
+                            jurusan : $("#jurusan").val().substr(1,3),
+                            nohp : $("#nohp").val(),
+                            tahun : year1 + year2
+                        },
+                        success : function (hasil) {
+                            $("#content-pass").html(hasil);
+                        }
+                    });
+                }
         }
 
     </script>
