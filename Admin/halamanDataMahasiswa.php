@@ -13,7 +13,7 @@
     }
 
     if(isset($_POST['btnUpdate'])){
-        $id = $_POST['hidNrp'];
+        $id = $_POST['idMahasiswa'];
         $query = "SELECT * FROM Mahasiswa";
         $listMahasiswa = $conn->query($query);
         foreach ($listMahasiswa as $key => $value) {
