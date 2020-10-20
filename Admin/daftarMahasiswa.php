@@ -36,7 +36,7 @@
         echo "<td>$value[Mahasiswa_Email]</td>";
         echo "<td>$value[Mahasiswa_NoTelp]</td>";
         echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='hidNrp' value='$value[Mahasiswa_ID]'></form></td>";
-        echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='hidNrp' value='$value[Mahasiswa_ID]'></form></td>";
+        echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Mahasiswa_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Mahasiswa_ID]' value='$value[Mahasiswa_Nama]'</form></td>";
         echo "</tr>";
     }
     
