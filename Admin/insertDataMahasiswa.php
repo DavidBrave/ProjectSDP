@@ -166,7 +166,6 @@
                                 }
                                 else {
                                     document.getElementById('msgKota').hidden = true;
-                                    alert(kota);
                                 }
 
                                 if (dosen == null || dosen == "") {
