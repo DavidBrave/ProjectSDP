@@ -54,8 +54,9 @@
                             jurusan : $("#jurusan").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
                             if(hasil == 1){
-                                alert("Major Berhasil Diperbaharui");
+                                alert("Major " + nama + " Berhasil Diperbaharui");
                             }else{
                                 alert("Pembaharuan Gagal");
                             }

@@ -9,14 +9,16 @@
 
         $message = "Gagal Delete";
         if($conn){
-            $message = "Berhasil Delete";
+            $message = "Berhasil Delete Jadwal Kuliah dengan ID $id";
             //echo 1;
         }else{
-            $message = "Gagal Delete";
+            $message = "Gagal Delete Jadwal Kuliah dengan ID $id";
             //echo 0;
         }
 
         
         echo "<script type='text/javascript'>alert('$message');</script>";
     }
+
+    $conn->close();
 ?>

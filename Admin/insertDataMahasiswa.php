@@ -95,30 +95,117 @@
                             email : $("#email").val(),
                             nohp : $("#nohp").val(),
                             pass : $("#pass").val(),
-                            photo : $("#hidFile").val()
+                            photo : $("#hidFile").val(),
+                            provinsi : $("#provinsi").val(),
+                            kota : $("#kota").val(), 
+                            jurusan : $("#jurusan").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
+                            var dosen = $("#dosen").val();
+                            var tgl = $("#tgl").val();
+                            var jk = $("input[name='group1']:checked").val();
+                            var alamat = $("#alamat").val();
+                            var provinsi = $("#kota").val();
+                            var kota = $("#provinsi").val();
+                            var nohp = $("#nohp").val();
+                            var email = $("#email").val();
+                            var jurusan = $("#jurusan").val();
+                            var agama = $("#agama").val();
+
                             if(hasil == 1){
-                                alert("sukses");
+                                alert("Berhasil Insert Data Mahasiswa " + nama);
+                                document.getElementById('nama').value = "";
+                                document.getElementById('alamat').value = "";
+                                document.getElementById('email').value = "";
+                                document.getElementById('nohp').value = "";
+                                document.getElementById('kota').value = "";
+                                document.getElementById('dosen').selectedIndex = 0;
+                                document.getElementById('jurusan').selectedIndex = 0;
+                                document.getElementById('agama').selectedIndex = 0;
+                                document.getElementById('provinsi').selectedIndex = 0;
                             }else{
-                                alert("gagal");
+                                alert("Gagal Insert Data Mahasiswa " + nama);
+                                if (nama == "" || nama == null) {
+                                    document.getElementById('msgNama').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgNama').hidden = true;
+                                }
+
+                                if (tgl == "" || tgl == null) {
+                                    document.getElementById('msgTanggal').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgTanggal').hidden = true;
+                                }
+
+                                if (alamat == "" || alamat == null) {
+                                    document.getElementById('msgAlamat').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgAlamat').hidden = true;
+                                }
+
+                                if (email == "" || email == null) {
+                                    document.getElementById('msgEmail').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgEmail').hidden = true;
+                                }
+
+                                if (nohp == "" || nohp == null) {
+                                    document.getElementById('msgNohp').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgNohp').hidden = true;
+                                }
+
+                                if (kota == null || kota == "") {
+                                    document.getElementById('msgKota').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgKota').hidden = true;
+                                }
+
+                                if (dosen == null || dosen == "") {
+                                    document.getElementById('msgDosen').hidden = false; 
+                                }
+                                else {
+                                    document.getElementById('msgDosen').hidden = true;
+                                }
+
+                                if (jurusan == null || jurusan == "") {
+                                    document.getElementById('msgJurusan').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgJurusan').hidden = true;
+                                }
+                                
+                                if (agama == null || agama == "") {
+                                    document.getElementById('msgAgama').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgAgama').hidden = true;
+                                }
+
+                                if (provinsi == "" || provinsi == null) {
+                                    document.getElementById('msgProvinsi').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgProvinsi').hidden = true;
+                                }
+
+                                if (jk == "" || jk == null) {
+                                    document.getElementById('msgJK').hidden = false;
+                                }
+                                else {
+                                    document.getElementById('msgJK').hidden = true;
+                                }
                             }
                         }
                     });
                 }
-                $("#nrp").val("");
-                $("#nama").val("");
-                $("#tgl").val("");
-                $("#alamat").val("");
-                $("#kota").val("");
-                $("#provinsi").val("");
-                $("#agama").val("");
-                $("#email").val("");
-                $("#nohp").val("");
-                $("#pass").val("");
-                $("input[name='group1'][value='M'").prop("checked",false);
-                $("input[name='group1'][value='F'").prop("checked",false);
-                $("#photo").css("background-image","none");
             });
             
             $("#btnUpload").click(function () {
@@ -157,12 +244,14 @@
 
             var generated_nrp = document.getElementById('nrp').value;
             if (generated_nrp != "") {
-
                 nrp_baru = generated_nrp.substr(0, 3) + jurusan_dipilih.substr(1) + generated_nrp.substr(6);
                 document.getElementById('nrp').value = nrp_baru;
             }
             
         }
+
+    </script>
+    <script type="text/JavaScript">  
 
     </script>
 </head>
@@ -220,7 +309,9 @@
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Insert Data Mahasiswa</h3><br>
-                Nama Lengkap: <input type="text" id="nama">
+                Nama Lengkap: <input type="text" id="nama"
+                value = "<?php if (isset($_SESSION['temp']['mahasiswa']['nama'])) {echo $_SESSION['temp']['mahasiswa']['nama'];}?>">
+                <label id='msgNama' style = 'color:Red' hidden>Nama Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="jurusan" id="jurusan" onchange="UbahJurusan();">
                         <option value="none" disabled selected>Pilih Jurusan</option>
@@ -229,11 +320,11 @@
                             $listJurusan = $conn->query($query);
                             foreach ($listJurusan as $key => $value) {
                                 echo "<option value='$value[Jurusan_ID]'>".$value['Jurusan_ID']."-".$value['Jurusan_Nama']."</option>";
-
                             }
                         ?>
                     </select>
                 </div>
+                <label id='msgJurusan' style = 'color:Red' hidden>Jurusan Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="dosen" id="dosen">
                         <option value="none" disabled selected>Pilih Dosen Wali</option>
@@ -246,33 +337,37 @@
                         ?>
                     </select>
                 </div>
+                <label id='msgDosen' style = 'color:Red' hidden>Dosen Tidak Boleh Kosong</label><br><br>
                 Tanggal Lahir:
                 <input type="date" name="tgl" id="tgl">
+                <label id='msgTanggal' style = 'color:Red' hidden>Tanggal Tidak Boleh Kosong</label><br><br>
                 Jenis Kelamin: 
                 <p>
                     <label>
-                        <input name="group1" type="radio" value="M"/>
+                        <input name="group1" type="radio" value="M">
                         <span>Laki-laki</span>
                     </label>
                     </p>
                     <p>
                     <label>
-                        <input name="group1" type="radio" value="F"/>
+                        <input name="group1" type="radio" value="F">
                         <span>Perempuan</span>
                     </label>
                 </p>
+                <label id='msgJK' style = 'color:Red' hidden>Jenis Kelamin Tidak Boleh Kosong</label><br><br>
                 Alamat: <input type="text" id="alamat">
+                <label id='msgAlamat' style = 'color:Red' hidden>Alamat Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="provinsi" id="provinsi">
                         <option value="none" disabled selected>Pilih Provinsi</option>
                         <option value="Nanggroe Aceh Darussalam">Nanggroe Aceh Darussalam</option>
                         <option value="Sumatera Utara">Sumatera Utara</option>
                         <option value="Sumatera Barat">Sumatera Barat</option>
+                        <option value="Sumatera Selatan">Sumatera Selatan</option>
                         <option value="Riau">Riau</option>
                         <option value="Kepulauan Riau">Kepulauan Riau</option>
                         <option value="Jambi">Jambi</option>
                         <option value="Bengkulu">Bengkulu</option>
-                        <option value="Sumatera Selatan">Sumatera Selatan</option>
                         <option value="Kepulauan Bangka Belitung">Kepulauan Bangka Belitung</option>
                         <option value="Lampung">Lampung</option>
                         <option value="Banten">Banten</option>
@@ -301,7 +396,9 @@
                         <option value="Papua Barat">Papua Barat</option>
                     </select>
                 </div>
+                <label id='msgProvinsi' style = 'color:Red' hidden>Provinsi Tidak Boleh Kosong</label><br><br>
                 Kota <input type="text" id="kota">
+                <label id='msgKota' style = 'color:Red' hidden>Kota Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="agama" id="agama">
                         <option value="none" disabled selected>Pilih Agama</option>
@@ -313,8 +410,12 @@
                         <option value="Islam">Islam</option>
                     </select>
                 </div>
+                <label id='msgAgama' style = 'color:Red' hidden>Agama Tidak Boleh Kosong</label><br><br>
                 Email: <input type="text" id="email">
-                No Hp: <input type="text" id="nohp"><br><br>
+                <label id='msgEmail' style = 'color:Red' hidden>Email Tidak Boleh Kosong</label><br><br>
+
+                No Hp: <input type="text" id="nohp">
+                <label id='msgNohp' style = 'color:Red' hidden>Nomor HP Tidak Boleh Kosong</label><br><br>
                 <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnGenerate">Generate</button><br><br>
                 NRP:
                 <div id="content-nrp">

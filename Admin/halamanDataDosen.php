@@ -17,18 +17,6 @@
         $nama = "";
     }
 
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idDosen'];
-        $query = "DELETE FROM Sidang_Skripsi WHERE Dosen_Pengamat_ID = '$id'";
-        $conn->query($query);
-        $query = "UPDATE Mahasiswa SET Dosen_Wali_ID = '' WHERE Dosen_Wali_ID = '$id'";
-        $conn->query($query);
-        $query = "UPDATE Mahasiswa SET Dosen_Pembimbing_ID = '' WHERE Dosen_Pembimbing_ID = '$id'";
-        $conn->query($query);
-        $query = "DELETE FROM Dosen WHERE Dosen_ID = '$id'";
-        $conn->query($query);
-    }
-
     if(isset($_POST['btnUpdate'])){
         $id = $_POST['idDosen'];
         $query = "SELECT * FROM Dosen";
@@ -98,6 +86,33 @@
                 });
             });
         });
+
+        function DeleteClick(clicked_id)
+        {
+            //minta result lewat confirmation alert
+            var nama = $("#Nama" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
+            //kalo result = true, atau pilih yes, hapus
+            if (result) {
+                var berhasil = true;
+                $.ajax({
+                    method : "post",
+                    url : "deleteDosen.php",
+                    async : false,
+                    data : {
+                        id : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("Data Dosen " + nama + " Berhasil Dihapus");
+                }).fail(function(data){
+                    alert("Data Dosen " + nama + " Gagal Dihapus");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -185,9 +200,11 @@
                     //echo "<td>$value[Dosen_Pass]</td>";
                     echo "<td>$value[Dosen_Jabatan]</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
+                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Dosen_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Dosen_ID]' value='$value[Dosen_Nama]'</form></td>";
                     echo "</tr>";
                 }
+
+                $conn->close();
             ?>
             </table>
         </div>

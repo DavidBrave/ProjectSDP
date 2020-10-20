@@ -17,18 +17,6 @@
         $nama = "";
     }
 
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idMajor'];
-
-        //Delete Major
-        $query = "DELETE FROM Major WHERE Major_ID = '$id'";
-        $conn->query($query);
-
-        echo '<script language = "javascript">';
-        echo "alert('Berhasil Delete')";
-        echo '</script>';
-    }
-
     if(isset($_POST['btnUpdate'])){
         $id = $_POST['idMajor'];
         $query = "SELECT * FROM Major";
@@ -94,6 +82,33 @@
                 });
             });
         });
+
+        function DeleteClick(clicked_id)
+        {
+            //minta result lewat confirmation alert
+            var nama = $("#Nama" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
+            //kalo result = true, atau pilih yes, hapus
+            if (result) {
+                var berhasil = true;
+                $.ajax({
+                    method : "post",
+                    url : "deleteMajor.php",
+                    async : false,
+                    data : {
+                        id : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("Data Major " + nama + " Berhasil Dihapus");
+                }).fail(function(data){
+                    alert("Data Major " + nama + " Gagal Dihapus");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -173,9 +188,11 @@
                     echo "<td>$value[Major_ID]</td>";
                     echo "<td>$value[Major_Nama]</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idMajor' value='$value[Major_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idMajor' value='$value[Major_ID]'></form></td>";
+                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Major_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Major_ID]' value='$value[Major_Nama]'</form></td>";
                     echo "</tr>";
                 }
+
+                $conn->close();
             ?>
             </table>
         </div>

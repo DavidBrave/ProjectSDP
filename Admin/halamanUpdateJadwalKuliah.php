@@ -76,9 +76,11 @@
                         },
                         
                     }).done(function(data){
-                        alert("Jadwal Kuliah Berhasil Diperbaharui");
+                        var idJadwal = $("#jadwal_id").val();
+                        alert("Jadwal Kuliah dengan ID " + idJadwal + " Berhasil Diperbaharui");
                     }).fail(function(){
-                        alert("Jadwal Kuliah Gagal Diperbaharui");
+                        var idJadwal = $("#jadwal_id").val();
+                        alert("Jadwal Kuliah dengan ID " + idJadwal + " Gagal Diperbaharui");
                     });;
 
                 }

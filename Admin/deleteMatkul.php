@@ -5,22 +5,20 @@
         $id = $_POST['id'];
         
         $nama = "";
-        $query = "SELECT * FROM Kurikulum WHERE Kurikulum_ID = '$id'";
+        $query = "SELECT * FROM Matkul WHERE Matkul_ID = '$id'";
         $temp = $conn->query($query);
         foreach($temp as $key => $value) {
-            $nama = $value['Kurikulum_Nama'];
+            $nama = $value['Matkul_Nama'];
         }
 
-        $query = "DELETE FROM Kurikulum WHERE Kurikulum_ID = '$id'";
+        $query = "DELETE FROM Matkul WHERE Matkul_ID = '$id'";
         $conn->query($query);
 
-        $message = "Gagal Delete";
+        $message = "";
         if($conn){
-            $message = "Berhasil Delete Kurikulum $nama";
-            //echo 1;
+            $message = "Berhasil Delete Mata Kuliah $nama";
         }else{
-            $message = "Gagal Delete Kurikulum $nama";
-            //echo 0;
+            $message = "Gagal Delete Mata Kuliah $nama";
         }
 
         

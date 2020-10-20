@@ -74,8 +74,6 @@
             
             //kalo result = true, atau pilih yes, hapus
             if (result) {
-
-                
                 $.ajax({
                     method : "post",
                     async : false,
@@ -85,12 +83,10 @@
                     },
                     
                 }).done(function(data){
-                    alert("Data Dihapus");
+                    alert("Jadwal Kuliah dengan ID " + clicked_id + " Berhasil Dihapus");
                 }).fail(function(data){
-                    alert("Data Gagal Dihapus");
+                    alert("Jadwal Kuliah dengan ID " + clicked_id + "  Gagal Dihapus");
                 });
-
-
             }
             else {
                 alert("Data Tidak Dihapus")

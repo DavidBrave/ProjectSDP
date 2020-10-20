@@ -41,9 +41,11 @@
                         },
                         success : function (hasil) {
                             if(hasil == 1){
-                                alert("sukses");
+                                var nama = $("#nama").val();
+                                alert("Update Jurusan " + nama + " Sukses");
                             }else{
-                                alert("gagal");
+                                var nama = $("#nama").val();
+                                alert("Gagal Update Jurusan" + nama);
                             }
                         }
                     });

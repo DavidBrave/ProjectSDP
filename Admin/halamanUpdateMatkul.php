@@ -188,8 +188,9 @@
                             standar : $("#standar").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
                             if(hasil == 1){
-                                alert("Mata Kuliah Berhasil Diperbaharui");
+                                alert("Mata Kuliah " + nama + " Berhasil Diperbaharui");
                             }else{
                                 alert("Pembaharuan Gagal");
                             }
