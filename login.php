@@ -82,6 +82,7 @@
                             $_SESSION['user']['user'] = $value['Mahasiswa_ID'];
                             $_SESSION['user']['name'] = $value['Mahasiswa_Nama'];
                             $_SESSION['user']['pass'] = $value['Mahasiswa_Pass'];
+                            $_SESSION['user']['photo'] = $value['Mahasiswa_Photo'];
                             $cekMahasiswa = true;
                         }
                     }
@@ -93,6 +94,7 @@
                             $_SESSION['user']['user'] = $value['Dosen_ID'];
                             $_SESSION['user']['name'] = $value['Dosen_Nama'];
                             $_SESSION['user']['pass'] = $value['Dosen_Pass'];
+                            $_SESSION['user']['photo'] = $value['Dosen_Photo'];
                             $cekDosen = true;
                         }
                     }
