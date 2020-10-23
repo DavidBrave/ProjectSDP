@@ -49,7 +49,17 @@
         <div id="menu">
             <a href="#" style="width: 100%; color: black; padding-left: 0px;">
                 <div id="profile">
-                    <img src="../Photo/<?=$_SESSION['user']['photo']?>" alt="" id="photo">
+                    <?php 
+                        if($_SESSION['user']['photo'] == ""){
+                        ?>
+                            <img src="../Photo/profile.png" alt="" id="photo">
+                        <?php
+                        }else{
+                        ?>
+                            <img src="../Photo/<?=$_SESSION['user']['photo']?>" alt="" id="photo">
+                        <?php
+                        }
+                    ?>
                     <div id="text-profile">
                         <p><?=$_SESSION['user']['name']?></p>
                         <p><?=$_SESSION['user']['user']?></p>
