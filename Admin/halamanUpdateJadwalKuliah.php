@@ -137,9 +137,8 @@
                 <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div> 
-
-        <ul id = "dropdown8" class = "dropdown-content blue-grey lighten-4">
+        
+            <ul id = "dropdown8" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMatkulKurikulum.php">Data Matkul Kurikulum</a></li>
                 <li><a href = "insertMatkulKurikulum.php">Insert Data Matkul Kurikulum</a></li>
             </ul>
@@ -157,17 +156,12 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        </div>
 
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Update Jadwal Kuliah</h3><br>
-
                 ID: <input type="text" name="jadwal_id" id="jadwal_id" value="<?=$_SESSION['jadwal']['id']?>" disabled><br>
-
-                
-
-                
-
                 <div class="input-field col s12">
                     <select name="kelas" id="kelas">
                         <option value="none" disabled selected>Pilih Kelas</option>

@@ -70,6 +70,11 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script src="../jquery.js"></script>
+    <style>
+        #container{
+            height: auto;
+        }
+    </style>
     <script>
         $(document).ready(function () {
             $("#menu_nilai").click(function () {
@@ -142,10 +147,241 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-            <h2 style="margin: 10px;">FRS</h2>
-            <h4><?=$semester?></h4>
-            <h4><?=$sksTotal?></h4>
+        <div id="container" style="padding: 20px;">
+            <h2>FRS</h2>
+            <h5>Max SKS: <?=$sksTotal?></h5><br>
+            <h4>Semester 1</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 1";
+                $semester1 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 1";
+                $sksSemester1 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester1[total]</th></tr>";
+                if($sksSemester1["Semester"]%2 != $semester%2){
+                    foreach ($semester1 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester1 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 2</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 2";
+                $semester2 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 2";
+                $sksSemester2 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester2[total]</th></tr>";
+                if($sksSemester2["Semester"]%2 != $semester%2){
+                    foreach ($semester2 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester2 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 3</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 3";
+                $semester3 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 3";
+                $sksSemester3 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester3[total]</th></tr>";
+                if($sksSemester3["Semester"]%2 != $semester%2){
+                    foreach ($semester3 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester3 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 4</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 4";
+                $semester4 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 4";
+                $sksSemester4 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester4[total]</th></tr>";
+                if($sksSemester4["Semester"]%2 != $semester%2){
+                    foreach ($semester4 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester4 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 5</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 5";
+                $semester5 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 5";
+                $sksSemester5 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester5[total]</th></tr>";
+                if($sksSemester5["Semester"]%2 != $semester%2){
+                    foreach ($semester5 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester5 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 6</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 6";
+                $semester6 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 6";
+                $sksSemester6 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester6[total]</th></tr>";
+                if($sksSemester6["Semester"]%2 != $semester%2){
+                    foreach ($semester6 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester6 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 7</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 7";
+                $semester7 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 7";
+                $sksSemester7 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester7[total]</th></tr>";
+                if($sksSemester7["Semester"]%2 != $semester%2){
+                    foreach ($semester7 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester7 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
+            <h4>Semester 8</h4>    
+            <?php
+                $query = "SELECT mk.Matkul_Kurikulum_ID, mk.SKS, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 8";
+                $semester8 = $conn->query($query);
+                $query = "SELECT SUM(mk.SKS) as total, mk.Semester FROM Matkul_Kurikulum mk, Matkul m WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = '$jurusan' AND mk.Semester = 8";
+                $sksSemester8 = mysqli_fetch_array($conn->query($query));
+                echo "<table style='width: 600px;'>";
+                echo "<tr><th colspan='3' style='text-align: right;'>$sksSemester7[total]</th></tr>";
+                if($sksSemester8["Semester"]%2 != $semester%2){
+                    foreach ($semester8 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]' disabled/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }else{
+                    foreach ($semester8 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[SKS]</td>";
+                        echo "<td><p><label><input type='checkbox' value='$value[Matkul_Kurikulum_ID]'/><span></span></label></p></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "</table>";
+            ?>
         </div>
         <div id="footer">
 
