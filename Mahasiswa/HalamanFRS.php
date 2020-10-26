@@ -10,13 +10,59 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
+    $semesterLalu = $semester - 1;
+    if($semester == 1){
+        $sksTotal = 18;
+    }else{
+        $query = "SELECT p.Pengambilan_Grade FROM Mahasiswa m, Pengambilan p, Kelas k, Matkul_Kurikulum mk 
+                  WHERE m.Mahasiswa_ID = p.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND m.Mahasiswa_ID = '$nrp' AND mk.Semester = $semesterLalu";
+        $listNilai = $conn->query($query);
+        $count = mysqli_num_rows($listNilai);
+        $ips = 0;
+        foreach ($listNilai as $key => $value) {
+            if($value['Pengambilan_Grade'] == 'A'){
+                $ips += 4;
+            }else if($value['Pengambilan_Grade'] == 'B' || $value['Pengambilan_Grade'] == 'B+'){
+                $ips += 3;
+            }else if($value['Pengambilan_Grade'] == 'C' || $value['Pengambilan_Grade'] == 'C+'){
+                $ips += 2;
+            }else if($value['Pengambilan_Grade'] == 'D'){
+                $ips += 1;
+            }else if($value['Pengambilan_Grade'] == 'E'){
+                $ips += 0;
+            }
+        }
+        $ips = $ips/$count;
+
+        if($ips >= 3.5){
+            $sksTotal = 22;
+        }else if($ips >= 3.0){
+            $sksTotal = 20;
+        }else if($ips >= 2.5){
+            $sksTotal = 18;
+        }else if($ips >= 2.0){
+            $sksTotal = 15;
+        }else if($ips >= 1.5){
+            $sksTotal = 12;
+        }else{
+            $sksTotal = 9;
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>FRS</title>
     <link rel="stylesheet" href="Mahasiswa.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -97,7 +143,9 @@
             </form>
         </div>
         <div id="container">
-
+            <h2 style="margin: 10px;">FRS</h2>
+            <h4><?=$semester?></h4>
+            <h4><?=$sksTotal?></h4>
         </div>
         <div id="footer">
 

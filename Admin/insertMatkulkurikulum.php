@@ -78,7 +78,7 @@
     <title>Admin</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin2.css">
     <style>
         p{
             font-size: 20px;
