@@ -140,6 +140,7 @@
             <ul id = "dropdown9" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataPraktikum.php">Data Praktikum</a></li>
                 <li><a href = "insertDataPraktikum.php">Insert Data Praktikum</a></li>
+                <li><a href = "insertKelasPraktikum.php">Insert Kelas Praktikum</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 

@@ -41,10 +41,8 @@
                         matkulkurikulum : $("#matkulkurikulum").val(),
                         nama : $("#nama").val(),
                         hari : $("#hari").val(),
-                        ruangan : $("#ruangan").val(),
                         mulai : $("#mulai").val(),
                         selesai : $("#selesai").val(),
-                        kapasitas : $("#kapasitas").val(),
                         standar : $("#minimum").val()
                     },
                     success : function (hasil) {
@@ -118,6 +116,7 @@
             <ul id = "dropdown9" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataPraktikum.php">Data Praktikum</a></li>
                 <li><a href = "insertDataPraktikum.php">Insert Data Praktikum</a></li>
+                <li><a href = "insertKelasPraktikum.php">Insert Kelas Praktikum</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
@@ -237,16 +236,12 @@
                         
                     </select>
                 </div>
-                <p>Ruangan : </p>
-                <input type="text" name="ruangan" id="ruangan" value="<?=$_SESSION['praktikum']['ruangan']?>">
                 <p>Waktu Mulai : </p>
                 <input type="time" name="mulai" id="mulai" value="<?=$_SESSION['praktikum']['mulai']?>">
                 <p>Waktu Selesai : </p>
                 <input type="time" name="selesai" id="selesai" value="<?=$_SESSION['praktikum']['selesai']?>">
                 <p>Nilai Minimum : </p>
                 <input type="text" name="minimum" id="minimum" value="<?=$_SESSION['praktikum']['standar']?>">
-                <p>Kapasitas</p>
-                <input type="number" name="kapasitas" id="kapasitas" min="0" value="<?=$_SESSION['praktikum']['kapasitas']?>">
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>

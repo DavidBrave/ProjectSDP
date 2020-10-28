@@ -193,7 +193,7 @@
                     <select name="kelas" id="kelas">
                         <option value="none" disabled selected>Pilih Kelas</option>
                         <?php
-                            $kelas_query = "SELECT * FROM Kelas";
+                            $kelas_query = "SELECT * FROM Kelas WHERE Kelas_ID NOT IN(SELECT Kelas_ID FROM Jadwal_Kuliah)";
                             $list_kelas = $conn->query($kelas_query);
 
                             //Query kelas yang ada

@@ -41,10 +41,8 @@
                 $_SESSION['praktikum']['matkulkurikulum'] = $value['Matkulkurikulum_ID'];
                 $_SESSION['praktikum']['nama'] = $value['Praktikum_Nama'];
                 $_SESSION['praktikum']['hari'] = $value['Praktikum_Hari'];
-                $_SESSION['praktikum']['ruangan'] = $value['Praktikum_Ruangan'];
                 $_SESSION['praktikum']['mulai'] = $value['Praktikum_Jam_Mulai'];
                 $_SESSION['praktikum']['selesai'] = $value['Praktikum_Jam_Selesai'];
-                $_SESSION['praktikum']['kapasitas'] = $value['Praktikum_Kapasitas'];
                 $_SESSION['praktikum']['standar'] = $value['Praktikum_Standar'];
             }
         }
@@ -163,6 +161,7 @@
             <ul id = "dropdown9" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataPraktikum.php">Data Praktikum</a></li>
                 <li><a href = "insertDataPraktikum.php">Insert Data Praktikum</a></li>
+                <li><a href = "insertKelasPraktikum.php">Insert Kelas Praktikum</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 

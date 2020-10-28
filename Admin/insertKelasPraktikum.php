@@ -1,10 +1,6 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-    $nama = "";
-    $tingkat = "";
-    $id = "K";
-    $tahun = date('Y');
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -15,39 +11,18 @@
         header("location: ../login.php");
     }
 
-    if (isset($_POST['btnInsert'])) {        
-        $nama = $_POST['nama'];
-        if (isset($_POST['tingkat'])) {
-            $tingkat = $_POST['tingkat'];
-        }
+    if (isset($_POST['btnInsert'])) {
+        $praktikum = $_POST['praktikum'];
+        $ruangan = $_POST['ruangan'];
+        $kapasitas = $_POST['kapasitas'];
 
-        //Generate ID Kurikulum
-        if ($nama != "") {
-            $id = "K" . $tahun;
-    
-            $query = "SELECT Count(Kurikulum_ID)+1 as jumlah FROM Kurikulum WHERE Kurikulum_ID LIKE '$id%'";
-            $result = $conn->query($query);
-            $ctr = 0;
-
-            foreach($result as $key => $value) {
-                $ctr = $value['jumlah'];
-            }
-    
-            $id .= $ctr;
-            
-            //Proses Insert
-            $query = "INSERT INTO Kurikulum VALUES('$id', '$nama')";
+        if ($praktikum != "" && $ruangan != "" && $kapasitas) {
+            $query = "INSERT INTO Kelas_Praktikum VALUES('', '$praktikum', '$ruangan', '$kapasitas')";
             $conn->query($query);
-
-            if($conn){
-                echo '<script language = "javascript">';
-                echo "alert('Berhasil Insert Kurikulum $nama')";
-                echo '</script>';
-            }else{
-                echo '<script language = "javascript">';
-                echo "alert('Gagal Insert Kurikulum $nama')";
-                echo '</script>';
-            }
+            
+            echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert Kelas Praktikum $praktikum')";
+            echo '</script>';
         }
         else {
             echo '<script language = "javascript">';
@@ -56,7 +31,8 @@
         }
     }
 
-    $conn->close();
+    $query = "SELECT * FROM Praktikum";
+    $listPraktikum = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -64,12 +40,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Insert Praktikum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
+        p{
+            font-size: 20px;
+        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -80,7 +58,6 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
-
          });
     </script>
 </head>
@@ -152,22 +129,30 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <form action = "" method = "post">
-                    <h3>Insert Data Kurikulum</h3><br>
-                    Nama Kurikulum: <input type="text" name="nama">
-                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+                <h3>Insert Data Praktikum</h3><br>
+                <form action = "#" method = "post">
+                    <p>Matkul Kurikulum : </p>
+                    <div class="input-field col s12">
+                        <select name="praktikum">
+                            <option value="none" disabled selected>Pilih Praktikum</option>
+                            <?php
+                                foreach ($listPraktikum as $key => $value) {
+                                    echo "<option value='$value[Praktikum_ID]'>".$value['Praktikum_ID']." - ".$value['Praktikum_Nama']."</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Ruangan : </p>
+                    <input type="text" name="ruangan">
+                    <p>Kapasitas</p>
+                    <input type="number" name="kapasitas" id="" min="0">
+                    <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
                 </form>
             </div>
         </div>
     </div>
 </body>
 </html>
-
-<?php
-    unset($_SESSION['validate']['kurikulum']);
-    unset($_SESSION['temp']['kurikulum']);
-?>
