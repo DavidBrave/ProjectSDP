@@ -12,6 +12,22 @@
     }
 
     $selectedMatkuls = explode(",", $_SESSION['matkul']);
+
+    if(isset($_POST['btnRemove'])){
+        $matkulkurikulumid = $_POST['hidId'];
+        $str = "";
+        for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+            if($selectedMatkuls[$i] != $matkulkurikulumid){
+                if($i == sizeof($selectedMatkuls)-1){
+                    $str = $str.$selectedMatkuls[$i];
+                }else{
+                    $str = $str.$selectedMatkuls[$i].",";
+                }
+            }
+        }
+        $_SESSION['matkul'] = $str;
+        $selectedMatkuls = explode(",", $_SESSION['matkul']);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +45,7 @@
     <style>
         #container{
             height: auto;
+            width: 800px;
         }
     </style>
     <script>
@@ -106,38 +123,47 @@
         <div id="container" style="padding: 20px;">
             <h2>FRS</h2>
             <h4>Mata kuliah yang dipilih</h4>
-            <form action="#" method="post">
-                <table>
-                <?php
-                    for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-                        $selectedMatkul = $selectedMatkuls[$i];
-                        $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
-                        WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
-                        $matkul = mysqli_fetch_array($conn->query($query));
-                        $matkulkurikulumid = $matkul['Matkul_Kurikulum_ID'];
-                        $matkulnama = $matkul['Matkul_Nama'];
-                        $semester = $matkul['Semester'];
-                        $jadwalHari = $matkul['Jadwal_Hari'];
-                        $jadwalMulai = $matkul['Jadwal_Mulai'];
-                        $jadwalSelesai = $matkul['Jadwal_Selesai'];
-                        $sks = $matkul['SKS'];
-                        echo "<tr>";
-                        echo "<td>$matkulkurikulumid</td>";
-                        echo "<td>$matkulnama</td>";
-                        echo "<td>$jadwalHari</td>";
-                        echo "<td>$jadwalMulai</td>";
-                        echo "<td>$jadwalSelesai</td>";
-                        echo "<td>$semester</td>";
-                        echo "<td>$sks</td>";
-                        echo "<td><p><label><input type='checkbox' class='matkul' name='matkul[]' value='$matkulkurikulumid"."-".$matkulnama."'/><span></span></label></p></td>";
-                        echo "</tr>";
-                    }
-                ?>
-                </table>
-                <br>
-                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanFRS.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
-                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnNext"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Submit</p></button>
-            </form>
+            <table>
+                <tr>
+                    <th>Kode</th>
+                    <th>Matkul</th>
+                    <th>Hari</th>
+                    <th>Mulai</th>
+                    <th>Selesai</th>
+                    <th>Semester</th>
+                    <th>SKS</th>
+                    <th></th>
+                </tr>
+            <?php
+                echo $_SESSION['matkul'];
+                for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                    $selectedMatkul = $selectedMatkuls[$i];
+                    $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
+                    WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
+                    $matkul = mysqli_fetch_array($conn->query($query));
+                    $matkulkurikulumid = $matkul['Matkul_Kurikulum_ID'];
+                    $matkulnama = $matkul['Matkul_Nama'];
+                    $semester = $matkul['Semester'];
+                    $jadwalHari = $matkul['Jadwal_Hari'];
+                    $jadwalMulai = $matkul['Jadwal_Mulai'];
+                    $jadwalSelesai = $matkul['Jadwal_Selesai'];
+                    $sks = $matkul['SKS'];
+                    echo "<tr>";
+                    echo "<td>$matkulkurikulumid</td>";
+                    echo "<td>$matkulnama</td>";
+                    echo "<td>$jadwalHari</td>";
+                    echo "<td>$jadwalMulai</td>";
+                    echo "<td>$jadwalSelesai</td>";
+                    echo "<td>$semester</td>";
+                    echo "<td>$sks</td>";
+                    echo "<td><form action='#' method='post'><input type='submit' name='btnRemove' value='Remove' class='btn waves-effect red darken-3' style='height: 35px;'><input type='hidden' name='hidId' value='$matkulkurikulumid'></form></td>";
+                    echo "</tr>";
+                }
+            ?>
+            </table>
+            <br>
+            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanFRS.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
+            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnNext"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Submit</p></button>
         </div>
         <div id="footer">
 
