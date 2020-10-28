@@ -15,13 +15,11 @@
         $matkulKurikulum = $_POST['matkulKurikulum'];
         $nama = $_POST['nama'];
         $hari = $_POST['hari'];
-        $ruangan = $_POST['ruangan'];
         $mulai = $_POST['mulai'];
         $selesai = $_POST['selesai'];
-        $kapasitas = $_POST['kapasitas'];
         $minimum = $_POST['minimum'];
 
-        if ($nama != "" && $hari != "" && $matkulKurikulum != "" && $ruangan != "" && $mulai != "" && $selesai != "" && $kapasitas != "" && $minimum != "") {
+        if ($nama != "" && $hari != "" && $matkulKurikulum != "" && $mulai != "" && $selesai != "" && $minimum != "") {
             $query = "SELECT * FROM Praktikum";
             $jumlah = mysqli_num_rows($conn->query($query)) + 1;
 
@@ -45,7 +43,7 @@
                 }
             }
 
-            $query = "INSERT INTO Praktikum VALUES('$id', '$matkulKurikulum', '$nama', '$hari', '$ruangan', '$mulai', '$selesai', $kapasitas, $minimum)";
+            $query = "INSERT INTO Praktikum VALUES('$id', '$matkulKurikulum', '$nama', '$hari', '$mulai', '$selesai', $minimum)";
             $conn->query($query);
 
             $query = "UPDATE Matkul_Kurikulum SET Praktikum_ID = '$id' WHERE Matkul_Kurikulum_ID = '$matkulKurikulum'";
@@ -74,7 +72,7 @@
     <title>Insert Praktikum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin2.css">
     <style>
         p{
             font-size: 20px;
@@ -150,6 +148,7 @@
             <ul id = "dropdown9" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataPraktikum.php">Data Praktikum</a></li>
                 <li><a href = "insertDataPraktikum.php">Insert Data Praktikum</a></li>
+                <li><a href = "insertKelasPraktikum.php">Insert Kelas Praktikum</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
@@ -210,16 +209,12 @@
                             <option value="Minggu">Minggu</option>
                         </select>
                     </div>
-                    <p>Ruangan : </p>
-                    <input type="text" name="ruangan">
                     <p>Waktu Mulai : </p>
                     <input type="time" name="mulai" id="">
                     <p>Waktu Selesai : </p>
                     <input type="time" name="selesai" id="">
                     <p>Nilai Minimum : </p>
                     <input type="text" name="minimum" id="">
-                    <p>Kapasitas</p>
-                    <input type="number" name="kapasitas" id="" min="0">
                     <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
                 </form>
             </div>
