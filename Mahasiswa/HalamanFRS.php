@@ -45,7 +45,11 @@
                 $ips += 0;
             }
         }
-        $ips = $ips/$count;
+        if($count == 0){
+            $ips = $ips;
+        }else{
+            $ips = $ips/$count;
+        }
 
         if($ips >= 3.5){
             $sksTotal = 22;
