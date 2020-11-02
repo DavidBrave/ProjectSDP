@@ -10,6 +10,10 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    if (isset($_POST['btnInsert'])) {
+        
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,7 +64,7 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-            <a href = "halamanInsertNilai.php" class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
+            <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
@@ -85,6 +89,24 @@
             </form>
         </div>
         <div id="container">
+
+        <div style="width: 50%;">
+            <form action="">
+                <h3>Insert Nilai Mahasiswa</h3><br>
+                NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id="">
+                Kelas : <input type="text" name="id_kelas" id="">
+                <div class="input-field col s12">
+                    <select name="ujian">
+                        <option value="none" disabled selected>Pilih Ujian</option>
+                        <option value="quiz">Quiz</option>
+                        <option value="uts">UTS</option>
+                        <option value="uts">UAS</option>
+                    </select>
+                </div>
+                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+            </form>
+        </div>
+            
 
         </div>
         <div id="footer">
