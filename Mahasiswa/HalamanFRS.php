@@ -28,7 +28,7 @@
         $sksTotal = 18;
     }else{
         $query = "SELECT p.Pengambilan_Grade FROM Mahasiswa m, Pengambilan p, Kelas k, Matkul_Kurikulum mk 
-                  WHERE m.Mahasiswa_ID = p.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND m.Mahasiswa_ID = '$nrp' AND mk.Semester = $semesterLalu";
+                  WHERE m.Mahasiswa_ID = p.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND m.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semesterLalu";
         $listNilai = $conn->query($query);
         $count = mysqli_num_rows($listNilai);
         $ips = 0;
