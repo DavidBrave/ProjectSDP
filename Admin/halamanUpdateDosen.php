@@ -239,7 +239,7 @@
                 <div class="input-field col s12">
                         <select name="jabatan2">
                             <option value="none" disabled selected>Pilih Jabatan</option>
-                            <option value='Dosen'>Dosen</option>
+                            <option value='Dosen Pengajar'>Dosen</option>
                             <option value='Dosen Wali'>Dosen Wali</option>
                             <option value='Rektor'>Rektor</option>
                             <option value='Wakil Rektor'>Wakil Rektor</option>

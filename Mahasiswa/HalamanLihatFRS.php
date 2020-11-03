@@ -30,17 +30,21 @@
     }
 
     if(isset($_POST['btnSubmit'])){
-        $praktikum = $_POST['praktikum'];
-        $mahasiswa = $_SESSION['user']['user'];
-        for ($i=0; $i < sizeof($praktikum); $i++) { 
-            $kelas = $praktikum[$i];
-            $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,1)";
-            $conn->query($query);
-        }
-        for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-            $matkul = $selectedMatkuls[$i];
-            $query = "INSERT INTO Ambil VALUES('', '$mahasiswa', '$matkul', '')";
-            $conn->query($query);
+        if(isset($_POST['praktikum'])){
+            $praktikum = $_POST['praktikum'];
+            $mahasiswa = $_SESSION['user']['user'];
+            for ($i=0; $i < sizeof($praktikum); $i++) { 
+                $kelas = $praktikum[$i];
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,1)";
+                $conn->query($query);
+            }
+            for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                $matkul = $selectedMatkuls[$i];
+                $query = "INSERT INTO Ambil VALUES('', '$mahasiswa', '$matkul', '')";
+                $conn->query($query);
+            }
+        }else{
+            echo "<script> alert('Belum ada matkul yang dipilih'); </script>";
         }
     }
 ?>
@@ -59,7 +63,7 @@
     <script src="../jquery.js"></script>
     <style>
         #container{
-            height: auto;
+            height: 937px;
             width: 800px;
         }
     </style>
@@ -108,14 +112,16 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Laporan Nilai</a>
-                <a class = "btn dropdown-button blue" href = "#">Nilai Praktikum</a>
+
+                <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
+                <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
+
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Kuliah</a>
+                <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Praktikum</a>
+                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#"><i class="material-icons left">event_available</i>Absen</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>
@@ -150,27 +156,33 @@
                     <th></th>
                 </tr>
             <?php
-                for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-                    $selectedMatkul = $selectedMatkuls[$i];
-                    $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
-                    WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
-                    $matkul = mysqli_fetch_array($conn->query($query));
-                    $matkulkurikulumid = $matkul['Matkul_Kurikulum_ID'];
-                    $matkulnama = $matkul['Matkul_Nama'];
-                    $semester = $matkul['Semester'];
-                    $jadwalHari = $matkul['Jadwal_Hari'];
-                    $jadwalMulai = $matkul['Jadwal_Mulai'];
-                    $jadwalSelesai = $matkul['Jadwal_Selesai'];
-                    $sks = $matkul['SKS'];
+                if(isset($_SESSION['matkul']) && $_SESSION['matkul'] != null){
+                    for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                        $selectedMatkul = $selectedMatkuls[$i];
+                        $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
+                        WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
+                        $matkul = mysqli_fetch_array($conn->query($query));
+                        $matkulkurikulumid = $matkul['Matkul_Kurikulum_ID'];
+                        $matkulnama = $matkul['Matkul_Nama'];
+                        $semester = $matkul['Semester'];
+                        $jadwalHari = $matkul['Jadwal_Hari'];
+                        $jadwalMulai = $matkul['Jadwal_Mulai'];
+                        $jadwalSelesai = $matkul['Jadwal_Selesai'];
+                        $sks = $matkul['SKS'];
+                        echo "<tr>";
+                        echo "<td>$matkulkurikulumid</td>";
+                        echo "<td>$matkulnama</td>";
+                        echo "<td>$jadwalHari</td>";
+                        echo "<td>$jadwalMulai</td>";
+                        echo "<td>$jadwalSelesai</td>";
+                        echo "<td>$semester</td>";
+                        echo "<td>$sks</td>";
+                        echo "<td><form action='#' method='post'><input type='submit' name='btnRemove' value='Remove' class='btn waves-effect red darken-3' style='height: 35px;'><input type='hidden' name='hidId' value='$matkulkurikulumid'></form></td>";
+                        echo "</tr>";
+                    }
+                }else{
                     echo "<tr>";
-                    echo "<td>$matkulkurikulumid</td>";
-                    echo "<td>$matkulnama</td>";
-                    echo "<td>$jadwalHari</td>";
-                    echo "<td>$jadwalMulai</td>";
-                    echo "<td>$jadwalSelesai</td>";
-                    echo "<td>$semester</td>";
-                    echo "<td>$sks</td>";
-                    echo "<td><form action='#' method='post'><input type='submit' name='btnRemove' value='Remove' class='btn waves-effect red darken-3' style='height: 35px;'><input type='hidden' name='hidId' value='$matkulkurikulumid'></form></td>";
+                    echo "<td colspan='7' style='text-align: center;'>Tidak ada matkul yang dipilih</td>";
                     echo "</tr>";
                 }
             ?>

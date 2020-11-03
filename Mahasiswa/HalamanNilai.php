@@ -10,13 +10,16 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+    $nrp = $_SESSION['user']['user'];
+    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk WHERE Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID";
+    $listNilai = $conn->query($query);            
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Biodata</title>
     <link rel="stylesheet" href="Mahasiswa.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -43,6 +46,18 @@
             });
         });
     </script>
+    <style>
+        #photo2{
+            margin-left: auto;
+            margin-right: auto;
+            width: 200px; 
+            height: 200px;
+            margin-top : 30px;
+        }
+        #container{
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <div id="col-kiri">
@@ -69,16 +84,14 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
-
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
+                <a class = "btn dropdown-button blue" href = "#">Jadwal Kuliah</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
+                <a class = "btn dropdown-button blue" href = "#">Jadwal Praktikum</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#"><i class="material-icons left">event_available</i>Absen</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>
@@ -98,12 +111,38 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-
-        </div>
-        <div id="footer">
-
-        </div>
+        <table border="1" style="display: hidden">
+            <tr>
+                <?php
+                    if(mysqli_num_rows($listNilai) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>Kelas</th>";
+                        echo "<th>UTS</th>";
+                        echo "<th>UAS</th>";
+                        echo "<th>Quiz</th>";
+                        echo "<th>Nilai Akhir</th>";
+                        echo "<th>Grade</th>";
+                        echo "<th>Pengambilan Ke-</th>";
+                    }
+                ?>
+            </tr>
+            <?php
+                foreach ($listNilai as $key => $value)
+                {
+                    echo "<tr>";
+                        echo "<td>$value[Matkul_Nama]</td>";
+                        echo "<td>$value[UTS]</td>";
+                        echo "<td>$value[UAS]</td>";
+                        echo "<td>$value[Quiz]</td>";
+                        echo "<td>$value[Nilai_Akhir]</td>";
+                        echo "<td>$value[Pengambilan_Grade]</td>";
+                        echo "<td>$value[Jumlah_Ambil]</td>";
+                    echo "</tr>";
+                }
+                $conn->close();
+            ?>
+        </table>
     </div>
 </body>
 </html>

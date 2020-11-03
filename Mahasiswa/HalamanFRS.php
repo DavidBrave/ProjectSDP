@@ -45,11 +45,13 @@
                 $ips += 0;
             }
         }
+
         if($count == 0){
             $ips = $ips;
         }else{
             $ips = $ips/$count;
         }
+
 
         if($ips >= 3.5){
             $sksTotal = 22;
@@ -172,14 +174,16 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Laporan Nilai</a>
-                <a class = "btn dropdown-button blue" href = "#">Nilai Praktikum</a>
+
+                <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
+                <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
+
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Kuliah</a>
+                <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Praktikum</a>
+                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#"><i class="material-icons left">event_available</i>Absen</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>

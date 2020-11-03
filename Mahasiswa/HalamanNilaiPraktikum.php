@@ -10,13 +10,49 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama, d.Dosen_Nama FROM Mahasiswa m, Jurusan j, Dosen d 
+              WHERE m.Dosen_Wali_ID = d.Dosen_ID AND SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $nama = $mahasiswa['Mahasiswa_Nama'];
+    if($mahasiswa['Mahasiswa_JK'] == "M"){
+        $jk = "Laki-laki";
+    }else{
+        $jk = "Perempuan";
+    }
+    $alamat = $mahasiswa['Mahasiswa_Alamat'];
+    $tgl = $mahasiswa['Mahasiswa_Tgl'];
+    $agama = $mahasiswa['Mahasiswa_Agama'];
+    $email = $mahasiswa['Mahasiswa_Email'];
+    $nohp = $mahasiswa['Mahasiswa_NoTelp'];
+    $photo = $mahasiswa['Mahasiswa_Photo'];
+    $semester = $mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_Nama'];
+    $dosen = $mahasiswa['Dosen_Nama'];
+    if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "1"){
+        $degree = "D1";
+    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "2"){
+        $degree = "D2";
+    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "3"){
+        $degree = "D3";
+    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "4"){
+        $degree = "D4";
+    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "5"){
+        $degree = "S1";
+    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "6"){
+        $degree = "S2";
+    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "7"){
+        $degree = "S3";
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Biodata</title>
     <link rel="stylesheet" href="Mahasiswa.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -43,6 +79,18 @@
             });
         });
     </script>
+    <style>
+        #photo2{
+            margin-left: auto;
+            margin-right: auto;
+            width: 200px; 
+            height: 200px;
+            margin-top : 30px;
+        }
+        #container{
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <div id="col-kiri">
@@ -69,16 +117,14 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
-
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
+                <a class = "btn dropdown-button blue" href = "#">Jadwal Kuliah</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
+                <a class = "btn dropdown-button blue" href = "#">Jadwal Praktikum</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#"><i class="material-icons left">event_available</i>Absen</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>
@@ -98,8 +144,57 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-
+        <div id="container" style="padding: 20px;">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <?php 
+                    if($photo == ""){
+                    ?>
+                        <img src="../Photo/profile.png" alt="" id="photo2"> 
+                    <?php
+                    }else{
+                    ?>
+                        <img src="../Photo/<?=$photo?>" alt="" id="photo2">
+                    <?php
+                    }
+                ?>
+                <h5><?=$nama?></h5>
+                <h6><?=$nrp?></h6>
+                <p><?=$degree?>-<?=$jurusan?></p>
+            </div>
+            <h3>Biodata</h3>
+            <table style="width: 700px;" class="highlight">
+                <tr>
+                    <td>Alamat</td>
+                    <td style="text-align: right;"><?=$alamat?></td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td style="text-align: right;"><?=$email?></td>
+                </tr>
+                <tr>
+                    <td>No Telp</td>
+                    <td style="text-align: right;"><?=$nohp?></td>
+                </tr>
+                <tr>
+                    <td>Tanggal Lahir</td>
+                    <td style="text-align: right;"><?=$tgl?></td>
+                </tr>
+                <tr>
+                    <td>Agama</td>
+                    <td style="text-align: right;"><?=$agama?></td>
+                </tr>
+                <tr>
+                    <td>Jenis Kelamin</td>
+                    <td style="text-align: right;"><?=$jk?></td>
+                </tr>
+            </table>
+            <h3>Status Akademis</h3>
+            <table style="width: 700px;" class="highlight">
+                <tr>
+                    <td>Dosen Wali</td>
+                    <td style="text-align: right;"><?=$dosen?></td>
+                </tr>
+            </table>
         </div>
         <div id="footer">
 
