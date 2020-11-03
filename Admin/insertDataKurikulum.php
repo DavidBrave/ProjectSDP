@@ -24,13 +24,13 @@
         //Generate ID Kurikulum
         if ($nama != "") {
             $id = "K" . $tahun;
-    
-            $query = "SELECT Count(Kurikulum_ID)+1 as jumlah FROM Kurikulum WHERE Kurikulum_ID LIKE '$id%'";
+
+            $query = "SELECT Kurikulum_ID FROM Kurikulum WHERE Kurikulum_ID Like '$id%'";
             $result = $conn->query($query);
             $ctr = 0;
 
             foreach($result as $key => $value) {
-                $ctr = $value['jumlah'];
+                $ctr = substr($value['Kurikulum_ID'], 5) + 1;
             }
     
             $id .= $ctr;
