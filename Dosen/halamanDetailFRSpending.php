@@ -26,7 +26,6 @@
         $_SESSION['matkul'] = array();
         array_push($_SESSION['matkul'], $_POST['matkul']);
         $_SESSION['mahasiswaID'] = $id;
-        var_dump($_POST['matkul']);
         header("location: halamanFRSpraktikum.php");
     }
 
