@@ -24,11 +24,12 @@
         if ($nama != "" && $jurusan != "") {  
             $id .= substr($jurusan, 1, 3);
 
-            $query = "SELECT Count(Major_ID) as jumlah FROM Major WHERE Major_ID LIKE '$id%'";
+            $query = "SELECT Major_ID FROM Major WHERE Major_ID Like '$id%'";
             $result = $conn->query($query);
             $ctr = 0;
+
             foreach($result as $key => $value) {
-                $ctr = $value['jumlah'] + 1;
+                $ctr = substr($value['Major_ID'], 4) + 1;
             }
     
             if ($ctr < 10) {

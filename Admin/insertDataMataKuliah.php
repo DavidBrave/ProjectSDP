@@ -21,12 +21,12 @@
 
         //Generate ID Matkul
         if ($nilai != "" && $nama != "") {
-            $query = "SELECT Count(Matkul_ID) as jumlah FROM Matkul";
+            $query = "SELECT Matkul_ID FROM Matkul";
             $result = $conn->query($query);
             $ctr = 0;
 
             foreach($result as $key => $value) {
-                $ctr = $value['jumlah'] + 1;
+                $ctr = substr($value['Matkul_ID'], 2) + 1;
             }
 
             if ($ctr < 10) {

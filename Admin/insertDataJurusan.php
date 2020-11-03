@@ -24,13 +24,13 @@
         //Generate ID Jurusan
         if ($tingkat != "" && $nama != "") {
             $id = "J" . $tingkat;
-    
-            $query = "SELECT Count(Jurusan_ID) as jumlah FROM Jurusan WHERE Jurusan_ID LIKE '$id%'";
+
+            $query = "SELECT Jurusan_ID FROM Jurusan WHERE Jurusan_ID LIKE '$id%'";
             $result = $conn->query($query);
             $ctr = 0;
 
             foreach($result as $key => $value) {
-                $ctr = $value['jumlah'] + 1;
+                $ctr = substr($value['Jurusan_ID'], 2) + 1;
             }
     
             if ($ctr < 10) {

@@ -10,13 +10,26 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    if(isset($_POST['btnDetail'])){
+        $_SESSION['detailFRSpending'] = $_POST['idMahasiswa'];
+        header("location: halamanDetailFRSpending.php");
+    }
+
+    $dosenID = $_SESSION['user']['user'];
+    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester 
+    FROM Mahasiswa m, Dosen d, Ambil a 
+    WHERE m.Mahasiswa_ID = a.Mahasiswa_ID 
+    AND m.Dosen_Wali_ID = $dosenID
+    AND a.Ambil_Status = ''";
+    $listFRS = $conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>FRS</title>
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -42,6 +55,54 @@
                $("#menu_item3").toggle();
             });
         });
+
+        function TolakClick(clicked_id)
+        {
+            var nama = $("#Nama" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Tolak FRS?");
+            if (result) {
+                $.ajax({
+                    method : "post",
+                    url : "tolakFRS.php",
+                    async : false,
+                    data : {
+                        id : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("FRS Mahasiswa " + nama + " Berhasil Ditolak");
+                }).fail(function(data){
+                    alert("Tolak FRS Mahasiswa " + nama + " Dibatalkan");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
+
+        function TerimaClick(clicked_id)
+        {
+            var nama = $("#Nama" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Terima FRS?");
+            if (result) {
+                $.ajax({
+                    method : "post",
+                    url : "terimaFRS.php",
+                    async : false,
+                    data : {
+                        id : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("FRS Mahasiswa " + nama + " Berhasil Diterima");
+                }).fail(function(data){
+                    alert("Terima FRS Mahasiswa " + nama + " Dibatalkan");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -67,9 +128,7 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-
             <a href = "halamanInsertNilai.php" class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
-
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
@@ -86,7 +145,7 @@
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
-            </div>       
+            </div>
         </div>
     </div>
     <div id="col-kanan">
@@ -99,7 +158,38 @@
             </form>
         </div>
         <div id="container">
+            <h3>FRS (Pending)</h3><br>
+            <table id = "dataFRS" border="1" style="display: hidden">
+            <tr>
+                <?php
+                    if(mysqli_num_rows($listFRS) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>NRP Mahasiswa</th>";
+                        echo "<th>Nama</th>";
+                        echo "<th>Semester</th>";
+                        echo "<th>Detail</th>";
+                        echo "<th>Terima</th>";
+                        echo "<th>Tolak</th>";
+                    }
+                ?>
+            </tr>
 
+            <?php
+                foreach ($listFRS as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Mahasiswa_ID]</td>";
+                    echo "<td>$value[Mahasiswa_Nama]</td>";
+                    echo "<td>$value[Mahasiswa_Semester]</td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnDetail' style='width: 150px;'>Detail<i class='material-icons right'>Detail</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_ID]'></form></td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnTerima' id='$value[Mahasiswa_ID]' onClick='TerimaClick(this.id)' style='width: 150px;'>Terima<i class='material-icons right'>Terima</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_Nama]'></form></td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnTolak' id='$value[Mahasiswa_ID]' onClick='TolakClick(this.id)' style='width: 150px;'>Tolak<i class='material-icons right'>Tolak</i></button><input type='hidden' id='Nama$value[Mahasiswa_ID]' value='$value[Mahasiswa_Nama]'></form></td>";
+                    echo "</tr>";
+                }
+
+                $conn->close();
+            ?>
+            </table>
         </div>
         <div id="footer">
 
