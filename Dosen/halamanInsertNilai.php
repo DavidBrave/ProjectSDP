@@ -20,16 +20,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Insert Nilai</title>
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+    
+
     <script src="../jquery.js"></script>
     <script>
         $(document).ready(function () {
+            $("select").material_select();
+
             $("#menu_jadwal").click(function () {
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
@@ -100,7 +105,7 @@
                         <option value="none" disabled selected>Pilih Ujian</option>
                         <option value="quiz">Quiz</option>
                         <option value="uts">UTS</option>
-                        <option value="uts">UAS</option>
+                        <option value="uas">UAS</option>
                     </select>
                 </div>
                 <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
