@@ -209,7 +209,7 @@
 
                             $pengambilan = null;
                             while ($pengambilan = $list_pengambilan->fetch_assoc()) {
-                                $val = $pengambilan['Kelas_ID'];//."-".$pengambilan['Pengambilan_ID'];
+                                $val = $pengambilan['Mahasiswa_ID'];//."-".$pengambilan['Pengambilan_ID'];
 
                                 $mahasiswa_id = $pengambilan['Mahasiswa_ID'];
                                 $mahasiswa_query = "SELECT * FROM Mahasiswa WHERE Mahasiswa_ID = '$mahasiswa_id'";
@@ -239,7 +239,7 @@
                     </select>
                 </div>
                 Nilai : <input type="text" name="nilai" id="">
-                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit">Insert</button>
             </form>
         </div>
         <div id="footer">
