@@ -12,47 +12,19 @@
     }
 
     $nrp = $_SESSION['user']['user'];
-    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama, d.Dosen_Nama FROM Mahasiswa m, Jurusan j, Dosen d 
-              WHERE m.Dosen_Wali_ID = d.Dosen_ID AND SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
     $mahasiswa = mysqli_fetch_array($conn->query($query));
     $nrp = $mahasiswa['Mahasiswa_ID'];
-    $nama = $mahasiswa['Mahasiswa_Nama'];
-    if($mahasiswa['Mahasiswa_JK'] == "M"){
-        $jk = "Laki-laki";
-    }else{
-        $jk = "Perempuan";
-    }
-    $alamat = $mahasiswa['Mahasiswa_Alamat'];
-    $tgl = $mahasiswa['Mahasiswa_Tgl'];
-    $agama = $mahasiswa['Mahasiswa_Agama'];
-    $email = $mahasiswa['Mahasiswa_Email'];
-    $nohp = $mahasiswa['Mahasiswa_NoTelp'];
-    $photo = $mahasiswa['Mahasiswa_Photo'];
-    $semester = $mahasiswa['Mahasiswa_Semester'];
-    $jurusan = $mahasiswa['Jurusan_Nama'];
-    $dosen = $mahasiswa['Dosen_Nama'];
-    if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "1"){
-        $degree = "D1";
-    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "2"){
-        $degree = "D2";
-    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "3"){
-        $degree = "D3";
-    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "4"){
-        $degree = "D4";
-    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "5"){
-        $degree = "S1";
-    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "6"){
-        $degree = "S2";
-    }else if(substr($mahasiswa['Jurusan_ID'], 1, 1) == "7"){
-        $degree = "S3";
-    }
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biodata</title>
+    <title>Jadwal Kuliah</title>
     <link rel="stylesheet" href="Mahasiswa.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -80,15 +52,8 @@
         });
     </script>
     <style>
-        #photo2{
-            margin-left: auto;
-            margin-right: auto;
-            width: 200px; 
-            height: 200px;
-            margin-top : 30px;
-        }
         #container{
-            height: auto;
+            height: 937px;
         }
     </style>
 </head>
@@ -117,10 +82,8 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-
-                <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
-                <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
-
+                <a class = "btn dropdown-button blue" href = "#">Laporan Nilai</a>
+                <a class = "btn dropdown-button blue" href = "#">Nilai Praktikum</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
@@ -147,55 +110,77 @@
             </form>
         </div>
         <div id="container" style="padding: 20px;">
-            <div style="text-align: center; margin-bottom: 50px;">
-                <?php 
-                    if($photo == ""){
-                    ?>
-                        <img src="../Photo/profile.png" alt="" id="photo2"> 
-                    <?php
-                    }else{
-                    ?>
-                        <img src="../Photo/<?=$photo?>" alt="" id="photo2">
-                    <?php
+            <h3>Jadwal Kuliah</h3>
+            <table>
+                <tr>
+                    <th>Kode</th>
+                    <th>Mata Kuliah</th>
+                    <th>SKS</th>
+                    <th>Kelas</th>
+                    <th>Dosen</th>
+                    <th>Hari</th>
+                    <th colspan="2">Jam</th>
+                    <th>Ruangan</th>
+                </tr>
+            <?php
+                $query = "SELECT DISTINCT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, mk.SKS, k.Kelas_Nama, d.Dosen_Nama, jk.Jadwal_Hari, SUBSTR(jk.Jadwal_Mulai,1,5) as Jadwal_Mulai, SUBSTR(jk.Jadwal_Selesai,1,5) as Jadwal_Selesai, k.Kelas_Ruangan, (CASE jk.Jadwal_Hari WHEN 'monday' THEN 1 WHEN 'tuesday' THEN 2 WHEN 'wednesday' THEN 3 WHEN 'thursday' THEN 4 WHEN 'friday' THEN 5 WHEN 'saturday' THEN 6 WHEN 'sunday' THEN 7 END) AS day 
+                FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs 
+                WHERE mk.Matkul_Kurikulum_ID = Matkulkurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND jk.Kelas_ID = k.Kelas_ID AND k.DosenPengajar_ID = d.Dosen_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester ORDER BY day ASC";   
+                $jadwal = $conn->query($query);     
+                foreach ($jadwal as $key => $value) {
+                    $hari = $value['Jadwal_Hari'];
+                    if($hari == "monday"){
+                        $hari = "Senin";
+                    }else if($hari == "tuesday"){
+                        $hari = "Selasa";
+                    }else if($hari == "wednesday"){
+                        $hari = "Rabu";
+                    }else if($hari == "thursday"){
+                        $hari = "Kamis";
+                    }else if($hari == "friday"){
+                        $hari = "Jumat";
+                    }else if($hari == "saturday"){
+                        $hari = "Sabtu";
+                    }else if($hari == "sunday"){
+                        $hari = "Minggu";
                     }
-                ?>
-                <h5><?=$nama?></h5>
-                <h6><?=$nrp?></h6>
-                <p><?=$degree?>-<?=$jurusan?></p>
-            </div>
-            <h3>Biodata</h3>
-            <table style="width: 700px;" class="highlight">
-                <tr>
-                    <td>Alamat</td>
-                    <td style="text-align: right;"><?=$alamat?></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td style="text-align: right;"><?=$email?></td>
-                </tr>
-                <tr>
-                    <td>No Telp</td>
-                    <td style="text-align: right;"><?=$nohp?></td>
-                </tr>
-                <tr>
-                    <td>Tanggal Lahir</td>
-                    <td style="text-align: right;"><?=$tgl?></td>
-                </tr>
-                <tr>
-                    <td>Agama</td>
-                    <td style="text-align: right;"><?=$agama?></td>
-                </tr>
-                <tr>
-                    <td>Jenis Kelamin</td>
-                    <td style="text-align: right;"><?=$jk?></td>
-                </tr>
+                    echo "<tr>";
+                    echo "<td>$value[Matkul_Kurikulum_ID]</td>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[SKS]</td>";
+                    echo "<td>$value[Kelas_Nama]</td>";
+                    echo "<td>$value[Dosen_Nama]</td>";
+                    echo "<td>$hari</td>";
+                    echo "<td colspan='2'>$value[Jadwal_Mulai] - $value[Jadwal_Selesai]</td>";
+                    echo "<td>$value[Kelas_Ruangan]</td>";
+                    echo "</tr>";
+                }
+            ?>
             </table>
-            <h3>Status Akademis</h3>
-            <table style="width: 700px;" class="highlight">
+            <br><br>
+            <h3>Jadwal Praktikum</h3>
+            <table>
                 <tr>
-                    <td>Dosen Wali</td>
-                    <td style="text-align: right;"><?=$dosen?></td>
+                    <th>Kode</th>
+                    <th>Praktikum</th>
+                    <th>Hari</th>
+                    <th colspan="2">Jam</th>
+                    <th>Ruangan</th>
                 </tr>
+            <?php
+                $query = "SELECT p.Praktikum_ID, m.Matkul_Nama, p.Praktikum_Hari, SUBSTR(p.Praktikum_Jam_Mulai,1,5) as Jadwal_Mulai, SUBSTR(p.Praktikum_Jam_Selesai,1,5) as Jadwal_Selesai, kp.Kelas_Praktikum_Ruangan, (CASE p.Praktikum_Hari WHEN 'Senin' THEN 1 WHEN 'Selasa' THEN 2 WHEN 'Rabu' THEN 3 WHEN 'Kamis' THEN 4 WHEN 'Jumat' THEN 5 WHEN 'Sabtu' THEN 6 WHEN 'Minggu' THEN 7 END) AS day FROM Praktikum p, Kelas_Praktikum kp, Pengambilan_Praktikum pp, Matkul_Kurikulum mk, Matkul m, Mahasiswa mhs 
+                WHERE mk.Matkul_Kurikulum_ID = p.Matkulkurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Praktikum_ID = kp.Praktikum_ID AND kp.Kelas_Praktikum_ID = pp.Kelas_Praktikum_ID AND pp.Mahasiswa_ID = mhs.Mahasiswa_ID AND pp.Mahasiswa_ID = '$nrp' AND pp.Semester_Pengambilan_Praktikum = $semester ORDER BY day ASC";   
+                $jadwal = $conn->query($query);     
+                foreach ($jadwal as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Praktikum_ID]</td>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[Praktikum_Hari]</td>";
+                    echo "<td colspan='2'>$value[Jadwal_Mulai] - $value[Jadwal_Selesai]</td>";
+                    echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
+                    echo "</tr>";
+                }
+            ?>
             </table>
         </div>
         <div id="footer">
