@@ -14,7 +14,7 @@
     if (isset($_POST['btnInsert'])) {
 
         $nrp=$_POST['nrp_mahasiswa'];
-        $id_kelas=$_POST['id_kelas'];
+        $id_kelas=$_POST['kelas'];
         if (isset($_POST['ujian']))
         {
             if ($_POST['ujian']=="quiz")
@@ -141,9 +141,57 @@
         <div style="width: 50%;">
             <form action="POST">
 
+<<<<<<< Updated upstream
                 <h3>Insert Nilai Mahasiswa</h3><br>
                 NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id="">
                 Kelas : <input type="text" name="id_kelas" id="">
+=======
+                            //     $dosen_query = "SELECT * FROM Dosen WHERE Dosen_ID = '$kelas[DosenPengajar_ID]'";
+                            //     $dosen = $conn->query($dosen_query);
+                            //     $dosen = $dosen->fetch_assoc();
+
+                            // }
+
+
+
+                        ?>
+                    </select>
+                </div>
+
+                Nama Mahasiswa : 
+                <div class="input-field col s12">
+                    <select name="nrp_mahasiswa" id="select2">
+                    <option value="none" disabled selected>Pilih Mahasiswa</option>
+                        <?php
+                            
+                            
+                            $query_pengambilan = "SELECT * FROM Pengambilan";
+                            $list_pengambilan = $conn->query($query_pengambilan);
+
+                            $pengambilan = null;
+                            while ($pengambilan = $list_pengambilan->fetch_assoc()) {
+                                $val = $pengambilan['Mahasiswa_ID'];//."-".$pengambilan['Pengambilan_ID'];
+
+                                $mahasiswa_id = $pengambilan['Mahasiswa_ID'];
+                                $mahasiswa_query = "SELECT * FROM Mahasiswa WHERE Mahasiswa_ID = '$mahasiswa_id'";
+                                $list_mahasiswa = $conn->query($mahasiswa_query);
+                                $mahasiswa = $list_mahasiswa->fetch_assoc();
+                                echo("<option value='$val'>".
+                                        $mahasiswa['Mahasiswa_Nama']."</option>");
+                            }
+                            
+
+
+
+                        ?>
+                    </select>
+                </div>
+
+
+<!--                 
+                NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id=""> -->
+                Kelas :
+>>>>>>> Stashed changes
                 <div class="input-field col s12">
                     <select name="ujian">
                         <option value="none" disabled selected>Pilih Ujian</option>
