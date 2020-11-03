@@ -10,13 +10,21 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Jadwal Kuliah</title>
     <link rel="stylesheet" href="Mahasiswa.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -43,6 +51,11 @@
             });
         });
     </script>
+    <style>
+        #container{
+            height: 937px;
+        }
+    </style>
 </head>
 <body>
     <div id="col-kiri">
@@ -96,8 +109,13 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-
+        <div id="container" style="padding: 20px;">
+            <h2>Jadwal Kuliah</h2>
+            <?php
+                $query = "SELECT DISTINCT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, mk.SKS, k.Kelas_Nama, d.Dosen_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai, k.Kelas_Ruangan FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs 
+                WHERE mk.Matkul_Kurikulum_ID = Matkulkurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND jk.Kelas_ID = k.Kelas_ID AND k.DosenPengajar_ID = d.Dosen_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester";   
+                $jadwal = $conn->query($query);     
+            ?>
         </div>
         <div id="footer">
 
