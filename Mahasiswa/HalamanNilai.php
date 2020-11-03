@@ -140,6 +140,7 @@
                         echo "<td>$value[Jumlah_Ambil]</td>";
                     echo "</tr>";
                 }
+                $conn->close();
             ?>
         </table>
     </div>

@@ -28,7 +28,29 @@
             {
                 $query="UPDATE Pengambilan SET UAS=$_POST[nilai] WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
             }
+            $conn->query($query);  
         }
+        $query="SELECT UTS FROM PENGAMBILAN WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
+        $nilaiUTS=$conn->query($query);  
+        $query="SELECT UAS FROM PENGAMBILAN WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
+        $nilaiUAS=$conn->query($query);
+        $query="SELECT Quiz FROM PENGAMBILAN WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
+        $nilaiQuiz=$conn->query($query);
+        $nilaiAkhir=($nilaiQuiz*(30/100)+($nilaiUTS*(30/100)+($nilaiUAS*(40/100))));
+        $query="UPDATE Pengambilan SET NilaiAkhir=$nilaiAkhir WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
+        $conn->query($query);
+        $grade="";
+        if ($nilaiAkhir>=80)
+            $grade="A";
+        elseif (($nilaiAkhir<80)&&($nilaiAkhir>=70))
+            $grade="B";
+        elseif (($nilaiAkhir<70)&&($nilaiAkhir>=56))
+            $grade="C";
+        else
+            $grade="D";
+        $query="UPDATE Pengambilan SET Grade=$grade WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
+        $conn->query($query);        
+        $conn->close();
     }
 ?>
 <!DOCTYPE html>
