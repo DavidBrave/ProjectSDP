@@ -45,7 +45,13 @@
                 $ips += 0;
             }
         }
-        $ips = $ips/$count;
+
+        if($count == 0){
+            $ips = $ips;
+        }else{
+            $ips = $ips/$count;
+        }
+
 
         if($ips >= 3.5){
             $sksTotal = 22;
@@ -168,8 +174,10 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
+
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
+
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>

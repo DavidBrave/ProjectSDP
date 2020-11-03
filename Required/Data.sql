@@ -238,7 +238,6 @@ INSERT INTO `Mahasiswa` (`Mahasiswa_ID`,`Dosen_Wali_ID`,`Dosen_Pembimbing_ID`,`M
 ('2205030013','198520102001','','Wuisan Changpu','F','Jl Arteri Mangga Dua Raya Mal Mangga Dua Bl B/89, Dki Jakarta','2002-06-24','Katolik','wuisanchangpu@gmail.com','081230002008','220116773'),
 ('2205040006','198520102001','','Yorit Pooroe','F','Jl Jatiwaringin Raya 9, Dki Jakarta','2002-08-23','Buddha','yoritpooroe@gmail.com','081230002009','220116774');
 
-
 -- MLK + 4 digit id
 INSERT INTO `Matkul_Kurikulum` (`Matkul_Kurikulum_ID`, `Matkul_ID`, `Jurusan_ID`, `Kurikulum_ID`, `Periode_ID`, `Semester`, `SKS`) VALUES
 ('MLK0001', 'MK0003', 'J301', 'K20132', '2018201911', 1, 3);
@@ -252,3 +251,6 @@ INSERT INTO `Kelas` (`Kelas_ID`, `Matkulkurikulum_ID`, `DosenPengajar_ID`, `Kela
 -- JDL + 4 digit id
 INSERT INTO `Jadwal_Kuliah`(`Jadwal_ID`, `Kelas_ID`, `Jadwal_Hari`, `Jadwal_Mulai`, `Jadwal_Selesai`) VALUES 
 ([value-1],[value-2],[value-3],[value-4],[value-5])
+
+--Praktikum
+--P + 4 digit id

@@ -1,10 +1,6 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-    $nama = "";
-    $tingkat = "";
-    $id = "K";
-    $tahun = date('Y');
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -14,62 +10,17 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if (isset($_POST['btnInsert'])) {        
-        $nama = $_POST['nama'];
-        if (isset($_POST['tingkat'])) {
-            $tingkat = $_POST['tingkat'];
-        }
-
-        //Generate ID Kurikulum
-        if ($nama != "") {
-            $id = "K" . $tahun;
-    
-            $query = "SELECT Count(Kurikulum_ID)+1 as jumlah FROM Kurikulum WHERE Kurikulum_ID LIKE '$id%'";
-            $result = $conn->query($query);
-            $ctr = 0;
-
-            foreach($result as $key => $value) {
-                $ctr = $value['jumlah'];
-            }
-    
-            $id .= $ctr;
-            
-            //Proses Insert
-            $query = "INSERT INTO Kurikulum VALUES('$id', '$nama')";
-            $conn->query($query);
-
-            if($conn){
-                echo '<script language = "javascript">';
-                echo "alert('Berhasil Insert Kurikulum $nama')";
-                echo '</script>';
-            }else{
-                echo '<script language = "javascript">';
-                echo "alert('Gagal Insert Kurikulum $nama')";
-                echo '</script>';
-            }
-        }
-        else {
-            echo '<script language = "javascript">';
-            echo "alert('Semua Field Harus Diisi')";
-            echo '</script>';
-        }
-    }
-
-    $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Update Matkul Kurikulum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -78,10 +29,35 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-         $(document).ready(function() {
+        $(document).ready(function () {
             $('select').material_select();
 
-         });
+            $("#btnUpdate").click(function () {
+                $.ajax({
+                    method : "post",
+                    url : "updateKelas.php",
+                    data : {
+                        id : $("#id").val(),
+                        matkulkurikulum : $("#matkulkurikulum").val(),
+                        dosen : $("#dosen").val(),
+                        nama : $("#nama").val(),
+                        ruangan : $("#ruangan").val(),
+                        kapasitas : $("#kapasitas").val()
+                    },
+                    success : function (hasil) {
+                        var id = $("#id").val();
+                        var nama = $("#nama").val();
+                        var text = $("#matkulkurikulum option:selected").text();
+                        var arr = text.split(" - ");
+                        if(hasil == 1){
+                            alert("Kelas " + nama + " " + arr[0] + " jurusan " + arr[1] + " Berhasil Diperbaharui");
+                        }else{
+                            alert("Pembaharuan Gagal");
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </head>
 <body>
@@ -152,22 +128,77 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
+
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <form action = "" method = "post">
-                    <h3>Insert Data Kurikulum</h3><br>
-                    Nama Kurikulum: <input type="text" name="nama">
-                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
-                </form>
+                <h3>Update Data Kelas</h3><br>
+                <p>ID : </p>
+                <input type="text" name="id" id="id" value="<?=$_SESSION['kelas']['id']?>" disabled>
+                <p>Matkul Kurikulum : </p>
+                    <div class="input-field col s12">
+                        <select name="matkulkurikulum" id="matkulkurikulum">
+                            <?php
+                                $query = "SELECT * FROM Matkul_Kurikulum";
+                                $listMatkulKurikulum = $conn->query($query);
+                                
+                                foreach ($listMatkulKurikulum as $key => $value) {
+                                    $idMatkulKurikulum = $value['Matkul_Kurikulum_ID'];
+                                    $idMatkul = $value['Matkul_ID'];
+                                    $idJurusan = $value['Jurusan_ID'];
+                                    
+                                    $query = "SELECT * FROM Matkul";
+                                    $listMatkul = $conn->query($query);
+                                    foreach ($listMatkul as $key => $value) {
+                                        if($value['Matkul_ID'] == $idMatkul){
+                                            $namaMatkul = $value['Matkul_Nama'];
+                                        }
+                                    }
+    
+                                    $query = "SELECT * FROM Jurusan";
+                                    $listJurusan = $conn->query($query);
+                                    foreach ($listJurusan as $key => $value) {
+                                        if($value['Jurusan_ID'] == $idJurusan){
+                                            $namaJurusan = $value['Jurusan_Nama'];
+                                        }
+                                    }
+                                    
+                                    if($idMatkulKurikulum == $_SESSION['kelas']['matkulkurikulum']){
+                                        echo "<option value='$idMatkulKurikulum' selected>".$namaMatkul." - ".$namaJurusan."</option>";
+                                    }else{
+                                        echo "<option value='$idMatkulKurikulum'>".$namaMatkul." - ".$namaJurusan."</option>";
+                                    }
+                                    
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Dosen : </p>
+                    <div class="input-field col s12">
+                        <select name="dosen" id="dosen">
+                            <option value="none" disabled selected>Pilih Dosen</option>
+                            <?php
+                                $query = "SELECT * FROM Dosen";
+                                $listDosen = $conn->query($query);
+                                foreach ($listDosen as $key => $value) {
+                                    if($value['Dosen_ID'] == $_SESSION['kelas']['dosen']){
+                                        echo "<option value='$value[Dosen_ID]' selected>".$value['Dosen_Nama']."</option>";
+                                    }else{
+                                        echo "<option value='$value[Dosen_ID]'>".$value['Dosen_Nama']."</option>";
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Nama : </p>
+                    <input type="text" name="nama" id="nama" value="<?=$_SESSION['kelas']['nama']?>">
+                    <p>Ruangan : </p>
+                    <input type="text" name="ruangan" id="ruangan" value="<?=$_SESSION['kelas']['ruangan']?>">
+                    <p>Kapasitas : </p>
+                    <input type="number" name="kapasitas" min="0" id="kapasitas" value="<?=$_SESSION['kelas']['kapasitas']?>">
+                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>
     </div>
 </body>
 </html>
-
-<?php
-    unset($_SESSION['validate']['kurikulum']);
-    unset($_SESSION['temp']['kurikulum']);
-?>
