@@ -10,48 +10,9 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if (isset($_POST['btnInsert'])) {
-        $nrp=$_POST['nrp_mahasiswa'];
-        $id_kelas=$_POST['id_kelas'];
-        if (isset($_POST['ujian']))
-        {
-            if ($_POST['ujian']=="quiz")
-            {
-                $query="UPDATE Pengambilan SET Quiz=$_POST[nilai] WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            }
-            elseif ($_POST['ujian']=="uts")
-            {
-                $query="UPDATE Pengambilan SET UTS=$_POST[nilai] WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            }
-            elseif ($_POST['ujian']=="uas")
-            {
-                $query="UPDATE Pengambilan SET UAS=$_POST[nilai] WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            }
-            $conn->query($query);  
-            $query="SELECT UTS FROM PENGAMBILAN WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            $nilaiUTS=$conn->query($query);  
-            $query="SELECT UAS FROM PENGAMBILAN WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            $nilaiUAS=$conn->query($query);
-            $query="SELECT Quiz FROM PENGAMBILAN WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            $nilaiQuiz=$conn->query($query);
-            $nilaiAkhir=($nilaiQuiz*(30/100)+($nilaiUTS*(30/100)+($nilaiUAS*(40/100))));
-            $query="UPDATE Pengambilan SET NilaiAkhir=$nilaiAkhir WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            $conn->query($query);
-            $grade="";
-            if ($nilaiAkhir>=80)
-                $grade="A";
-            elseif (($nilaiAkhir<80)&&($nilaiAkhir>=70))
-                $grade="B";
-            elseif (($nilaiAkhir<70)&&($nilaiAkhir>=56))
-                $grade="C";
-            else
-                $grade="D";
-            $query="UPDATE Pengambilan SET Grade=$grade WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
-            $conn->query($query);        
-        }
-        $conn->close();
-    }
+    $idDosen=$_SESSION['user']['user'];
+    $query="SELECT * FROM Kelas k,Matkul m,Matkul_Kurikulum mk,Jadwal_Kuliah jk Where k.DosenPengajar_ID=$idDosen AND k.MatkulKurikulum_ID=mk.Matkul_Kurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND k.Kelas_ID=jk.Kelas_ID";
+    $listKelas=$conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -102,7 +63,7 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-            <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
+            <a class = "btn dropdown-button blue lighten-2" id="menu_nilai" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
@@ -127,26 +88,30 @@
             </form>
         </div>
         <div id="container">
-
-        <div style="width: 50%;">
-            <form action="POST">
-                <h3>Insert Nilai Mahasiswa</h3><br>
-                NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id="">
-                Kelas : <input type="text" name="id_kelas" id="">
-                <div class="input-field col s12">
-                    <select name="ujian">
-                        <option value="none" disabled selected>Pilih Ujian</option>
-                        <option value="quiz">Quiz</option>
-                        <option value="uts">UTS</option>
-                        <option value="uas">UAS</option>
-                    </select>
-                    Nilai : <input type="text" name="nilai" id="">
-                </div>
-                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
-            </form>
-        </div>
-            
-
+            <table border="1" style="display: hidden">
+                <tr>
+                    <?php
+                        if(mysqli_num_rows($listKelas) == 0){
+                            echo "<h4>Tidak ada data</h4>";
+                        }else{
+                            echo "<th>Kelas</th>";
+                            echo "<th>Ruangan</th>";
+                            echo "<th>Waktu</th>";
+                            echo "<th>Action</th>";
+                        }
+                    ?>
+                </tr>
+                <?php
+                    foreach ($listKelas as $key => $value) {
+                        echo"<tr>";
+                            echo"<td>$value[Matkul_Nama] - $value[Kelas_Nama] </td>";
+                            echo"<td>$value[Kelas_Ruangan]</td>";
+                            echo"<td>$value[Jadwal_Hari] $value[Jadwal_Mulai]-$value[Jadwal_Selesai]</td>";
+                            echo"<td><button>Details</button></td>";
+                        echo"</tr>";
+                    }
+                ?>
+            </table>
         </div>
         <div id="footer">
 
@@ -154,3 +119,4 @@
     </div>
 </body>
 </html>
+<form action="halamanDetail" method="post"></form>

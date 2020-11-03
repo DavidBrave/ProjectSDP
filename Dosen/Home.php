@@ -63,7 +63,7 @@
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Ruangan</a>
