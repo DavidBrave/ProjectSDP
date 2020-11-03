@@ -20,7 +20,7 @@
     <title>Admin</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="admin2.css">
     <style>
         #photo{
             width: 200px;
@@ -54,7 +54,6 @@
                         method : "post",
                         url : "generateNrp.php",
                         data : {
-                            
                             jurusan : $("#jurusan").val().substr(1,3),
                             nohp : $("#nohp").val(),
                             tahun : year1 + year2
@@ -120,10 +119,21 @@
                                 document.getElementById('email').value = "";
                                 document.getElementById('nohp').value = "";
                                 document.getElementById('kota').value = "";
-                                document.getElementById('dosen').selectedIndex = 0;
-                                document.getElementById('jurusan').selectedIndex = 0;
-                                document.getElementById('agama').selectedIndex = 0;
-                                document.getElementById('provinsi').selectedIndex = 0;
+                                document.getElementById('rbM').checked = false;
+                                document.getElementById('rbF').checked = false;
+                                document.getElementById('content-nrp').innerHTML = "";
+                                document.getElementById('content-pass').innerHTML = "";
+                                ocument.getElementById('msgNama').hidden = true;
+                                ocument.getElementById('msgNama').hidden = true;
+                                document.getElementById('msgAlamat').hidden = true;
+                                document.getElementById('msgEmail').hidden = true;
+                                document.getElementById('msgNohp').hidden = true;
+                                document.getElementById('msgKota').hidden = true;
+                                document.getElementById('msgDosen').hidden = true;
+                                document.getElementById('msgJurusan').hidden = true;
+                                document.getElementById('msgAgama').hidden = true;
+                                document.getElementById('msgProvinsi').hidden = true;
+                                document.getElementById('msgJK').hidden = true;
                             }else{
                                 alert("Gagal Insert Data Mahasiswa " + nama);
                                 if (nama == "" || nama == null) {
@@ -137,7 +147,7 @@
                                     document.getElementById('msgTanggal').hidden = false;
                                 }
                                 else {
-                                    document.getElementById('msgTanggal').hidden = true;
+                                    ocument.getElementById('msgNama').hidden = true;
                                 }
 
                                 if (alamat == "" || alamat == null) {
@@ -237,17 +247,37 @@
         }
 
         function UbahJurusan() {
-            
-            var list_jurusan = document.getElementById("jurusan");
-            var jurusan_dipilih = list_jurusan.options[list_jurusan.selectedIndex].value;
-            
-
-            var generated_nrp = document.getElementById('nrp').value;
-            if (generated_nrp != "") {
-                nrp_baru = generated_nrp.substr(0, 3) + jurusan_dipilih.substr(1) + generated_nrp.substr(6);
-                document.getElementById('nrp').value = nrp_baru;
-            }
-            
+            if($("#nama").val() != "" && $("#jurusan").val() != "" && $("#dosen").val() != "" && $("#tgl").val() != "" && $("input[name='group1']:checked").val() != "" && $("#alamat").val() != "" && $("#provinsi").val() != "" && $("#kota").val() != "" && $("#agama").val() != "" && $("#email").val() != "" && $("#nohp").val() != "") {
+                    var d = new Date();
+                    var year = d.getFullYear() + "";
+                    var year1 = year.substr(0,1);
+                    var year2 = year.substr(2,2);
+                    $.ajax({
+                        method : "post",
+                        url : "generateNrp.php",
+                        data : {
+                            
+                            jurusan : $("#jurusan").val().substr(1,3),
+                            nohp : $("#nohp").val(),
+                            tahun : year1 + year2
+                        },
+                        success : function (hasil) {
+                            $("#content-nrp").html(hasil);
+                        }
+                    });
+                    $.ajax({
+                        method : "post",
+                        url : "generatePassword.php",
+                        data : {
+                            jurusan : $("#jurusan").val().substr(1,3),
+                            nohp : $("#nohp").val(),
+                            tahun : year1 + year2
+                        },
+                        success : function (hasil) {
+                            $("#content-pass").html(hasil);
+                        }
+                    });
+                }
         }
 
     </script>
@@ -304,17 +334,35 @@
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
+            <ul id = "dropdown8" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanMatkulKurikulum.php">Data Matkul Kurikulum</a></li>
+                <li><a href = "insertMatkulKurikulum.php">Insert Data Matkul Kurikulum</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown8" style="width: 100%; color: black;">Matkul Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+            <ul id = "dropdown9" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataPraktikum.php">Data Praktikum</a></li>
+                <li><a href = "insertDataPraktikum.php">Insert Data Praktikum</a></li>
+                <li><a href = "insertKelasPraktikum.php">Insert Kelas Praktikum</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+            <ul id = "dropdown10" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataKelas.php">Data Kelas</a></li>
+                <li><a href = "insertDataKelas.php">Insert Data Kelas</a></li>
+                <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Insert Data Mahasiswa</h3><br>
-                Nama Lengkap: <input type="text" id="nama"
-                value = "<?php if (isset($_SESSION['temp']['mahasiswa']['nama'])) {echo $_SESSION['temp']['mahasiswa']['nama'];}?>">
+                Nama Lengkap: <input type="text" id="nama">
                 <label id='msgNama' style = 'color:Red' hidden>Nama Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="jurusan" id="jurusan" onchange="UbahJurusan();">
-                        <option value="none" disabled selected>Pilih Jurusan</option>
+                        <option value="none" id="defaultJurusan" disabled selected>Pilih Jurusan</option>
                         <?php
                             $query = "SELECT * FROM Jurusan";
                             $listJurusan = $conn->query($query);
@@ -327,9 +375,11 @@
                 <label id='msgJurusan' style = 'color:Red' hidden>Jurusan Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="dosen" id="dosen">
-                        <option value="none" disabled selected>Pilih Dosen Wali</option>
+                        <option value="none" id="defaultDosen" disabled selected>Pilih Dosen Wali</option>
                         <?php
+
                             $query = "SELECT d.Dosen_Nama,d.Dosen_ID FROM Dosen d,Jabatan_Dosen jd WHERE jd.Jabatan_ID='JBT0005' AND d.Dosen_ID=jd.Dosen_ID";
+
                             $listDosen = $conn->query($query);
                             foreach ($listDosen as $key => $value) {
                                 echo "<option value='$value[Dosen_ID]'>".$value['Dosen_ID']."-".$value['Dosen_Nama']."</option>";
@@ -344,13 +394,13 @@
                 Jenis Kelamin: 
                 <p>
                     <label>
-                        <input name="group1" type="radio" value="M">
+                        <input id="rbM" name="group1" type="radio" value="M">
                         <span>Laki-laki</span>
                     </label>
                     </p>
                     <p>
                     <label>
-                        <input name="group1" type="radio" value="F">
+                        <input id="rbF" name="group1" type="radio" value="F">
                         <span>Perempuan</span>
                     </label>
                 </p>
@@ -359,7 +409,7 @@
                 <label id='msgAlamat' style = 'color:Red' hidden>Alamat Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="provinsi" id="provinsi">
-                        <option value="none" disabled selected>Pilih Provinsi</option>
+                        <option value="none" id="defaultProvinsi" disabled selected>Pilih Provinsi</option>
                         <option value="Nanggroe Aceh Darussalam">Nanggroe Aceh Darussalam</option>
                         <option value="Sumatera Utara">Sumatera Utara</option>
                         <option value="Sumatera Barat">Sumatera Barat</option>
@@ -401,7 +451,7 @@
                 <label id='msgKota' style = 'color:Red' hidden>Kota Tidak Boleh Kosong</label><br><br>
                 <div class="input-field col s12">
                     <select name="agama" id="agama">
-                        <option value="none" disabled selected>Pilih Agama</option>
+                        <option value="none" id="defaultAgama" disabled selected>Pilih Agama</option>
                         <option value="Katolik">Katolik</option>
                         <option value="Kristen">Kristen</option>
                         <option value="Buddha">Buddha</option>

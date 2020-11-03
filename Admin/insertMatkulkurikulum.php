@@ -1,10 +1,6 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-    $nama = "";
-    $tingkat = "";
-    $id = "K";
-    $tahun = date('Y');
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -15,39 +11,56 @@
         header("location: ../login.php");
     }
 
-    if (isset($_POST['btnInsert'])) {        
-        $nama = $_POST['nama'];
-        if (isset($_POST['tingkat'])) {
-            $tingkat = $_POST['tingkat'];
-        }
+    $query = "SELECT * FROM Matkul";
+    $listMatkul = $conn->query($query);
+    $query = "SELECT * FROM Jurusan";
+    $listJurusan = $conn->query($query);
+    $query = "SELECT * FROM Major";
+    $listMajor = $conn->query($query);
+    $query = "SELECT * FROM Kurikulum";
+    $listKurikulum = $conn->query($query);
+    $query = "SELECT * FROM Periode";
+    $listPeriode = $conn->query($query);
 
-        //Generate ID Kurikulum
-        if ($nama != "") {
-            $id = "K" . $tahun;
-    
-            $query = "SELECT Count(Kurikulum_ID)+1 as jumlah FROM Kurikulum WHERE Kurikulum_ID LIKE '$id%'";
-            $result = $conn->query($query);
-            $ctr = 0;
+    if (isset($_POST['btnInsert'])) {
+        $matkul = $_POST['matkul'];
+        $jurusan = $_POST['jurusan'];
+        $major = $_POST['major'];
+        $kurikulum = $_POST['kurikulum'];
+        $periode = $_POST['periode'];
+        $semester = $_POST['semester'];
+        $sks = $_POST['sks'];
 
-            foreach($result as $key => $value) {
-                $ctr = $value['jumlah'];
-            }
-    
-            $id .= $ctr;
-            
-            //Proses Insert
-            $query = "INSERT INTO Kurikulum VALUES('$id', '$nama')";
-            $conn->query($query);
+        if ($matkul != "" && $jurusan != "" && $kurikulum != "" && $periode != "" && $semester != "" && $sks != "") {
+            $query = "SELECT * FROM Matkul_Kurikulum";
+            $jumlah = mysqli_num_rows($conn->query($query))+1;
 
-            if($conn){
-                echo '<script language = "javascript">';
-                echo "alert('Berhasil Insert Kurikulum $nama')";
-                echo '</script>';
+            if($jumlah == 1){
+                $id = "MLK0001";
             }else{
-                echo '<script language = "javascript">';
-                echo "alert('Gagal Insert Kurikulum $nama')";
-                echo '</script>';
+                $query = "SELECT * FROM Matkul_Kurikulum ORDER BY Matkul_Kurikulum_ID DESC LIMIT 1";
+                $last = $conn->query($query);
+                foreach ($last as $key => $value) {
+                    $jumlah = (int)(substr($value['Matkul_Kurikulum_ID'],3,4))+1;
+                }
+
+                if($jumlah < 10){
+                    $id = "MLK000".$jumlah;
+                }else if($jumlah > 9 && $jumlah < 100){
+                    $id = "MLK00".$jumlah;
+                }else if($jumlah > 99 && $jumlah < 1000){
+                    $id = "MLK0".$jumlah;
+                }else{
+                    $id = "MLK".$jumlah;
+                }
             }
+
+            $query = "INSERT INTO Matkul_Kurikulum VALUES('$id', '$matkul', '$major', '$jurusan', '$kurikulum', '$periode', '', $semester, $sks)";
+            $conn->query($query);
+            
+            echo '<script language = "javascript">';
+            echo "alert('Berhasil Insert Matkul Kurikulum $id')";
+            echo '</script>';
         }
         else {
             echo '<script language = "javascript">';
@@ -55,8 +68,6 @@
             echo '</script>';
         }
     }
-
-    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -69,7 +80,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
+        p{
+            font-size: 20px;
+        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -80,7 +93,6 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
-
          });
     </script>
 </head>
@@ -152,22 +164,74 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
-                <form action = "" method = "post">
-                    <h3>Insert Data Kurikulum</h3><br>
-                    Nama Kurikulum: <input type="text" name="nama">
-                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+                <h3>Insert Data Matkul Kurikulum</h3><br>
+                <form action = "#" method = "post">
+                    <p>Matkul : </p>
+                    <div class="input-field col s12">
+                        <select name="matkul">
+                            <option value="none" disabled selected>Pilih Matkul</option>
+                            <?php
+                                foreach ($listMatkul as $key) {
+                                    echo "<option value='$key[Matkul_ID]'>$key[Matkul_Nama]</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Jurusan : </p>
+                    <div class="input-field col s12">
+                        <select name="jurusan" id="jurusan">
+                            <option value="none" disabled selected>Pilih Jurusan</option>
+                            <?php
+                                foreach ($listJurusan as $key) {
+                                    echo "<option value='$key[Jurusan_ID]'>$key[Jurusan_Nama]</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Major : </p>
+                    <div class="input-field col s12">
+                        <select name="major" id="major">
+                            <option value="" selected>Pilih Major</option>
+                            <?php
+                                foreach ($listMajor as $key) {
+                                    echo "<option value='$key[Major_ID]'>$key[Major_Nama]</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Kurikulum : </p>
+                    <div class="input-field col s12">
+                        <select name="kurikulum">
+                            <option value="none" disabled selected>Pilih Kurikulum</option>
+                            <?php
+                                foreach ($listKurikulum as $key) {
+                                    echo "<option value='$key[Kurikulum_ID]'>$key[Kurikulum_Nama]</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Periode : </p>
+                    <div class="input-field col s12">
+                        <select name="periode">
+                            <option value="none" disabled selected>Pilih Periode</option>
+                            <?php
+                                foreach ($listPeriode as $key) {
+                                    echo "<option value='$key[Periode_ID]'>$key[Periode_Nama]</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <p>Semester : </p>
+                    <input type="number" name="semester" min="0">
+                    <p>SKS : </p>
+                    <input type="number" name="sks" min="0" max="3">
+                    <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
                 </form>
             </div>
         </div>
     </div>
 </body>
 </html>
-
-<?php
-    unset($_SESSION['validate']['kurikulum']);
-    unset($_SESSION['temp']['kurikulum']);
-?>

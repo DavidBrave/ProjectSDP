@@ -12,6 +12,7 @@
     }
 
     if (isset($_POST['btnInsert'])) {
+
         $nrp=$_POST['nrp_mahasiswa'];
         $id_kelas=$_POST['id_kelas'];
         if (isset($_POST['ujian']))
@@ -51,6 +52,7 @@
         $query="UPDATE Pengambilan SET Grade=$grade WHERE Mahasiswa_ID=$nrp AND Kelas_ID=$id_kelas";
         $conn->query($query);        
         $conn->close();
+
     }
 ?>
 <!DOCTYPE html>
@@ -58,16 +60,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+
+
+    <title>Insert Nilai</title>
+
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+
+
     <script src="../jquery.js"></script>
     <script>
         $(document).ready(function () {
+            $("select").material_select();
+
+
             $("#menu_jadwal").click(function () {
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
@@ -130,6 +140,7 @@
 
         <div style="width: 50%;">
             <form action="POST">
+
                 <h3>Insert Nilai Mahasiswa</h3><br>
                 NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id="">
                 Kelas : <input type="text" name="id_kelas" id="">
@@ -140,7 +151,9 @@
                         <option value="uts">UTS</option>
                         <option value="uas">UAS</option>
                     </select>
+
                     Nilai : <input type="text" name="nilai" id="">
+
                 </div>
                 <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
             </form>
