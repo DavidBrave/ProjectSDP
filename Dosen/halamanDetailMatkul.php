@@ -10,24 +10,17 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+    $idKelas=$_SESSION['kelasID'];
     $idDosen=$_SESSION['user']['user'];
-    $query="SELECT * FROM Kelas k,Matkul m,Matkul_Kurikulum mk,Jadwal_Kuliah jk Where k.DosenPengajar_ID=$idDosen AND k.MatkulKurikulum_ID=mk.Matkul_Kurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND k.Kelas_ID=jk.Kelas_ID";
-    $listKelas=$conn->query($query);
-    if (isset($_POST['toDetails']))
-    {
-        $_SESSION['kelas']['ID']=$_POST['idKelas'];
-        $_SESSION['kelas']['Nama']=$_POST['namaKelas'];
-        $_SESSION['kelas']['Ruangan']=$_POST['ruanganKelas'];
-        $_SESSION['kelas']['Jadwal']=$_POST['JadwalKelas'];
-        header("location: ../Dosen/halamanDetailMatkul.php");
-    }
+    $query="SELECT * FROM Pengambilan p,Mahasiswa m WHERE p.Kelas_ID=$idKelas AND p.Mahasiswa_ID=m.Mahasiswa_ID";
+    $listMHS=$conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Detail Matkul</title>
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -96,26 +89,31 @@
             </form>
         </div>
         <div id="container">
+            <h4>ID Kelas</h4>
+            <p><?=$_SESSION['kelas']['ID']?></p>
+            <h4>Nama</h4>
+            <p><?=$_SESSION['kelas']['Nama']?></p>
+            <h4>Ruangan</h4>
+            <p><?=$_SESSION['kelas']['Ruangan']?></p>
+            <h4>Hari</h4>
+            <p><?=$_SESSION['kelas']['Jadwal']?></p>
+            <h4>Mahasiswa</h4>
             <table border="1" style="display: hidden">
                 <tr>
                     <?php
-                        if(mysqli_num_rows($listKelas) == 0){
+                        if(mysqli_num_rows($listMHS) == 0){
                             echo "<h4>Tidak ada data</h4>";
                         }else{
-                            echo "<th>Kelas</th>";
-                            echo "<th>Ruangan</th>";
-                            echo "<th>Waktu</th>";
-                            echo "<th>Action</th>";
+                            echo "<th>Nama</th>";
+                            echo "<th>NRP</th>";
                         }
                     ?>
                 </tr>
                 <?php
                     foreach ($listKelas as $key => $value) {
                         echo"<tr>";
-                            echo"<td>$value[Matkul_Nama] - $value[Kelas_Nama] </td>";
-                            echo"<td>$value[Kelas_Ruangan]</td>";
-                            echo"<td>$value[Jadwal_Hari] $value[Jadwal_Mulai]-$value[Jadwal_Selesai]</td>";
-                            echo"<td><form method='post'><input type='hidden' name='idKelas' value='$value[Kelas_ID]'><input type='hidden' name='namaKelas' value='$value[Matkul_Nama] - $value[Kelas_Nama]'><input type='hidden' name='ruanganKelas' value='$value[Kelas_Ruangan]'><input type='hidden' name='JadwalKelas' value='$value[Jadwal_Hari] $value[Jadwal_Mulai]-$value[Jadwal_Selesai]</td>'><input type='submit' name='toDetails' value='Details'></form></td>";
+                            echo"<td>$value[Mahasiswa_Nama]</td>";
+                            echo"<td>$value[Mahasiswa_ID]</td>";
                         echo"</tr>";
                     }
                 ?>
