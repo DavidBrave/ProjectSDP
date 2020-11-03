@@ -11,11 +11,11 @@
 
     if ($jabatan2!="none")
     {
-        $query="SELECT Jabatan_ID FROM Jabatan WHERE Jabatan_Nama=$jabatan2 ";
+        $query="SELECT Jabatan_ID FROM Jabatan WHERE Jabatan_Nama='$jabatan2'";
         $result = $conn->query($query);
         $id_jabatan="";
         foreach($result as $key => $value) {
-            $id_jabatan = $value['Jabatan_Nama'];
+            $id_jabatan = $value['Jabatan_ID'];
         }
         $query = "INSERT INTO Jabatan_Dosen VALUES('$id', '$id_jabatan')";
         $conn->query($query);
