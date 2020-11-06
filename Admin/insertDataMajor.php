@@ -59,8 +59,6 @@
             echo '</script>';
         }
     }
-
-    $conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -181,7 +179,7 @@
                                 $query = "SELECT * FROM Jurusan";
                                 $listJurusan = $conn->query($query);
                                 foreach ($listJurusan as $key => $value) {
-                                    echo "<option value='$value[Jurusan_ID]'>" . $value['Jurusan_Nama'] . "</option>";
+                                    echo "<option value='$value[Jurusan_ID]'>".$value['Jurusan_ID']."-".$value['Jurusan_Nama']."</option>";
                                 }
                             ?>
                         </select>

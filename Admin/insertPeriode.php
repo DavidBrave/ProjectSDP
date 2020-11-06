@@ -13,6 +13,32 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    if(isset($_POST['btnInsert'])){
+        $tahun1 = $_POST['tahun1'];
+        $tahun2 = $_POST['tahun2'];
+        $semester = $_POST['sems'];
+        $id = $tahun1.$tahun2;
+
+        if($semester == "Gasal"){
+            $text = "Tahun Ajaran ".$tahun1."/".$tahun2." Semester Gasal";
+            $id = $id."11";
+        }else{
+            $text = "Tahun Ajaran ".$tahun1."/".$tahun2." Semester Genap";
+            $id = $id."21";
+        }
+
+        $query = "SELECT * FROM Periode WHERE Periode_ID = '$id'";
+        $count = mysqli_num_rows($conn->query($query));
+        
+        if($count == 0){
+            $query = "INSERT INTO Periode VALUES('$id', '$text')";
+            $conn->query($query);
+            echo "<script>alert('Berhasil insert $text')</script>";
+        }else{
+            echo "<script>alert('Periode sudah ada')</script>";
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +141,28 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
-            
+            <h3>Insert Periode</h3><br>
+            <h5>Pilih Tahun Ajaran</h5><br>
+            <form action="#" method="post">
+                <input type="number" name="tahun1" id="tahun1" min="2000" max="2099" style="width: 200px; float: left;" required>
+                <h4 style="margin: 0px; margin-left: 10px; margin-right: 10px; float: left;">-</h4>
+                <input type="number" name="tahun2" id="tahun2" min="2000" max="2099" style="width: 200px; float: left;" required><br><br><br><br>
+                <h5>Pilih Semester</h5><br>
+                <p>
+                <label>
+                    <input name="sems" type="radio" value="Gasal" checked/>
+                    <span>Gasal</span>
+                </label>
+                </p>
+                <p>
+                <label>
+                    <input name="sems" type="radio" value="Genap" />
+                    <span>Genap</span>
+                </label>
+                </p>
+                <br><br>
+                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+            </form>
         </div>
     </div>
 </body>

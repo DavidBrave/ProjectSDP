@@ -13,6 +13,26 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    if(isset($_POST['nama'])){
+        $nama = $_POST['nama'];
+    }else{
+        $nama = "";
+    }
+
+    if (isset($_POST['btnDelete'])) {
+        $id = $_POST['idPeriode'];
+
+        $query = "DELETE FROM Periode WHERE Periode_ID = '$id'";
+        $conn->query($query);
+
+        echo '<script language = "javascript">';
+        echo "alert('Berhasil Delete Periode $id')";
+        echo '</script>';
+    }
+
+    $query = "SELECT * FROM Periode WHERE Periode_Nama LIKE '%$nama%'";
+    $listPeriode = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +135,31 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
-            
+            <h3>List Periode</h3><br>
+            <table id = "dataPeriode" border="1" style="width: 800px;">
+            <tr>
+                <?php
+                    if(mysqli_num_rows($listPeriode) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>ID</th>";
+                        echo "<th>Nama Periode</th>";
+                        echo "<th>Delete</th>";
+                    }
+                ?>
+            </tr>
+
+            <?php
+                foreach ($listPeriode as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Periode_ID]</td>";
+                    echo "<td>$value[Periode_Nama]</td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idPeriode' value='$value[Periode_ID]'></form></td>";
+                    echo "</tr>";
+                }
+                $conn->close();
+            ?>
+            </table>
         </div>
     </div>
 </body>
