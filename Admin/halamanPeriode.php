@@ -1,6 +1,9 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
+?>
+
+<?php
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -10,22 +13,6 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-
-    if(isset($_POST['btnInsert'])){
-        $kelas = $_POST['kelas'];
-        $mahasiswa = $_POST['mahasiswa'];
-        $query = "SELECT Kelas_Kapasitas FROM Kelas WHERE Kelas_ID = '$kelas'";
-        $kapasitas = $conn->query($query);
-        foreach ($kapasitas as $key => $value) {
-            $count = $value['Kelas_Kapasitas'];
-        }
-        $count = $count-1;
-        $query = "UPDATE Kelas SET Kelas_Kapasitas = $count WHERE Kelas_Id = '$kelas'";
-        $conn->query($query);
-
-        $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_Id = '$mahasiswa'";
-        $conn->query($query);
-    }
 ?>
 
 <!DOCTYPE html>
@@ -33,12 +20,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembagian Kelas</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -46,28 +32,9 @@
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('select').material_select();
-
-            $('#kelas').change(function () {
-                $.ajax({
-                    method : 'post',
-                    url : 'daftarAmbilMahasiswa.php',
-                    data : {
-                        id : $('#kelas').val()
-                    },
-                    success : function (hasil) {
-                        $("#content-mahasiswa").html(hasil);
-                        $("#temp").hide();
-                    }
-                });
-            });
-        });
-    </script>
 </head>
 <body>
-    <div id="header">
+<div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -76,7 +43,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -148,32 +115,7 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
-            <div style="width: 50%;">
-                <h3>Pembagian Kelas</h3><br>
-                <form action="#" method="post">
-                    <p>Kelas : </p>
-                    <div class="input-field col s12">
-                        <select name="kelas" id="kelas">
-                            <option value="none" disabled selected>Pilih Kelas</option>
-                            <?php
-                                $query = "SELECT kls.Kelas_ID, kls.Kelas_Nama, kls.Matkulkurikulum_ID, mk.Matkul_Nama, j.Jurusan_Nama, kls.Kelas_Ruangan, kls.Kelas_Kapasitas FROM Kelas kls, Matkul_Kurikulum mkl, Matkul mk, Jurusan j
-                                WHERE kls.Matkulkurikulum_ID = mkl.Matkul_Kurikulum_ID AND mkl.Matkul_ID = mk.Matkul_ID AND mkl.Jurusan_ID = j.Jurusan_ID";
-                                $listKelas = $conn->query($query);
-                                foreach ($listKelas as $key => $value) {
-                                    echo "<option value='$value[Kelas_ID]'>[ ".$value['Kelas_Nama']." ] ".$value['Matkul_Nama']." - ".$value['Jurusan_Nama']." - ".$value['Kelas_Ruangan']." - ".$value['Kelas_Kapasitas']."</option>";
-                                }
-                            ?>
-                        </select>
-                    </div>
-                    <p>Mahasiswa : </p>
-                    <div class="input-field col s12" id="content-mahasiswa">
-                        <select name="temp" id="temp" disabled>
-                            <option value="none" selected>Pilih Mahasiswa</option>
-                        </select>
-                    </div>
-                    <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnInsert">Insert</button>
-                </form>
-            </div>
+            
         </div>
     </div>
 </body>
