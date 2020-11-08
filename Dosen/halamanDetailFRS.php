@@ -26,11 +26,19 @@
         }
     }
 
-    $query = "SELECT m.Matkul_Nama, mk.Matkul_Kurikulum_ID FROM Ambil a, Matkul m, Matkul_Kurikulum mk 
+    $query = "SELECT m.Matkul_Nama, mk.Matkul_Kurikulum_ID FROM FRS a, Matkul m, Matkul_Kurikulum mk 
     WHERE a.Mahasiswa_ID = $id
     AND a.Matkul_Kurikulum_ID = mk.Matkul_Kurikulum_ID
     AND mk.Matkul_ID = m.Matkul_ID";
     $listMatkul = $conn->query($query);
+
+    $matkuls = array();
+    foreach ($listMatkul as $key => $value) {
+        array_push($matkuls, $value['Matkul_Kurikulum_ID']);
+    }
+
+    $query = "SELECT * FROM Pengambilan_Praktikum WHERE Mahasiswa_ID = $id";
+    $listPrak = $conn->query($query);
 
     $nrp = $id;
     $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
@@ -225,10 +233,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' chekced/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled chekced/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -276,10 +284,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -327,10 +335,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -378,10 +386,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -429,10 +437,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -480,10 +488,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -531,10 +539,10 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
                             }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }
                             echo "</tr>";
                         }
@@ -582,16 +590,56 @@
                                 }
                             }
                             if ($cek) {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' checked/><span></span></label></p></td>";                            }
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled checked/><span></span></label></p></td>";
+                            }
                             else {
-                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";                            }
+                                echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
+                            }
                             echo "</tr>";
                         }
                     }
                     echo "</table>";
                 ?> 
                 <br>
-                <input type="hidden" name="hidMatkul" id="hidMatkul">
+                <br>
+                <h4>Praktikum</h4>
+                <table>
+                    <?php
+                        for ($i=0; $i < sizeof($matkuls); $i++) { 
+                            $selectedMatkul = $matkuls[$i];
+                            $query = "SELECT kp.Kelas_Praktikum_ID, mk.Matkul_Kurikulum_ID, m.Matkul_Nama, p.Praktikum_ID, p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_ID, kp.Kelas_Praktikum_Ruangan, kp.Kelas_Praktikum_Kapasitas 
+                            FROM Matkul_Kurikulum mk, Matkul m, Praktikum p, Kelas_Praktikum kp
+                            WHERE mk.Praktikum_ID = p.Praktikum_ID 
+                            AND mk.Matkul_ID = m.Matkul_ID 
+                            AND p.Praktikum_ID = kp.Praktikum_ID 
+                            AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
+                            $listKelasPraktikum = $conn->query($query);
+                            foreach ($listKelasPraktikum as $key => $value) {
+                                echo "<tr>";
+                                echo "<td>$value[Matkul_Nama]</td>";
+                                echo "<td>$value[Praktikum_Hari]</td>";
+                                echo "<td>$value[Praktikum_Jam_Mulai]</td>";
+                                echo "<td>$value[Praktikum_Jam_Selesai]</td>";
+                                echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
+                                echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
+                                $ada = false;
+                                foreach($listPrak as $key2 => $value2) {
+                                    var_dump($value2['Kelas_Praktikum_ID']);
+                                    if ($value2['Kelas_Praktikum_ID'] == $value['Kelas_Praktikum_ID']) {
+                                        $ada = true;
+                                    }
+                                }
+                                if ($ada) {
+                                    echo "<td><p><label><input type='checkbox' class='praktikum' name='praktikum[]' value='$value[Kelas_Praktikum_ID]' disabled checked/><span></span></label></p></td>";
+                                }
+                                else {
+                                    echo "<td><p><label><input type='checkbox' class='praktikum' name='praktikum[]' value='$value[Kelas_Praktikum_ID]' disabled/><span></span></label></p></td>";
+                                }
+                                echo "</tr>";
+                            }
+                        }
+                    ?>
+                </table>
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnBack"><i class="material-icons right">navigate_before</i> Back</button>    
             </form>
         </div>
