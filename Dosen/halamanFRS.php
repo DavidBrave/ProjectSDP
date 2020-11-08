@@ -17,11 +17,11 @@
     }
 
     $dosenID = $_SESSION['user']['user'];
-    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester, a.Ambil_Status
-    FROM Mahasiswa m, Dosen d, Ambil a 
+    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester, a.FRS_Status
+    FROM Mahasiswa m, Dosen d, FRS a 
     WHERE m.Mahasiswa_ID = a.Mahasiswa_ID 
     AND m.Dosen_Wali_ID = $dosenID
-    AND a.Ambil_Status = 'Diterima'";
+    AND a.FRS_Status = 'Diterima'";
     $listFRS = $conn->query($query);
 ?>
 <!DOCTYPE html>
@@ -132,7 +132,7 @@
                     echo "<td>$value[Mahasiswa_ID]</td>";
                     echo "<td>$value[Mahasiswa_Nama]</td>";
                     echo "<td>$value[Mahasiswa_Semester]</td>";
-                    echo "<td>$value[Ambil_Status]</td>";
+                    echo "<td>$value[FRS_Status]</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnDetail' style='width: 150px;'>Detail<i class='material-icons right'>Detail</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_ID]'></form></td>";
                     echo "</tr>";
                 }

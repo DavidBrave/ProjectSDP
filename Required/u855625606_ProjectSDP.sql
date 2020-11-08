@@ -65,41 +65,41 @@ INSERT INTO `Administrator` (`Admin_ID`, `Admin_Nama`, `Admin_Pass`) VALUES
 -- Table structure for table `Ambil`
 --
 
-CREATE TABLE `Ambil` (
-  `Ambil_ID` int(11) NOT NULL,
+CREATE TABLE `FRS` (
+  `FRS_ID` int(11) NOT NULL,
   `Mahasiswa_ID` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Matkul_Kurikulum_ID` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Ambil_Status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
+  `FRS_Status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `Ambil`
 --
 
-INSERT INTO `Ambil` (`Ambil_ID`, `Mahasiswa_ID`, `Matkul_Kurikulum_ID`, `Ambil_Status`) VALUES
-(1, '2205010031', 'MLK0004', 'Diterima'),
-(2, '2205010032', 'MLK0004', 'Diterima'),
-(3, '2205040006', 'MLK0003', 'Diterima'),
-(4, '2205010033', 'MLK0004', 'Diterima'),
-(5, '2205010031', 'MLK0002', 'Diterima'),
-(6, '2205010032', 'MLK0002', 'Diterima'),
-(7, '2195010028', 'MLK0001', 'Diterima'),
-(8, '2195010028', 'MLK0004', 'Diterima'),
-(27, '2195010028', 'MLK0004', 'Ditolak'),
-(28, '2195010028', 'MLK0005', 'Ditolak'),
-(29, '2195010028', 'MLK0006', 'Ditolak'),
-(30, '2195010028', 'MLK0007', 'Ditolak'),
-(31, '2195010028', 'MLK0008', 'Diterima'),
-(32, '2195010028', 'MLK0016', 'Diterima'),
-(37, '2205010100', 'MLK0004', ''),
-(38, '2205010100', 'MLK0005', ''),
-(39, '2205010100', 'MLK0006', ''),
-(40, '2205010100', 'MLK0007', ''),
-(41, '2205010100', 'MLK0009', ''),
-(48, '2205010100', 'MLK0005', ''),
-(49, '2205010100', 'MLK0006', ''),
-(50, '2205010100', 'MLK0007', ''),
-(51, '2205010100', 'MLK0009', '');
+INSERT INTO `FRS` (`FRS_ID`, `Mahasiswa_ID`, `Matkul_Kurikulum_ID`, `FRS_Status`) VALUES
+('', '2205010031', 'MLK0004', ''),
+('', '2205010032', 'MLK0004', ''),
+('', '2205040006', 'MLK0003', ''),
+('', '2205010033', 'MLK0004', ''),
+('', '2205010031', 'MLK0002', ''),
+('', '2205010032', 'MLK0002', ''),
+('', '2195010028', 'MLK0001', ''),
+('', '2195010028', 'MLK0004', ''),
+('', '2195010028', 'MLK0004', ''),
+('', '2195010028', 'MLK0005', ''),
+('', '2195010028', 'MLK0006', ''),
+('', '2195010028', 'MLK0007', ''),
+('', '2195010028', 'MLK0008', ''),
+('', '2195010028', 'MLK0016', ''),
+('', '2205010100', 'MLK0004', ''),
+('', '2205010100', 'MLK0005', ''),
+('', '2205010100', 'MLK0006', ''),
+('', '2205010100', 'MLK0007', ''),
+('', '2205010100', 'MLK0009', ''),
+('', '2205010100', 'MLK0005', ''),
+('', '2205010100', 'MLK0006', ''),
+('', '2205010100', 'MLK0007', ''),
+('', '2205010100', 'MLK0009', '');
 
 -- --------------------------------------------------------
 
@@ -945,8 +945,8 @@ ALTER TABLE `Sidang_Skripsi`
 --
 -- AUTO_INCREMENT for table `Ambil`
 --
-ALTER TABLE `Ambil`
-  MODIFY `Ambil_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+ALTER TABLE `FRS`
+  MODIFY `FRS_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `Chat`

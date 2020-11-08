@@ -35,12 +35,12 @@
             $mahasiswa = $_SESSION['user']['user'];
             for ($i=0; $i < sizeof($praktikum); $i++) { 
                 $kelas = $praktikum[$i];
-                $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,1)";
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,0,1)";
                 $conn->query($query);
             }
             for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
                 $matkul = $selectedMatkuls[$i];
-                $query = "INSERT INTO Ambil VALUES('', '$mahasiswa', '$matkul', '')";
+                $query = "INSERT INTO FRS VALUES('', '$mahasiswa', '$matkul', '')";
                 $conn->query($query);
             }
         }else{

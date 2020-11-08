@@ -18,10 +18,10 @@
 
     $dosenID = $_SESSION['user']['user'];
     $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester 
-    FROM Mahasiswa m, Dosen d, Ambil a 
+    FROM Mahasiswa m, Dosen d, FRS a 
     WHERE m.Mahasiswa_ID = a.Mahasiswa_ID 
     AND m.Dosen_Wali_ID = $dosenID
-    AND a.Ambil_Status = ''";
+    AND a.FRS_Status = ''";
     $listFRS = $conn->query($query);
 ?>
 <!DOCTYPE html>
