@@ -265,8 +265,8 @@
                             foreach ($listJabatanDosen as $key=>$value2)
                             {
                                 echo"<tr>";
-                                    echo"<td>$value2[Jabatan_Nama]</td>";
-                                    echo"<td><button class='btn waves-effect red darken-3' type='submit' name='btnDeleteJabatan' id='$value[Dosen_ID]' onClick='DeleteJabatan(`$value2[Dosen_ID]`,`$value2[Jabatan_ID]`)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button></td>";
+                                    echo"<td width='50%'>$value2[Jabatan_Nama]</td>";
+                                    echo"<td width='50%'><button class='btn waves-effect red darken-3' type='submit' name='btnDeleteJabatan' id='$value[Dosen_ID]' onClick='DeleteJabatan(`$value2[Dosen_ID]`,`$value2[Jabatan_ID]`)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button></td>";
                                 echo"</tr>";
                             }
                         echo"</table>";
