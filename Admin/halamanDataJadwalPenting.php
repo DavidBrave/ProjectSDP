@@ -16,22 +16,6 @@
     }else{
         $nama = "";
     }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idJurusan'];
-        $query = "SELECT * FROM Jurusan";
-        $listJurusan = $conn->query($query);
-        foreach ($listJurusan as $key => $value) {
-            if($value['Jurusan_ID'] == $id){
-                $_SESSION['jurusan']['id'] = $value['Jurusan_ID'];
-                $_SESSION['jurusan']['nama'] = $value['Jurusan_Nama'];
-            }
-        }
-        header("location: halamanUpdateJurusan.php");
-    }
-
-    $query = "SELECT * FROM Jurusan WHERE Jurusan_Nama LIKE '%$nama%'";
-    $listJurusan = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -39,28 +23,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <title>Praktikum</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
-    <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
-    </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -68,47 +34,7 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarJurusan.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataJurusan").html(hasil);
-                    }
-                });
-            });
-        });
-
-        function DeleteClick(clicked_id)
-        {
-            //minta result lewat confirmation alert
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
-            //kalo result = true, atau pilih yes, hapus
-            if (result) {
-                var berhasil = true;
-                $.ajax({
-                    method : "post",
-                    url : "deleteJurusan.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("Data Jurusan " + nama + " Berhasil Dihapus");
-                }).fail(function(data){
-                    alert("Data Jurusan " + nama + " Gagal Dihapus");
-                });;
-            }
-
-            location.reload();
-            return false;
-        }
+        
     </script>
 </head>
 <body>
@@ -197,38 +123,80 @@
                 <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>   
+        </div>    
         <div id="col-kanan">
-            <h3>List Jurusan</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataJurusan" border="1" style="display: hidden">
+            <h4>Jadwal Quiz</h4>
+            <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    if(mysqli_num_rows($listJurusan) == 0){
+                    $query = "SELECT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m
+                    WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'quiz' ORDER BY Penting_Date";
+                    $listQuiz = $conn->query($query);
+                    if(mysqli_num_rows($listQuiz) == 0){
                         echo "<h4>Tidak ada data</h4>";
                     }else{
-                        echo "<th>ID Jurusan</th>";
-                        echo "<th>Nama Jurusan</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
+                        echo "<th>Matkul</th>";
+                        echo "<th>Tanggal</th>";
                     }
                 ?>
             </tr>
-
             <?php
-                foreach ($listJurusan as $key => $value) {
+                foreach ($listQuiz as $key => $value) {
                     echo "<tr>";
-                    echo "<td>$value[Jurusan_ID]</td>";
-                    echo "<td>$value[Jurusan_Nama]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idJurusan' value='$value[Jurusan_ID]'></form></td>";
-                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Jurusan_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Jurusan_ID]' value='$value[Jurusan_Nama]'</form></td>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[Penting_Date]</td>";
                     echo "</tr>";
                 }
+            ?>
+            </table><br><br>
 
-                $conn->close();
+            <h4>Jadwal UTS</h4>
+            <table border="1" style="width: 500px;">
+            <tr>
+                <?php
+                    $query = "SELECT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m
+                    WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uts' ORDER BY Penting_Date";
+                    $listUts = $conn->query($query);
+                    if(mysqli_num_rows($listUts) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>Matkul</th>";
+                        echo "<th>Tanggal</th>";
+                    }
+                ?>
+            </tr>
+            <?php
+                foreach ($listUts as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[Penting_Date]</td>";
+                    echo "</tr>";
+                }
+            ?>
+            </table><br><br>
+
+            <h4>Jadwal UAS</h4>
+            <table border="1" style="width: 500px;">
+            <tr>
+                <?php
+                    $query = "SELECT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m
+                    WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uas' ORDER BY Penting_Date";
+                    $listUas = $conn->query($query);
+                    if(mysqli_num_rows($listUas) == 0){
+                        echo "<h4>Tidak ada data</h4>";
+                    }else{
+                        echo "<th>Matkul</th>";
+                        echo "<th>Tanggal</th>";
+                    }
+                ?>
+            </tr>
+            <?php
+                foreach ($listUas as $key => $value) {
+                    echo "<tr>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[Penting_Date]</td>";
+                    echo "</tr>";
+                }
             ?>
             </table>
         </div>

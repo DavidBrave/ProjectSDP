@@ -11,27 +11,37 @@
         header("location: ../login.php");
     }
 
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
-    }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idJurusan'];
-        $query = "SELECT * FROM Jurusan";
-        $listJurusan = $conn->query($query);
-        foreach ($listJurusan as $key => $value) {
-            if($value['Jurusan_ID'] == $id){
-                $_SESSION['jurusan']['id'] = $value['Jurusan_ID'];
-                $_SESSION['jurusan']['nama'] = $value['Jurusan_Nama'];
+    if (isset($_POST['btnSubmit'])) {
+        $matkulkurikulum = $_POST['matkulkurikulum'];
+        $jenis = $_POST['jenis'];
+        $tanggal = $_POST['tanggal'];
+        if(isset($matkulkurikulum) || isset($jenis) || isset($tanggal)){
+            $query = "SELECT jk.Jadwal_ID, jp.Keterangan, mk.Matkul_Kurikulum_ID FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk
+            WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID";
+            $jadwalpenting = $conn->query($query);
+            $isCollision = false;
+            foreach ($jadwalpenting as $key => $value) {
+                if($value['Keterangan'] == $jenis && $value['Matkul_Kurikulum_ID'] == $matkulkurikulum){
+                    $isCollision = true;
+                }
             }
-        }
-        header("location: halamanUpdateJurusan.php");
-    }
 
-    $query = "SELECT * FROM Jurusan WHERE Jurusan_Nama LIKE '%$nama%'";
-    $listJurusan = $conn->query($query);
+            if($isCollision){
+                echo "<script>alert('Jadwal sudah ada')</script>";
+            }else{
+                $query = "SELECT jk.Jadwal_ID, mk.Matkul_Kurikulum_ID FROM Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk
+                WHERE jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_Kurikulum_ID = '$matkulkurikulum'";
+                $jadwalpenting = $conn->query($query);
+                foreach ($jadwalpenting as $key => $value) {
+                    $query = "INSERT INTO Jadwal_Penting VALUES(null, '$value[Jadwal_ID]', '$tanggal', '$jenis')";
+                    $conn->query($query);
+                }
+                echo "<script>alert('Berhasil')</script>";
+            }
+        }else{
+            echo "<script>alert('Inputan harus dipilih')</script>";
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -44,22 +54,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
+
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -68,51 +63,13 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarJurusan.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataJurusan").html(hasil);
-                    }
-                });
-            });
-        });
-
-        function DeleteClick(clicked_id)
-        {
-            //minta result lewat confirmation alert
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Menghapus Data?");
-            //kalo result = true, atau pilih yes, hapus
-            if (result) {
-                var berhasil = true;
-                $.ajax({
-                    method : "post",
-                    url : "deleteJurusan.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("Data Jurusan " + nama + " Berhasil Dihapus");
-                }).fail(function(data){
-                    alert("Data Jurusan " + nama + " Gagal Dihapus");
-                });;
-            }
-
-            location.reload();
-            return false;
-        }
+         $(document).ready(function() {
+            $('select').material_select();
+         });
     </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -197,40 +154,36 @@
                 <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>   
+        </div> 
         <div id="col-kanan">
-            <h3>List Jurusan</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            <table id = "dataJurusan" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listJurusan) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Jurusan</th>";
-                        echo "<th>Nama Jurusan</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listJurusan as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Jurusan_ID]</td>";
-                    echo "<td>$value[Jurusan_Nama]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idJurusan' value='$value[Jurusan_ID]'></form></td>";
-                    echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Jurusan_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Jurusan_ID]' value='$value[Jurusan_Nama]'</form></td>";
-                    echo "</tr>";
-                }
-
-                $conn->close();
-            ?>
-            </table>
+            <div style="width: 50%;">
+                <form action = "#" method = "post">
+                    <h3>Insert Jadwal Penting</h3><br>
+                    <div class="input-field col s12">
+                        <select name="matkulkurikulum">
+                            <option value="none" disabled selected>Pilih Kelas</option>
+                            <?php
+                                $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m 
+                                WHERE mk.Matkul_ID = m.Matkul_ID";
+                                $listMatkulKurikulum = $conn->query($query);
+                                foreach ($listMatkulKurikulum as $key => $value) {
+                                    echo "<option value='$value[Matkul_Kurikulum_ID]'>".$value['Matkul_Nama']."</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="input-field col s12">
+                        <select name="jenis">
+                            <option value="none" disabled selected>Pilih Jenis</option>
+                            <option value="quiz">Quiz</option>
+                            <option value="uts">UTS</option>
+                            <option value="uas">UAS</option>
+                        </select>
+                    </div>
+                    <input type="date" name="tanggal"><br>
+                    <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnSubmit">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>

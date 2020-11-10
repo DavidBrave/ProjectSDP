@@ -146,6 +146,12 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">

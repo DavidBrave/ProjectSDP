@@ -93,6 +93,21 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#jurusan").change(function () {
+                var jurusanlId = $("#jurusan").val();
+                $.ajax({
+                    method : "post",
+                    url : "cekJurusanMajor.php",
+                    data : {
+                        id : jurusanlId
+                    },
+                    success : function (hasil) {
+                        $("#major-container1").hide();
+                        $("#major-container2").html(hasil);
+                    }
+                });
+            });
          });
     </script>
 </head>
@@ -106,7 +121,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -176,6 +191,12 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>  
         <div id="col-kanan">
             <div style="width: 50%;">
@@ -183,7 +204,7 @@
                 <form action = "#" method = "post">
                     <p>Matkul : </p>
                     <div class="input-field col s12">
-                        <select name="matkul">
+                        <select name="matkul" id="matkul">
                             <option value="none" disabled selected>Pilih Matkul</option>
                             <?php
                                 foreach ($listMatkul as $key) {
@@ -205,14 +226,14 @@
                     </div>
                     <p>Major : </p>
                     <div class="input-field col s12">
-                        <select name="major" id="major">
-                            <option value="" selected>Pilih Major</option>
-                            <?php
-                                foreach ($listMajor as $key) {
-                                    echo "<option value='$key[Major_ID]'>$key[Major_Nama]</option>";
-                                }
-                            ?>
-                        </select>
+                        <div id="major-container1">
+                            <select name="major" disabled>
+                                <option value="none" selected disabled>Pilih Major</option>
+                            </select>
+                        </div>
+                        <div id="major-container2">
+
+                        </div>
                     </div>
                     <p>Kurikulum : </p>
                     <div class="input-field col s12">
