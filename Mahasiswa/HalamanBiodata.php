@@ -132,7 +132,7 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanFRS.php">FRS</a>
-                <a class = "btn dropdown-button blue" href = "#">Batal Tambah</a>
+                <a class = "btn dropdown-button blue" href = "HalamanBatalTambah.php">Batal Tambah</a>
                 <a class = "btn dropdown-button blue" href = "#">Drop</a>
             </div>
         </div>
