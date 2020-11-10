@@ -11,22 +11,18 @@
         header("location: ../login.php");
     }
 
-    $selectedMatkuls = explode(",", $_SESSION['matkul']);
+    $selectedMatkuls = $_SESSION['matkul'];
 
     if(isset($_POST['btnRemove'])){
         $matkulkurikulumid = $_POST['hidId'];
-        $str = "";
+        $arr = [];
         for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
             if($selectedMatkuls[$i] != $matkulkurikulumid){
-                if($i == sizeof($selectedMatkuls)-1){
-                    $str = $str.$selectedMatkuls[$i];
-                }else{
-                    $str = $str.$selectedMatkuls[$i].",";
-                }
+                array_push($arr, $selectedMatkuls[$i]);
             }
         }
-        $_SESSION['matkul'] = $str;
-        $selectedMatkuls = explode(",", $_SESSION['matkul']);
+        $_SESSION['matkul'] = $arr;
+        $selectedMatkuls = $_SESSION['matkul'];
     }
 
     if(isset($_POST['btnSubmit'])){
@@ -52,7 +48,7 @@
             }
         }
         echo '<script language = "javascript">';
-        echo "alert('FRS berhasil')";
+        echo "alert('Berhasil tambah matkul')";
         echo '</script>';
     }
 ?>
