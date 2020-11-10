@@ -7,8 +7,9 @@
         $hari = $_POST['hari'];
         $mulai = $_POST['mulai'];
         $selesai = $_POST['selesai'];
+        $ruangan = $_POST['ruangan'];
 
-        $query = "INSERT INTO Jadwal_Kuliah VALUES ('$id', '$kelas', '$hari', '$mulai', '$selesai')";
+        $query = "INSERT INTO Jadwal_Kuliah VALUES ('$id', '$kelas', '$hari', '$mulai', '$selesai', '$ruangan')";
         $conn->query($query);
 
         if($conn){

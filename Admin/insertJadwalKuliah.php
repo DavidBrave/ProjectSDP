@@ -70,7 +70,8 @@
                             kelas : $("#kelas").val(),
                             hari : $("#hari").val(),
                             mulai : $("#waktu_mulai").val(),
-                            selesai : $("#waktu_selesai").val()
+                            selesai : $("#waktu_selesai").val(),
+                            ruangan : "L-203"
                         },
                         
                     }).done(function(data){
