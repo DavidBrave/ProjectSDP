@@ -10,6 +10,14 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,10 +30,12 @@
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
+    <script src="../jquery.js"></script>         
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script src="../jquery.js"></script>
     <script>
         $(document).ready(function () {
+            $('select').material_select();
+
             $("#menu_nilai").click(function () {
                $("#menu_item1").toggle(); 
                $("#menu_item2").hide();
@@ -40,6 +50,20 @@
                $("#menu_item1").hide(); 
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
+            });
+
+            $("#matkul").change(function () {
+                var matkulId = $("#matkul").val();
+                $.ajax({
+                    method : "post",
+                    url : "dataAbsen.php",
+                    data : {
+                        id : matkulId
+                    },
+                    success : function (hasil) {
+                        $("#listAbsen").html(hasil);
+                    }
+                });
             });
         });
     </script>
@@ -69,10 +93,8 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
-
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
@@ -98,8 +120,24 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-
+        <div id="container" style="padding: 20px;">
+            <h3>Absensi</h3>
+            <div class="input-field col s12" style="width: 500px;">
+                <select name="matkul" id="matkul">
+                    <option value="none" disabled selected>Pilih Matkul</option>
+                    <?php
+                        $query = "SELECT DISTINCT mk.Matkul_Kurikulum_ID, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs 
+                        WHERE mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND jk.Kelas_ID = k.Kelas_ID AND k.DosenPengajar_ID = d.Dosen_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester AND p.Pengambilan_Batal <> 1";
+                        $matkul = $conn->query($query);
+                        foreach ($matkul as $key => $value) {
+                            echo "<option value='$value[Matkul_Kurikulum_ID]'>$value[Matkul_Nama]</option>";
+                        }
+                    ?>
+                </select>
+            </div><br><br>
+            <div id="listAbsen">
+                
+            </div>
         </div>
         <div id="footer">
 
