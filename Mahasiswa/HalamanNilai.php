@@ -11,7 +11,8 @@
         header("location: ../login.php");
     }
     $nrp = $_SESSION['user']['user'];
-    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk WHERE Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID";
+    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk, Mahasiswa mhs 
+    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID ORDER BY p.Semester_Pengambilan, m.Matkul_Nama ASC";
     $listNilai = $conn->query($query);            
 ?>
 <!DOCTYPE html>
@@ -47,15 +48,8 @@
         });
     </script>
     <style>
-        #photo2{
-            margin-left: auto;
-            margin-right: auto;
-            width: 200px; 
-            height: 200px;
-            margin-top : 30px;
-        }
         #container{
-            height: auto;
+            padding: 20px;
         }
     </style>
 </head>
@@ -111,38 +105,44 @@
                 </button>
             </form>
         </div>
-        <table border="1" style="display: hidden">
-            <tr>
+        <div id="container">
+            <h4>Nilai</h4>
+            <table border="1" style="display: hidden">
+                <tr>
+                    <?php
+                        if(mysqli_num_rows($listNilai) == 0){
+                            echo "<h4>Tidak ada data</h4>";
+                        }else{
+                            echo "<th>Kelas</th>";
+                            echo "<th>UTS</th>";
+                            echo "<th>UAS</th>";
+                            echo "<th>Quiz</th>";
+                            echo "<th>Nilai Akhir</th>";
+                            echo "<th>Grade</th>";
+                            echo "<th>Pengambilan Ke-</th>";
+                        }
+                    ?>
+                </tr>
                 <?php
-                    if(mysqli_num_rows($listNilai) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>Kelas</th>";
-                        echo "<th>UTS</th>";
-                        echo "<th>UAS</th>";
-                        echo "<th>Quiz</th>";
-                        echo "<th>Nilai Akhir</th>";
-                        echo "<th>Grade</th>";
-                        echo "<th>Pengambilan Ke-</th>";
+                    foreach ($listNilai as $key => $value)
+                    {
+                        echo "<tr>";
+                            echo "<td>$value[Matkul_Nama]</td>";
+                            echo "<td>$value[UTS]</td>";
+                            echo "<td>$value[UAS]</td>";
+                            echo "<td>$value[Quiz]</td>";
+                            echo "<td>$value[Nilai_Akhir]</td>";
+                            echo "<td>$value[Pengambilan_Grade]</td>";
+                            echo "<td>$value[Jumlah_Ambil]</td>";
+                        echo "</tr>";
                     }
+                    $conn->close();
                 ?>
-            </tr>
-            <?php
-                foreach ($listNilai as $key => $value)
-                {
-                    echo "<tr>";
-                        echo "<td>$value[Matkul_Nama]</td>";
-                        echo "<td>$value[UTS]</td>";
-                        echo "<td>$value[UAS]</td>";
-                        echo "<td>$value[Quiz]</td>";
-                        echo "<td>$value[Nilai_Akhir]</td>";
-                        echo "<td>$value[Pengambilan_Grade]</td>";
-                        echo "<td>$value[Jumlah_Ambil]</td>";
-                    echo "</tr>";
-                }
-                $conn->close();
-            ?>
-        </table>
+            </table>
+        </div>
+        <div id="footer">
+
+        </div>  
     </div>
 </body>
 </html>
