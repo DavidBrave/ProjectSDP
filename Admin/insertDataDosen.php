@@ -66,7 +66,7 @@
             }
             
             //Proses Insert
-            $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$jabatan', '$photo')";
+            $query = "INSERT INTO Dosen VALUES('$nip', '$nama', '$username', '$password', '$photo')";
             $conn->query($query);
             echo '<script language = "javascript">';
             echo "alert('Berhasil Insert Dosen $nama')";
@@ -77,10 +77,8 @@
             foreach($result as $key => $value) {
                 $jabatan = $value['Jabatan_ID'];
             }
-            $query = "INSERT INTO Jabatan_Dosen VALUES('$nip', '$jabatan')";
+            $query = "INSERT INTO Jabatan_Dosen VALUES('', '$nip', '$jabatan')";
             $conn->query($query);
-
-            
 
             $conn->close();
         }

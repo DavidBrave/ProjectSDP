@@ -24,6 +24,7 @@
             $query = "SELECT Matkul_ID FROM Matkul";
             $result = $conn->query($query);
             $ctr = 0;
+            $grade = "";
 
             foreach($result as $key => $value) {
                 $ctr = substr($value['Matkul_ID'], 2) + 1;
@@ -41,9 +42,37 @@
             else {
                 $id .= $ctr;
             }
+
+            if ($nilai <= 45) {
+                $grade = "E";
+            }
+            if ($nilai > 45) {
+                $grade = "E+";
+            }
+            if ($nilai > 50) {
+                $grade = "D";
+            }
+            if ($nilai > 55) {
+                $grade = "D+";
+            }
+            if ($nilai > 60) {
+                $grade = "C";
+            }
+            if ($nilai > 65) {
+                $grade = "C+";
+            }
+            if ($nilai > 70) {
+                $grade = "B";
+            }
+            if ($nilai > 80) {
+                $grade = "B+";
+            }
+            if ($nilai > 90) {
+                $grade = "A";
+            }
             
             //Proses Insert
-            $query = "INSERT INTO Matkul VALUES('$id', '$nama', '$nilai')";
+            $query = "INSERT INTO Matkul VALUES('$id', '$nama', '$nilai', '$grade')";
             $conn->query($query);
 
             if($conn){
