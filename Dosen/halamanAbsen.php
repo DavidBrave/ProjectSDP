@@ -12,33 +12,36 @@
     }
 
     if(isset($_POST['btnDetail'])){
-        $_SESSION['detailFRSpending'] = $_POST['idMahasiswa'];
-        header("location: halamanDetailFRSpending.php");
+        $_SESSION['detailFRS'] = $_POST['idMahasiswa'];
+        header("location: halamanDetailFRS.php");
     }
 
     $dosenID = $_SESSION['user']['user'];
-    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester 
-    FROM Mahasiswa m, Dosen d, FRS a 
-    WHERE m.Mahasiswa_ID = a.Mahasiswa_ID 
-    AND m.Dosen_Wali_ID = $dosenID
-    AND a.FRS_Status = ''";
-    $listFRS = $conn->query($query);
+    $query = "SELECT DISTINCT k.Kelas_Nama, k.Kelas_Ruangan, m.Matkul_Nama, k.Kelas_ID
+    FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d
+    WHERE d.Dosen_ID = '$dosenID' 
+    AND k.DosenPengajar_ID = d.Dosen_ID
+    AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID
+    AND mk.Matkul_ID = m.Matkul_ID";
+    $listKelas = $conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRS</title>
+    <title>Insert Nilai</title>
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script src="../jquery.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script> 
+    <script src="jquery.js"></script>
     <script>
         $(document).ready(function () {
+            $('select').material_select();
+
             $("#menu_jadwal").click(function () {
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
@@ -56,53 +59,14 @@
             });
         });
 
-        function TolakClick(clicked_id)
-        {
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Tolak FRS?");
-            if (result) {
-                $.ajax({
-                    method : "post",
-                    url : "tolakFRS.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("FRS Mahasiswa " + nama + " Berhasil Ditolak");
-                }).fail(function(data){
-                    alert("Tolak FRS Mahasiswa " + nama + " Dibatalkan");
-                });;
+        $("#select1").change(function() {
+            if ($(this).data('options') === undefined) {
+                $(this).data('options', $('#select2 option').clone());
             }
-
-            location.reload();
-            return false;
-        }
-
-        function TerimaClick(clicked_id)
-        {
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Terima FRS?");
-            if (result) {
-                $.ajax({
-                    method : "post",
-                    url : "terimaFRS.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("FRS Mahasiswa " + nama + " Berhasil Diterima");
-                }).fail(function(data){
-                    alert("Terima FRS Mahasiswa " + nama + " Dibatalkan");
-                });;
-            }
-
-            location.reload();
-            return false;
-        }
+            var id = $(this).val();
+            var options = $(this).data('options').filter('[value=' + id + ']');
+            $('#select2').html(options);
+        });
     </script>
 </head>
 <body>
@@ -128,7 +92,7 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-            <a href = "halamanInsertNilai.php" class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
+            <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
@@ -158,39 +122,21 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-            <h3>FRS (Pending)</h3><br>
-            <table id = "dataFRS" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listFRS) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>NRP Mahasiswa</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Semester</th>";
-                        echo "<th>Detail</th>";
-                        echo "<th>Terima</th>";
-                        echo "<th>Tolak</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listFRS as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Mahasiswa_ID]</td>";
-                    echo "<td>$value[Mahasiswa_Nama]</td>";
-                    echo "<td>$value[Mahasiswa_Semester]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnDetail' style='width: 150px;'>Detail<i class='material-icons right'>Detail</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnTerima' id='$value[Mahasiswa_ID]' onClick='TerimaClick(this.id)' style='width: 150px;'>Terima<i class='material-icons right'>Terima</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_Nama]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnTolak' id='$value[Mahasiswa_ID]' onClick='TolakClick(this.id)' style='width: 150px;'>Tolak<i class='material-icons right'>Tolak</i></button><input type='hidden' id='Nama$value[Mahasiswa_ID]' value='$value[Mahasiswa_Nama]'></form></td>";
-                    echo "</tr>";
-                }
-
-                $conn->close();
-            ?>
-            </table>
+        <div id="container" style="padding: 10px;">
+            <h3>Lihat Absen</h3>
+            <form action="#" method="post" style="width: 50%">
+                <div class="input-field col s12">
+                    <select name="kelas" id="kelas" onchange="showAbsen()">
+                        <option value="none" disabled selected>Pilih Kelas</option>
+                        <?php
+                            foreach ($listKelas as $key => $value) {
+                                echo "<option value='" . $value['Kelas_ID'] . "'>" . $value['Matkul_Nama'] . " - " . $value['Kelas_Ruangan'] . " - " . $value['Kelas_Nama'] . "</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+            </form>
+            <div id="listAbsen"></div>
         </div>
         <div id="footer">
 
@@ -198,3 +144,19 @@
     </div>
 </body>
 </html>
+
+<script>
+    function showAbsen() {
+        var kelas = $("#kelas").val();
+        $.ajax({
+            method : "post",
+            url : "AbsenKelas.php",
+            data : {
+                kelas : kelas
+            },
+            success : function (hasil) {
+                $("#listAbsen").html(hasil);
+            }
+        });
+    }
+</script>

@@ -135,7 +135,8 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "#">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
