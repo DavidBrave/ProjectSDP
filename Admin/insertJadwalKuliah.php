@@ -79,9 +79,7 @@
                     }).fail(function(){
                         var idJadwal = $("#jadwal_id").val();
                         alert("Input Jadwal Kuliah dengan ID " + idJadwal + " Gagal");
-                    });;
-
-
+                    });
                 }
                 
                 location.reload();
@@ -100,7 +98,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -180,7 +178,6 @@
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Insert Jadwal Kuliah</h3><br>
-
                 <?php
                     $id_count = 0;
                     $jadwal_query = "SELECT * FROM Jadwal_Kuliah";
@@ -197,12 +194,8 @@
                     }
                     $id_count += 1;
                     $id_count = "JDL".str_pad($id_count, 4, "0", STR_PAD_LEFT);
-
                     echo("<input style='display: none;' type='hidden' name='jadwal_id' id='jadwal_id' value='".$id_count."'>");
-
                 ?>
-
-                
 
                 <div class="input-field col s12">
                     <select name="kelas" id="kelas">
@@ -229,7 +222,6 @@
 
                                 $periode = substr($periode, 0, 4)." / ".substr($periode, 4, 4);
 
-
                                 $matkul_query = "SELECT * FROM Matkul WHERE Matkul_ID = '$matkul_kurikulum[Matkul_ID]'";
                                 $matkul = $conn->query($matkul_query);
                                 $matkul = $matkul->fetch_assoc();
@@ -239,10 +231,7 @@
                                     .$matkul['Matkul_Nama']." - Periode ".$periode." Semester ".$semester
                                 
                                 ."</option>");
-
                             }
-                            
-                            
                         ?>
                     </select>
                 </div>
@@ -261,7 +250,6 @@
                 <input type="time" name="waktu_mulai" id="waktu_mulai">
                 Jadwal Selesai
                 <input type="time" name="waktu_selesai" id="waktu_selesai">
-
                 <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnInsert">Insert</button>
             </div>
         </div>

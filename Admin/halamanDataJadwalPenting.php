@@ -34,7 +34,23 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
-        
+        $(document).ready(function() {
+            $('select').material_select();
+
+            $("#periode").change(function () {
+                var periodeId = $("#periode").val();
+                $.ajax({
+                    method : "post",
+                    url : "jadwalPenting.php",
+                    data : {
+                        id : periodeId
+                    },
+                    success : function (hasil) {
+                        $("#jadwal-container").html(hasil);
+                    }
+                });
+            });
+        });
     </script>
 </head>
 <body>
@@ -47,7 +63,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -125,80 +141,21 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>    
         <div id="col-kanan">
-            <h4>Jadwal Quiz</h4>
-            <table border="1" style="width: 500px;">
-            <tr>
-                <?php
-                    $query = "SELECT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m
-                    WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'quiz' ORDER BY Penting_Date";
-                    $listQuiz = $conn->query($query);
-                    if(mysqli_num_rows($listQuiz) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>Matkul</th>";
-                        echo "<th>Tanggal</th>";
-                    }
-                ?>
-            </tr>
-            <?php
-                foreach ($listQuiz as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Matkul_Nama]</td>";
-                    echo "<td>$value[Penting_Date]</td>";
-                    echo "</tr>";
-                }
-            ?>
-            </table><br><br>
+            <div class="input-field col s12" style="width: 500px;">
+                <select name="periode" id="periode">
+                    <option value="none" disabled selected>Pilih Periode</option>
+                    <?php
+                        $query = "SELECT * FROM Periode";
+                        $listJurusan = $conn->query($query);
+                        foreach ($listJurusan as $key) {
+                            echo "<option value='$key[Periode_ID]'>$key[Periode_Nama]</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+            <div id="jadwal-container">
 
-            <h4>Jadwal UTS</h4>
-            <table border="1" style="width: 500px;">
-            <tr>
-                <?php
-                    $query = "SELECT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m
-                    WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uts' ORDER BY Penting_Date";
-                    $listUts = $conn->query($query);
-                    if(mysqli_num_rows($listUts) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>Matkul</th>";
-                        echo "<th>Tanggal</th>";
-                    }
-                ?>
-            </tr>
-            <?php
-                foreach ($listUts as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Matkul_Nama]</td>";
-                    echo "<td>$value[Penting_Date]</td>";
-                    echo "</tr>";
-                }
-            ?>
-            </table><br><br>
-
-            <h4>Jadwal UAS</h4>
-            <table border="1" style="width: 500px;">
-            <tr>
-                <?php
-                    $query = "SELECT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m
-                    WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uas' ORDER BY Penting_Date";
-                    $listUas = $conn->query($query);
-                    if(mysqli_num_rows($listUas) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>Matkul</th>";
-                        echo "<th>Tanggal</th>";
-                    }
-                ?>
-            </tr>
-            <?php
-                foreach ($listUas as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Matkul_Nama]</td>";
-                    echo "<td>$value[Penting_Date]</td>";
-                    echo "</tr>";
-                }
-            ?>
-            </table>
+            </div>
         </div>
     </div>
 </body>

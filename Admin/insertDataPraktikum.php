@@ -102,6 +102,21 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#periode").change(function () {
+                var periodeId = $("#periode").val();
+                $.ajax({
+                    method : "post",
+                    url : "cekMatkulkurikulumPeriode.php",
+                    data : {
+                        id : periodeId
+                    },
+                    success : function (hasil) {
+                        $("#matkulKurikulum-container1").hide();
+                        $("#matkulKurikulum-container2").html(hasil);
+                    }
+                });
+            });
          });
     </script>
 </head>
@@ -196,36 +211,28 @@
             <div style="width: 50%;">
                 <h3>Insert Data Praktikum</h3><br>
                 <form action = "#" method = "post">
-                    <p>Matkul Kurikulum : </p>
                     <div class="input-field col s12">
-                        <select name="matkulKurikulum">
-                            <option value="none" disabled selected>Pilih Matkul Kurikulum</option>
+                        <select name="periode" id="periode">
+                            <option value="none" disabled selected>Pilih Periode</option>
                             <?php
-                                foreach ($listMatkulKurikulum as $key) {
-                                    $idMatkulKurikulum = $key['Matkul_Kurikulum_ID'];
-                                    $idMatkul = $key['Matkul_ID'];
-                                    $idJurusan = $key['Jurusan_ID'];
-
-                                    $query = "SELECT * FROM Matkul";
-                                    $listMatkul = $conn->query($query);
-                                    foreach ($listMatkul as $key => $value) {
-                                        if($value['Matkul_ID'] == $idMatkul){
-                                            $namaMatkul = $value['Matkul_Nama'];
-                                        }
-                                    }
-
-                                    $query = "SELECT * FROM Jurusan";
-                                    $listJurusan = $conn->query($query);
-                                    foreach ($listJurusan as $key => $value) {
-                                        if($value['Jurusan_ID'] == $idJurusan){
-                                            $namaJurusan = $value['Jurusan_Nama'];
-                                        }
-                                    }
-
-                                    echo "<option value='$idMatkulKurikulum'>".$namaMatkul." - ".$namaJurusan."</option>";
+                                $query = "SELECT * FROM Periode";
+                                $periode = $conn->query($query);
+                                foreach ($periode as $key) {
+                                    echo "<option value='$key[Periode_ID]'>$key[Periode_Nama]</option>";
                                 }
                             ?>
                         </select>
+                    </div>
+                    <p>Matkul Kurikulum : </p>
+                    <div class="input-field col s12">
+                        <div id="matkulKurikulum-container1">
+                            <select name="matkulKurikulum" disabled>
+                                <option value="none" selected disabled>Pilih Matkul Kurikulum</option>
+                            </select>
+                        </div>
+                        <div id="matkulKurikulum-container2">
+
+                        </div>
                     </div>
                     <p>Nama Praktikum : </p>
                     <input type="text" name="nama">

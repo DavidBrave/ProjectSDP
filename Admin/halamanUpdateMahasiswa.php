@@ -138,7 +138,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -232,7 +232,7 @@
                 <div class="input-field col s12">
                     <select name="wali" id="wali">
                         <?php
-                            $query = "SELECT * FROM Dosen WHERE Dosen_Jabatan = 'Dosen Wali'";
+                            $query = "SELECT jd.Dosen_ID, d.Dosen_Nama FROM Dosen d, Jabatan_Dosen jd, Jabatan j WHERE d.Dosen_ID = jd.Dosen_ID AND jd.Jabatan_ID = j.Jabatan_ID AND j.Jabatan_ID = 'JBT0005'";
                             $listDosen = $conn->query($query);
                             foreach ($listDosen as $key => $value) {
                                 if($value['Dosen_ID'] == $_SESSION['mahasiswa']['wali']){
