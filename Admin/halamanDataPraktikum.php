@@ -49,7 +49,9 @@
         header("location: halamanUpdatePraktikum.php");
     }
 
-    $query = "SELECT * FROM Praktikum WHERE Praktikum_Nama LIKE '%$nama%'";
+    $query = "SELECT p.Praktikum_ID, p.Praktikum_Nama, m.Matkul_Nama, j.Jurusan_Nama, pe.Periode_Nama, p.Praktikum_Hari, kp.Kelas_Praktikum_Ruangan, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_Kapasitas 
+    FROM Praktikum p, Matkul_Kurikulum mk, Matkul m, Jurusan j, Kelas_Praktikum kp, Periode pe 
+    WHERE mk.Matkul_Kurikulum_ID = p.Matkulkurikulum_ID AND mk.Periode_ID = pe.Periode_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = j.Jurusan_ID AND kp.Praktikum_ID = p.Praktikum_ID AND Praktikum_Nama LIKE '%$nama%'";
     $listPraktikum = $conn->query($query);
 ?>
 
@@ -113,7 +115,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -207,6 +209,7 @@
                         echo "<th>Nama Praktikum</th>";
                         echo "<th>Mata Kuliah</th>";
                         echo "<th>Jurusan</th>";
+                        echo "<th>Periode</th>";
                         echo "<th>Hari</th>";
                         echo "<th>Ruangan</th>";
                         echo "<th>Waktu</th>";
@@ -222,43 +225,16 @@
                     echo "<tr>";
                     echo "<td>$value[Praktikum_ID]</td>";
                     echo "<td>$value[Praktikum_Nama]</td>";
-                    $praktikumId = $value['Praktikum_ID'];
-                    $matkulKurikulumId = $value['Matkulkurikulum_ID'];
-                    $hari = $value['Praktikum_Hari'];
-                    $ruangan = $value['Praktikum_Ruangan'];
                     $waktu = substr($value['Praktikum_Jam_Mulai'],0,5)." - ".substr($value['Praktikum_Jam_Selesai'],0,5);
-                    $kapasitas = $value['Praktikum_Kapasitas'];
-                   
-                    $query = "SELECT * FROM Matkul_Kurikulum WHERE Matkul_Kurikulum_ID = '$matkulKurikulumId'";
-                    $listMatkulKurikulum = $conn->query($query);
-                    foreach ($listMatkulKurikulum as $key) {
-                        $idMatkul = $key['Matkul_ID'];
-                        $idJurusan = $key['Jurusan_ID'];
-
-                        $query = "SELECT * FROM Matkul";
-                        $listMatkul = $conn->query($query);
-                        foreach ($listMatkul as $key => $value) {
-                            if($value['Matkul_ID'] == $idMatkul){
-                                $namaMatkul = $value['Matkul_Nama'];
-                            }
-                        }
-
-                        $query = "SELECT * FROM Jurusan";
-                        $listJurusan = $conn->query($query);
-                        foreach ($listJurusan as $key => $value) {
-                            if($value['Jurusan_ID'] == $idJurusan){
-                                $namaJurusan = $value['Jurusan_Nama'];
-                            }
-                        }
-                    }
-                    echo "<td>$namaMatkul</td>";
-                    echo "<td>$namaJurusan</td>";
-                    echo "<td>$hari</td>";
-                    echo "<td>$ruangan</td>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[Jurusan_Nama]</td>";
+                    echo "<td>$value[Periode_Nama]</td>";
+                    echo "<td>$value[Praktikum_Hari]</td>";
+                    echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
                     echo "<td>$waktu</td>";
-                    echo "<td>$kapasitas</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='praktikumId' value='$praktikumId'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='praktikumId' value='$praktikumId'></form></td>";
+                    echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='praktikumId' value='$value[Praktikum_ID]'></form></td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='praktikumId' value='$value[Praktikum_ID]'></form></td>";
                     echo "</tr>";
                 }
 
