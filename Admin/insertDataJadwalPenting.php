@@ -12,16 +12,16 @@
     }
 
     if (isset($_POST['btnSubmit'])) {
-        $matkulkurikulum = $_POST['matkulkurikulum'];
+        $jadwal = $_POST['jadwal'];
         $jenis = $_POST['jenis'];
         $tanggal = $_POST['tanggal'];
-        if(isset($matkulkurikulum) || isset($jenis) || isset($tanggal)){
+        if(isset($jadwal) || isset($jenis) || isset($tanggal)){
             $query = "SELECT jk.Jadwal_ID, jp.Keterangan, mk.Matkul_Kurikulum_ID FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk
             WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID";
             $jadwalpenting = $conn->query($query);
             $isCollision = false;
             foreach ($jadwalpenting as $key => $value) {
-                if($value['Keterangan'] == $jenis && $value['Matkul_Kurikulum_ID'] == $matkulkurikulum){
+                if($value['Keterangan'] == $jenis && $value['Jadwal_ID'] == $jadwal){
                     $isCollision = true;
                 }
             }
@@ -29,13 +29,8 @@
             if($isCollision){
                 echo "<script>alert('Jadwal sudah ada')</script>";
             }else{
-                $query = "SELECT jk.Jadwal_ID, mk.Matkul_Kurikulum_ID FROM Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk
-                WHERE jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_Kurikulum_ID = '$matkulkurikulum'";
-                $jadwalpenting = $conn->query($query);
-                foreach ($jadwalpenting as $key => $value) {
-                    $query = "INSERT INTO Jadwal_Penting VALUES(null, '$value[Jadwal_ID]', '$tanggal', '$jenis')";
-                    $conn->query($query);
-                }
+                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggal', '$jenis')";
+                $conn->query($query);
                 echo "<script>alert('Berhasil')</script>";
             }
         }else{
@@ -65,6 +60,21 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#jurusan").change(function () {
+                var jurusanlId = $("#jurusan").val();
+                $.ajax({
+                    method : "post",
+                    url : "cekJurusanJadwal.php",
+                    data : {
+                        id : jurusanlId
+                    },
+                    success : function (hasil) {
+                        $("#jadwal-container1").hide();
+                        $("#jadwal-container2").html(hasil);
+                    }
+                });
+            });
          });
     </script>
 </head>
@@ -78,7 +88,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -160,17 +170,26 @@
                 <form action = "#" method = "post">
                     <h3>Insert Jadwal Penting</h3><br>
                     <div class="input-field col s12">
-                        <select name="matkulkurikulum">
-                            <option value="none" disabled selected>Pilih Kelas</option>
+                        <select name="jurusan" id="jurusan">
+                            <option value="none" disabled selected>Pilih Jurusan</option>
                             <?php
-                                $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama FROM Matkul_Kurikulum mk, Matkul m 
-                                WHERE mk.Matkul_ID = m.Matkul_ID";
-                                $listMatkulKurikulum = $conn->query($query);
-                                foreach ($listMatkulKurikulum as $key => $value) {
-                                    echo "<option value='$value[Matkul_Kurikulum_ID]'>".$value['Matkul_Nama']."</option>";
+                                $query = "SELECT * FROM Jurusan";
+                                $listJurusan = $conn->query($query);
+                                foreach ($listJurusan as $key) {
+                                    echo "<option value='$key[Jurusan_ID]'>$key[Jurusan_Nama]</option>";
                                 }
                             ?>
                         </select>
+                    </div>
+                    <div class="input-field col s12">
+                        <div id="jadwal-container1">
+                            <select name="jadwal" disabled>
+                                <option value="none" selected disabled>Pilih Kelas</option>
+                            </select>
+                        </div>
+                        <div id="jadwal-container2">
+
+                        </div>
                     </div>
                     <div class="input-field col s12">
                         <select name="jenis">
