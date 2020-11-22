@@ -12,16 +12,17 @@
     }
 
     if (isset($_POST['btnSubmit'])) {
-        $jadwal = $_POST['jadwal'];
-        $jenis = $_POST['jenis'];
-        $tanggal = $_POST['tanggal'];
-        if(isset($jadwal) || isset($jenis) || isset($tanggal)){
+        if(isset($_POST['jadwal']) && isset($_POST['tanggalQuiz']) && isset($_POST['tanggalUts']) && isset($_POST['tanggalUas'])){
+            $jadwal = $_POST['jadwal'];
+            $tanggalQuiz = $_POST['tanggalQuiz'];
+            $tanggalUts = $_POST['tanggalUts'];
+            $tanggalUas = $_POST['tanggalUas'];
             $query = "SELECT jk.Jadwal_ID, jp.Keterangan, mk.Matkul_Kurikulum_ID FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk
             WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID";
             $jadwalpenting = $conn->query($query);
             $isCollision = false;
             foreach ($jadwalpenting as $key => $value) {
-                if($value['Keterangan'] == $jenis && $value['Jadwal_ID'] == $jadwal){
+                if($value['Jadwal_ID'] == $jadwal){
                     $isCollision = true;
                 }
             }
@@ -29,7 +30,11 @@
             if($isCollision){
                 echo "<script>alert('Jadwal sudah ada')</script>";
             }else{
-                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggal', '$jenis')";
+                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggalQuiz', 'quiz')";
+                $conn->query($query);
+                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggalUts', 'uts')";
+                $conn->query($query);
+                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggalUas', 'uas')";
                 $conn->query($query);
                 echo "<script>alert('Berhasil')</script>";
             }
@@ -49,7 +54,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
+        #content{height: 1200px;}
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -169,6 +174,7 @@
             <div style="width: 50%;">
                 <form action = "#" method = "post">
                     <h3>Insert Jadwal Penting</h3><br>
+                    <h5 style="font-size:20px;">Jurusan : </h5>
                     <div class="input-field col s12">
                         <select name="jurusan" id="jurusan">
                             <option value="none" disabled selected>Pilih Jurusan</option>
@@ -181,6 +187,7 @@
                             ?>
                         </select>
                     </div>
+                    <h5 style="font-size:20px;">Kelas : </h5>
                     <div class="input-field col s12">
                         <div id="jadwal-container1">
                             <select name="jadwal" disabled>
@@ -191,15 +198,12 @@
 
                         </div>
                     </div>
-                    <div class="input-field col s12">
-                        <select name="jenis">
-                            <option value="none" disabled selected>Pilih Jenis</option>
-                            <option value="quiz">Quiz</option>
-                            <option value="uts">UTS</option>
-                            <option value="uas">UAS</option>
-                        </select>
-                    </div>
-                    <input type="date" name="tanggal"><br>
+                    <h5 style="font-size:20px;">Tanggal Quiz : </h5>
+                    <input type="date" name="tanggalQuiz"><br>
+                    <h5 style="font-size:20px;">Tanggal UTS : </h5>
+                    <input type="date" name="tanggalUts"><br>
+                    <h5 style="font-size:20px;">Tanggal UAS : </h5>
+                    <input type="date" name="tanggalUas"><br>
                     <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnSubmit">Submit</button>
                 </form>
             </div>
