@@ -97,7 +97,6 @@
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanFRS.php">FRS</a>
                 <a class = "btn dropdown-button blue" href = "HalamanBatalTambah.php">Batal Tambah</a>
-                <a class = "btn dropdown-button blue" href = "#">Drop</a>
             </div>
         </div>
     </div>
@@ -115,8 +114,10 @@
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p
-                    WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'quiz' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester' AND p.Pengambilan_Batal <> 1 ORDER BY Penting_Date";
+                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
+                    WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'quiz' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester'
+                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal'
+                    ORDER BY Penting_Date";
                     $listQuiz = $conn->query($query);
                     if(mysqli_num_rows($listQuiz) == 0){
                         echo "<h4>Tidak ada data</h4>";
@@ -140,8 +141,10 @@
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p
-                    WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uts' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester' AND p.Pengambilan_Batal <> 1 ORDER BY Penting_Date";
+                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
+                    WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uts' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester'
+                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' 
+                    ORDER BY Penting_Date";
                     $listUts = $conn->query($query);
                     if(mysqli_num_rows($listUts) == 0){
                         echo "<h4>Tidak ada data</h4>";
@@ -165,8 +168,10 @@
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p
-                    WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uas' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester' AND p.Pengambilan_Batal <> 1 ORDER BY Penting_Date";
+                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
+                    WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uas' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester'
+                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal'
+                    ORDER BY Penting_Date";
                     $listUas = $conn->query($query);
                     if(mysqli_num_rows($listUas) == 0){
                         echo "<h4>Tidak ada data</h4>";
