@@ -198,7 +198,6 @@
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanFRS.php">FRS</a>
                 <a class = "btn dropdown-button blue" href = "HalamanBatalTambah.php">Batal Tambah</a>
-                <a class = "btn dropdown-button blue" href = "#">Drop</a>
             </div>
         </div>
     </div>

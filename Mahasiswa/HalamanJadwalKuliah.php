@@ -96,7 +96,6 @@
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanFRS.php">FRS</a>
                 <a class = "btn dropdown-button blue" href = "HalamanBatalTambah.php">Batal Tambah</a>
-                <a class = "btn dropdown-button blue" href = "#">Drop</a>
             </div>
         </div>
     </div>
@@ -124,8 +123,10 @@
                 </tr>
             <?php
                 $query = "SELECT DISTINCT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, mk.SKS, k.Kelas_Nama, d.Dosen_Nama, jk.Jadwal_Hari, SUBSTR(jk.Jadwal_Mulai,1,5) as Jadwal_Mulai, SUBSTR(jk.Jadwal_Selesai,1,5) as Jadwal_Selesai, k.Kelas_Ruangan, (CASE jk.Jadwal_Hari WHEN 'monday' THEN 1 WHEN 'tuesday' THEN 2 WHEN 'wednesday' THEN 3 WHEN 'thursday' THEN 4 WHEN 'friday' THEN 5 WHEN 'saturday' THEN 6 WHEN 'sunday' THEN 7 END) AS day 
-                FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs 
-                WHERE mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND jk.Kelas_ID = k.Kelas_ID AND k.DosenPengajar_ID = d.Dosen_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester AND p.Pengambilan_Batal <> 1 ORDER BY day ASC";   
+                FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs, FRS f 
+                WHERE mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Kelas_ID = k.Kelas_ID AND jk.Kelas_ID = k.Kelas_ID AND k.DosenPengajar_ID = d.Dosen_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester
+                AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' 
+                ORDER BY day ASC";   
                 $jadwal = $conn->query($query);     
                 foreach ($jadwal as $key => $value) {
                     $hari = $value['Jadwal_Hari'];
