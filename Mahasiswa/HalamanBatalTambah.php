@@ -24,7 +24,8 @@
     $semester = (int)$mahasiswa['Mahasiswa_Semester'];
     $jurusan = $mahasiswa['Jurusan_ID'];
 
-    $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs
+    $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS 
+    FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs
     WHERE p.Kelas_ID = k.Kelas_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Semester_Pengambilan = mhs.Mahasiswa_Semester AND p.Pengambilan_Batal <> 1";
     $selectedMatkuls = $conn->query($query);
 
@@ -82,7 +83,7 @@
     </script>
 </head>
 <body>
-<div id="col-kiri">
+    <div id="col-kiri">
         <div id="menu">
             <a href="HalamanBiodata.php" style="width: 100%; color: black; padding-left: 0px;">
                 <div id="profile">

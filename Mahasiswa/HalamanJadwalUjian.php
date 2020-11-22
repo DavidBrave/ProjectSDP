@@ -53,7 +53,8 @@
     </script>
     <style>
         #container{
-            height: 937px;
+            min-height: 937px;
+            height: auto;
         }
     </style>
 </head>
