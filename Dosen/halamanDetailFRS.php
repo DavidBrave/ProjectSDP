@@ -625,7 +625,6 @@
                                 echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
                                 $ada = false;
                                 foreach($listPrak as $key2 => $value2) {
-                                    var_dump($value2['Kelas_Praktikum_ID']);
                                     if ($value2['Kelas_Praktikum_ID'] == $value['Kelas_Praktikum_ID']) {
                                         $ada = true;
                                     }

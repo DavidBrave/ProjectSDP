@@ -33,6 +33,10 @@
         header("location: halamanFRSpraktikum.php");
     }
 
+    if(isset($_POST['btnBack'])){
+        header("location: halamanFRSpending.php");
+    }
+
     $query = "SELECT m.Matkul_Nama, mk.Matkul_Kurikulum_ID FROM FRS a, Matkul m, Matkul_Kurikulum mk 
     WHERE a.Mahasiswa_ID = $id
     AND a.Matkul_Kurikulum_ID = mk.Matkul_Kurikulum_ID
