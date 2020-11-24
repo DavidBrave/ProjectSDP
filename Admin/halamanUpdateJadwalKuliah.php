@@ -78,6 +78,7 @@
                     }).done(function(data){
                         var idJadwal = $("#jadwal_id").val();
                         alert("Jadwal Kuliah dengan ID " + idJadwal + " Berhasil Diperbaharui");
+                        header('Location: /halamanJadwalKuliah.php');
                     }).fail(function(){
                         var idJadwal = $("#jadwal_id").val();
                         alert("Jadwal Kuliah dengan ID " + idJadwal + " Gagal Diperbaharui");
