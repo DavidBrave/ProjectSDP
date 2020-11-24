@@ -141,11 +141,9 @@
         <div style="width: 50%;">
             <form action="POST">
 
-<<<<<<< Updated upstream
                 <h3>Insert Nilai Mahasiswa</h3><br>
                 NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id="">
                 Kelas : <input type="text" name="id_kelas" id="">
-=======
                             //     $dosen_query = "SELECT * FROM Dosen WHERE Dosen_ID = '$kelas[DosenPengajar_ID]'";
                             //     $dosen = $conn->query($dosen_query);
                             //     $dosen = $dosen->fetch_assoc();
@@ -191,7 +189,6 @@
 <!--                 
                 NRP Mahasiswa : <input type="text" name="nrp_mahasiswa" id=""> -->
                 Kelas :
->>>>>>> Stashed changes
                 <div class="input-field col s12">
                     <select name="ujian">
                         <option value="none" disabled selected>Pilih Ujian</option>
