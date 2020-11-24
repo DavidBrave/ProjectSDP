@@ -9,23 +9,7 @@
     if(isset($_POST['btnLogout'])){
         unset($_SESSION['user']);
         header("location: ../login.php");
-    }
-
-    $nrp = $_SESSION['user']['user'];
-    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
-              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
-    $mahasiswa = mysqli_fetch_array($conn->query($query));
-    $nrp = $mahasiswa['Mahasiswa_ID'];
-    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
-    $jurusan = $mahasiswa['Jurusan_ID'];
-    $semesterLalu = $semester - 1;
-
-    $nrp = $_SESSION['user']['user'];
-    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
-    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID 
-    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND p.Semester_Pengambilan = $semester 
-    ORDER BY p.Semester_Pengambilan, m.Matkul_Nama ASC";
-    $listNilai = $conn->query($query);            
+    }    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,14 +18,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biodata</title>
     <link rel="stylesheet" href="Mahasiswa.css">
+    <script src="../jquery.js"></script>
+    <link rel="stylesheet" href="Mahasiswa.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script src="../jquery.js"></script>
     <script>
         $(document).ready(function () {
+            $('select').material_select();
+
             $("#menu_nilai").click(function () {
                $("#menu_item1").toggle(); 
                $("#menu_item2").hide();
@@ -56,6 +43,21 @@
                $("#menu_item1").hide(); 
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
+            });
+
+            $("#semester").change(function () {
+                var semester = $("#semester").val();
+                $.ajax({
+                    method : "post",
+                    url : "checkTranskripNilai.php",
+                    data : {
+                        id : semester
+                    },
+                    success : function (hasil) {
+                        $("#container1").hide();
+                        $("#container2").html(hasil);
+                    }
+                });
             });
         });
     </script>
@@ -119,38 +121,22 @@
         </div>
         <div id="container">
             <h4>Nilai</h4>
-            <table border="1" style="display: hidden">
-                <tr>
+            <div class="input-field col s12" style="width: 400px;">
+                <select name="semester" id="semester">
+                    <option value="none" disabled selected>Pilih Semester</option>
                     <?php
-                        if(mysqli_num_rows($listNilai) == 0){
-                            echo "<h4>Tidak ada data</h4>";
-                        }else{
-                            echo "<th>Kelas</th>";
-                            echo "<th>UTS</th>";
-                            echo "<th>UAS</th>";
-                            echo "<th>Quiz</th>";
-                            echo "<th>Nilai Akhir</th>";
-                            echo "<th>Grade</th>";
-                            echo "<th>Pengambilan Ke-</th>";
+                        for ($i=1; $i < 9; $i++) { 
+                            echo "<option value='$i'>Semester $i</option>";
                         }
                     ?>
-                </tr>
-                <?php
-                    foreach ($listNilai as $key => $value)
-                    {
-                        echo "<tr>";
-                            echo "<td>$value[Matkul_Nama]</td>";
-                            echo "<td>$value[UTS]</td>";
-                            echo "<td>$value[UAS]</td>";
-                            echo "<td>$value[Quiz]</td>";
-                            echo "<td>$value[Nilai_Akhir]</td>";
-                            echo "<td>$value[Pengambilan_Grade]</td>";
-                            echo "<td>$value[Jumlah_Ambil]</td>";
-                        echo "</tr>";
-                    }
-                    $conn->close();
-                ?>
-            </table>
+                </select>
+            </div>
+            <div id="container1">
+                <h3>Tidak ada data</h3>
+            </div>
+            <div id="container2">
+
+            </div>
         </div>
         <div id="footer">
 

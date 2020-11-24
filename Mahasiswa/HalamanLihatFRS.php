@@ -11,6 +11,15 @@
         header("location: ../login.php");
     }
 
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
+    $semesterLalu = $semester - 1;
+
     $selectedMatkuls = explode(",", $_SESSION['matkul']);
 
     if(isset($_POST['btnRemove'])){
@@ -35,7 +44,9 @@
             $mahasiswa = $_SESSION['user']['user'];
             for ($i=0; $i < sizeof($praktikum); $i++) { 
                 $kelas = $praktikum[$i];
-                $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,0,1)";
+                $query = "SELECT * FROM Pengambilan_Praktikum WHERE Mahasiswa_ID = '$mahasiswa' AND Kelas_Praktikum_ID = $praktikum[$i]";
+                $jumlah = (int)mysqli_num_rows($conn->query($query)) + 1;
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$mahasiswa', '$kelas', 0, $jumlah, $semester)";
                 $conn->query($query);
             }
             for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
@@ -122,6 +133,7 @@
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
+                <a class = "btn dropdown-button blue" href = "HalamanTranskripNilai.php">Transkrip Nilai</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
