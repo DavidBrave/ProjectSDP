@@ -95,6 +95,7 @@
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
+                <a class = "btn dropdown-button blue" href = "HalamanTranskripNilai.php">Transkrip Nilai</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
