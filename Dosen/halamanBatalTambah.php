@@ -17,12 +17,14 @@
     }
 
     $dosenID = $_SESSION['user']['user'];
-    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester 
-    FROM Mahasiswa m, Dosen d, FRS a 
+    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester, ma.Matkul_Nama, a.FRS_Status, a.Matkul_Kurikulum_ID
+    FROM Mahasiswa m, Dosen d, FRS a, Matkul_Kurikulum mk, Matkul ma
     WHERE m.Mahasiswa_ID = a.Mahasiswa_ID 
     AND m.Dosen_Wali_ID = $dosenID
-    AND a.FRS_Status = ''";
-    $listFRS = $conn->query($query);
+    AND a.Matkul_Kurikulum_ID = mk.Matkul_Kurikulum_ID 
+    AND mk.Matkul_ID = ma.Matkul_ID
+    AND (a.FRS_Status = 'Batal' OR a.FRS_Status = 'Tambah')";
+    $listBatalTambah = $conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,20 +61,22 @@
         function TolakClick(clicked_id)
         {
             var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Tolak FRS?");
+            var id = $("#Matkul" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Tolak Batal?");
             if (result) {
                 $.ajax({
                     method : "post",
-                    url : "tolakFRS.php",
+                    url : "tolakBatal.php",
                     async : false,
                     data : {
-                        id : clicked_id
+                        id : id,
+                        matkul : clicked_id
                     },
 
                 }).done(function(data){
-                    alert("FRS Mahasiswa " + nama + " Berhasil Ditolak");
+                    alert("Batal Mahasiswa " + nama + " Berhasil Ditolak");
                 }).fail(function(data){
-                    alert("Tolak FRS Mahasiswa " + nama + " Dibatalkan");
+                    alert("Tolak Batal Mahasiswa " + nama + " Dibatalkan");
                 });;
             }
 
@@ -83,20 +87,74 @@
         function TerimaClick(clicked_id)
         {
             var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Terima FRS?");
+            var id = $("#Matkul" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Terima Batal?");
             if (result) {
                 $.ajax({
                     method : "post",
-                    url : "terimaFRS.php",
+                    url : "terimaBatal.php",
                     async : false,
                     data : {
-                        id : clicked_id
+                        id : id,
+                        matkul : clicked_id
                     },
 
                 }).done(function(data){
-                    alert("FRS Mahasiswa " + nama + " Berhasil Diterima");
+                    alert("Batal Mahasiswa " + nama + " Berhasil Diterima");
                 }).fail(function(data){
-                    alert("Terima FRS Mahasiswa " + nama + " Dibatalkan");
+                    alert("Terima Batal Mahasiswa " + nama + " Dibatalkan");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
+
+        function TolakClick2(clicked_id)
+        {
+            var nama = $("#Nama" + clicked_id).val();
+            var id = $("#Matkul" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Tolak Tambah?");
+            if (result) {
+                $.ajax({
+                    method : "post",
+                    url : "tolakTambah.php",
+                    async : false,
+                    data : {
+                        id : id,
+                        matkul : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("Tambah Mahasiswa " + nama + " Berhasil Ditolak");
+                }).fail(function(data){
+                    alert("Tolak Tambah Mahasiswa " + nama + " Dibatalkan");
+                });;
+            }
+
+            location.reload();
+            return false;
+        }
+
+        function TerimaClick2(clicked_id)
+        {
+            var nama = $("#Nama" + clicked_id).val();
+            var id = $("#Matkul" + clicked_id).val();
+            var result = confirm("Apakah Yakin Ingin Terima Tambah?");
+            if (result) {
+                $.ajax({
+                    method : "post",
+                    url : "terimaTambah.php",
+                    async : false,
+                    data : {
+                        id : id,
+                        matkul : clicked_id
+                    },
+
+                }).done(function(data){
+                    alert("Tambah Mahasiswa " + nama + " Berhasil Diterima");
+                }).fail(function(data){
+                    alert("Terima Tambah Mahasiswa " + nama + " Dibatalkan");
                 });;
             }
 
@@ -160,17 +218,18 @@
             </form>
         </div>
         <div id="container">
-            <h3>FRS (Pending)</h3><br>
+            <h3>List Batal Tambah (Pending)</h3><br>
             <table id = "dataFRS" border="1" style="display: hidden">
             <tr>
                 <?php
-                    if(mysqli_num_rows($listFRS) == 0){
+                    if(mysqli_num_rows($listBatalTambah) == 0){
                         echo "<h4>Tidak ada data</h4>";
                     }else{
                         echo "<th>NRP Mahasiswa</th>";
                         echo "<th>Nama</th>";
                         echo "<th>Semester</th>";
-                        echo "<th>Detail</th>";
+                        echo "<th>Mata Kuliah</th>";
+                        echo "<th>Status</th>";
                         echo "<th>Terima</th>";
                         echo "<th>Tolak</th>";
                     }
@@ -178,14 +237,23 @@
             </tr>
 
             <?php
-                foreach ($listFRS as $key => $value) {
+                foreach ($listBatalTambah as $key => $value) {
                     echo "<tr>";
                     echo "<td>$value[Mahasiswa_ID]</td>";
                     echo "<td>$value[Mahasiswa_Nama]</td>";
                     echo "<td>$value[Mahasiswa_Semester]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnDetail' style='width: 150px;'>Detail<i class='material-icons right'>Detail</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnTerima' id='$value[Mahasiswa_ID]' onClick='TerimaClick(this.id)' style='width: 150px;'>Terima<i class='material-icons right'>Terima</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_Nama]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnTolak' id='$value[Mahasiswa_ID]' onClick='TolakClick(this.id)' style='width: 150px;'>Tolak<i class='material-icons right'>Tolak</i></button><input type='hidden' id='Nama$value[Mahasiswa_ID]' value='$value[Mahasiswa_Nama]'></form></td>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<Td>$value[FRS_Status]</td>";
+                    if ($value['FRS_Status'] == "Batal") {
+                        echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnTerima' id='$value[Matkul_Kurikulum_ID]' onClick='TerimaClick(this.id)' style='width: 150px;'>Terima<i class='material-icons right'>Terima</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_Nama]'></form></td>";
+                        echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnTolak' id='$value[Matkul_Kurikulum_ID]' onClick='TolakClick(this.id)' style='width: 150px;'>Tolak<i class='material-icons right'>Tolak</i></button><input type='hidden' id='Nama$value[Matkul_Kurikulum_ID]' value='$value[Mahasiswa_Nama]'></form></td>";
+                    }
+                    else {
+                        echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnTerima' id='$value[Matkul_Kurikulum_ID]' onClick='TerimaClick2(this.id)' style='width: 150px;'>Terima<i class='material-icons right'>Terima</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_Nama]'></form></td>";
+                        echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnTolak' id='$value[Matkul_Kurikulum_ID]' onClick='TolakClick2(this.id)' style='width: 150px;'>Tolak<i class='material-icons right'>Tolak</i></button><input type='hidden' id='Nama$value[Matkul_Kurikulum_ID]' value='$value[Mahasiswa_Nama]'></form></td>";
+                    }
+                    echo "<input type='hidden' id='Matkul$value[Matkul_Kurikulum_ID]' value='$value[Mahasiswa_ID]'>";
+                    
                     echo "</tr>";
                 }
 
