@@ -58,5 +58,7 @@
     ?>        
 </table>
 <?php
-    echo "<p style='float: right;'>IP Semester : ".substr($total/$counter, 0, 4)."</p>";
+    if($counter > 0){
+        echo "<p style='float: right;'>IP Semester : ".substr($total/$counter, 0, 4)."</p>";
+    }
 ?>
