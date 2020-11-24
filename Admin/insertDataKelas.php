@@ -70,6 +70,9 @@
         p{
             font-size: 20px;
         }
+        #content{
+            height: 1200px;
+        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -80,6 +83,21 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#jurusan").change(function () {
+                var jurusanlId = $("#jurusan").val();
+                $.ajax({
+                    method : "post",
+                    url : "cekJurusanMatkulkurikulum.php",
+                    data : {
+                        id : jurusanlId
+                    },
+                    success : function (hasil) {
+                        $("#mkl-container1").hide();
+                        $("#mkl-container2").html(hasil);
+                    }
+                });
+            });
          });
     </script>
 </head>
@@ -95,42 +113,49 @@
     <div id="content">
         <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
+            
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataMahasiswa.php">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown2" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataDosen.php">Data Dosen</a></li>
                 <li><a href = "insertDataDosen.php">Insert Data Dosen</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown2" style="width: 100%; color: black;">Dosen<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown3" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanJurusan.php">Data Jurusan</a></li>
                 <li><a href = "insertDataJurusan.php">Insert Data Jurusan</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown3" style="width: 100%; color: black;">Jurusan<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown4" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanKurikulum.php">Data Kurikulum</a></li>
-                <li><a href = "insertDataKurikulum.php">Insert Data Kurikulum</a></li>
+                <li><a href = "halamanMajor.php">Data Major</a></li>
+                <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
             <ul id = "dropdown5" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMataKuliah.php">Data Mata Kuliah</a></li>
                 <li><a href = "insertDataMataKuliah.php">Insert Data Mata Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown6" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanMajor.php">Data Major</a></li>
-                <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
+                <li><a href = "halamanKurikulum.php">Data Kurikulum</a></li>
+                <li><a href = "insertDataKurikulum.php">Insert Data Kurikulum</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
-                <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
+                <li><a href = "halamanPeriode.php">Data Periode</a></li>
+                <li><a href = "insertPeriode.php">Insert Periode</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Periode<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
             <ul id = "dropdown8" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMatkulKurikulum.php">Data Matkul Kurikulum</a></li>
                 <li><a href = "insertMatkulKurikulum.php">Insert Data Matkul Kurikulum</a></li>
@@ -145,53 +170,55 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
             <ul id = "dropdown10" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
+                <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+            <ul id = "dropdown11" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataKelas.php">Data Kelas</a></li>
                 <li><a href = "insertDataKelas.php">Insert Data Kelas</a></li>
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
-        <div id="col-kanan">
-            <div style="width: 50%;">
+        <div id="col-kanan" style="width: 50%;">
+            <div>
                 <h3>Insert Data Kelas</h3><br>
                 <form action = "#" method = "post">
-                    <p>Matkul Kurikulum : </p>
+                    <p>Jurusan : </p>
                     <div class="input-field col s12">
-                        <select name="matkulkurikulum">
-                            <option value="none" disabled selected>Pilih Matkul Kurikulum</option>
+                        <select name="jurusan" id="jurusan">
+                            <option value="none" disabled selected>Pilih Jurusan</option>
                             <?php
-                                $query = "SELECT * FROM Matkul_Kurikulum";
-                                $listMatkulKurikulum = $conn->query($query);
-                                
-                                foreach ($listMatkulKurikulum as $key => $value) {
-                                    $idMatkulKurikulum = $value['Matkul_Kurikulum_ID'];
-                                    $idMatkul = $value['Matkul_ID'];
-                                    $idJurusan = $value['Jurusan_ID'];
-                                    
-                                    $query = "SELECT * FROM Matkul";
-                                    $listMatkul = $conn->query($query);
-                                    foreach ($listMatkul as $key => $value) {
-                                        if($value['Matkul_ID'] == $idMatkul){
-                                            $namaMatkul = $value['Matkul_Nama'];
-                                        }
-                                    }
-    
-                                    $query = "SELECT * FROM Jurusan";
-                                    $listJurusan = $conn->query($query);
-                                    foreach ($listJurusan as $key => $value) {
-                                        if($value['Jurusan_ID'] == $idJurusan){
-                                            $namaJurusan = $value['Jurusan_Nama'];
-                                        }
-                                    }
-    
-                                    echo "<option value='$idMatkulKurikulum'>".$namaMatkul." - ".$namaJurusan."</option>";
+                                $query = "SELECT * FROM Jurusan";
+                                $listJurusan = $conn->query($query);
+                                foreach ($listJurusan as $key) {
+                                    echo "<option value='$key[Jurusan_ID]'>$key[Jurusan_Nama]</option>";
                                 }
                             ?>
                         </select>
                     </div>
+                    <p>Matkul Kurikulum : </p>
+                    <div class="input-field col s12">
+                        <div id="mkl-container1">
+                            <select name="matkulkurikulum" disabled>
+                                <option value="none" selected disabled>Pilih Matkul Kurikulum</option>
+                            </select>
+                        </div>
+                        <div id="mkl-container2">
+
+                        </div>
+                    </div>
                     <p>Dosen : </p>
                     <div class="input-field col s12">
-                        <select name="dosen">
+                        <select name="dosen" id="dosen">
                             <option value="none" disabled selected>Pilih Dosen</option>
                             <?php
                                 $query = "SELECT * FROM Dosen";

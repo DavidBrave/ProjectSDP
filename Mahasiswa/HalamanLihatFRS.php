@@ -11,6 +11,15 @@
         header("location: ../login.php");
     }
 
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
+    $semesterLalu = $semester - 1;
+
     $selectedMatkuls = explode(",", $_SESSION['matkul']);
 
     if(isset($_POST['btnRemove'])){
@@ -30,18 +39,32 @@
     }
 
     if(isset($_POST['btnSubmit'])){
-        $praktikum = $_POST['praktikum'];
-        $mahasiswa = $_SESSION['user']['user'];
-        for ($i=0; $i < sizeof($praktikum); $i++) { 
-            $kelas = $praktikum[$i];
-            $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,1)";
-            $conn->query($query);
+        if(isset($_POST['praktikum'])){
+            $praktikum = $_POST['praktikum'];
+            $mahasiswa = $_SESSION['user']['user'];
+            for ($i=0; $i < sizeof($praktikum); $i++) { 
+                $kelas = $praktikum[$i];
+                $query = "SELECT * FROM Pengambilan_Praktikum WHERE Mahasiswa_ID = '$mahasiswa' AND Kelas_Praktikum_ID = $praktikum[$i]";
+                $jumlah = (int)mysqli_num_rows($conn->query($query)) + 1;
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$mahasiswa', '$kelas', 0, $jumlah, $semester)";
+                $conn->query($query);
+            }
+            for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                $matkul = $selectedMatkuls[$i];
+                $query = "INSERT INTO FRS VALUES('', '$mahasiswa', '$matkul', '')";
+                $conn->query($query);
+            }
+        }else{
+            $mahasiswa = $_SESSION['user']['user'];
+            for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                $matkul = $selectedMatkuls[$i];
+                $query = "INSERT INTO FRS VALUES('', '$mahasiswa', '$matkul', '')";
+                $conn->query($query);
+            }
         }
-        for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-            $matkul = $selectedMatkuls[$i];
-            $query = "INSERT INTO Ambil VALUES('', '$mahasiswa', '$matkul', '')";
-            $conn->query($query);
-        }
+        echo '<script language = "javascript">';
+        echo "alert('FRS berhasil')";
+        echo '</script>';
     }
 ?>
 <!DOCTYPE html>
@@ -59,8 +82,8 @@
     <script src="../jquery.js"></script>
     <style>
         #container{
-            height: auto;
-            width: 800px;
+            height: 1200px;
+            width: 1000px;
         }
     </style>
     <script>
@@ -84,7 +107,7 @@
     </script>
 </head>
 <body>
-<div id="col-kiri">
+    <div id="col-kiri">
         <div id="menu">
             <a href="HalamanBiodata.php" style="width: 100%; color: black; padding-left: 0px;">
                 <div id="profile">
@@ -108,23 +131,21 @@
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
             <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <div id="menu_item1" hidden>
-
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
-
+                <a class = "btn dropdown-button blue" href = "HalamanTranskripNilai.php">Transkrip Nilai</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Kuliah</a>
+                <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Praktikum</a>
+                <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
-            <a class = "btn dropdown-button blue lighten-2" href = "#"><i class="material-icons left">event_available</i>Absen</a>
+            <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanFRS.php">FRS</a>
-                <a class = "btn dropdown-button blue" href = "#">Batal Tambah</a>
-                <a class = "btn dropdown-button blue" href = "#">Drop</a>
+                <a class = "btn dropdown-button blue" href = "HalamanBatalTambah.php">Batal Tambah</a>
             </div>
         </div>
     </div>
@@ -152,27 +173,50 @@
                     <th></th>
                 </tr>
             <?php
-                for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-                    $selectedMatkul = $selectedMatkuls[$i];
-                    $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
-                    WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
-                    $matkul = mysqli_fetch_array($conn->query($query));
-                    $matkulkurikulumid = $matkul['Matkul_Kurikulum_ID'];
-                    $matkulnama = $matkul['Matkul_Nama'];
-                    $semester = $matkul['Semester'];
-                    $jadwalHari = $matkul['Jadwal_Hari'];
-                    $jadwalMulai = $matkul['Jadwal_Mulai'];
-                    $jadwalSelesai = $matkul['Jadwal_Selesai'];
-                    $sks = $matkul['SKS'];
+                $success = true;
+                if(isset($_SESSION['matkul']) && $_SESSION['matkul'] != null){
+                    for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                        $selectedMatkul = $selectedMatkuls[$i];
+                        $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
+                        WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
+                        $matkul = mysqli_fetch_array($conn->query($query));
+                        $matkulkurikulumid = $matkul['Matkul_Kurikulum_ID'];
+                        $matkulnama = $matkul['Matkul_Nama'];
+                        $semester = $matkul['Semester'];
+                        $jadwalHari = $matkul['Jadwal_Hari'];
+                        $jadwalMulai = $matkul['Jadwal_Mulai'];
+                        $jadwalSelesai = $matkul['Jadwal_Selesai'];
+                        $sks = $matkul['SKS'];
+                        $isCollision = false;
+                        for ($j=0; $j < sizeof($selectedMatkuls); $j++) { 
+                            $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
+                            WHERE mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkuls[$j]'";
+                            $matkul2 = mysqli_fetch_array($conn->query($query));
+                            $jadwalMulai2 = $matkul2['Jadwal_Mulai'];
+                            $jadwalHari2 = $matkul2['Jadwal_Hari'];
+                            if($jadwalHari2 == $jadwalHari && $jadwalMulai2 == $jadwalMulai && $selectedMatkuls[$j] != $selectedMatkul){
+                                $isCollision = true;
+                            }
+                        }
+                        if($isCollision){
+                            $success = false;
+                            echo "<tr style='background-color: maroon; color: white;'>";
+                        }else{
+                            echo "<tr>";
+                        }
+                        echo "<td>$matkulkurikulumid</td>";
+                        echo "<td>$matkulnama</td>";
+                        echo "<td>$jadwalHari</td>";
+                        echo "<td>$jadwalMulai</td>";
+                        echo "<td>$jadwalSelesai</td>";
+                        echo "<td>$semester</td>";
+                        echo "<td>$sks</td>";
+                        echo "<td><form action='#' method='post'><input type='submit' name='btnRemove' value='Remove' class='btn waves-effect red darken-3' style='height: 35px;'><input type='hidden' name='hidId' value='$matkulkurikulumid'></form></td>";
+                        echo "</tr>";
+                    }
+                }else{
                     echo "<tr>";
-                    echo "<td>$matkulkurikulumid</td>";
-                    echo "<td>$matkulnama</td>";
-                    echo "<td>$jadwalHari</td>";
-                    echo "<td>$jadwalMulai</td>";
-                    echo "<td>$jadwalSelesai</td>";
-                    echo "<td>$semester</td>";
-                    echo "<td>$sks</td>";
-                    echo "<td><form action='#' method='post'><input type='submit' name='btnRemove' value='Remove' class='btn waves-effect red darken-3' style='height: 35px;'><input type='hidden' name='hidId' value='$matkulkurikulumid'></form></td>";
+                    echo "<td colspan='7' style='text-align: center;'>Tidak ada matkul yang dipilih</td>";
                     echo "</tr>";
                 }
             ?>
@@ -181,29 +225,39 @@
             <h4>Praktikum</h4>
             <form action="#" method="post">
             <table>
-                    <?php
-                        for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-                            $selectedMatkul = $selectedMatkuls[$i];
-                            $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, p.Praktikum_ID, p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_ID, kp.Kelas_Praktikum_Ruangan, kp.Kelas_Praktikum_Kapasitas FROM Matkul_Kurikulum mk, Matkul m, Praktikum p, Kelas_Praktikum kp
-                            WHERE mk.Praktikum_ID = p.Praktikum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Praktikum_ID = kp.Praktikum_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
-                            $listKelasPraktikum = $conn->query($query);
-                            foreach ($listKelasPraktikum as $key => $value) {
-                                echo "<tr>";
-                                echo "<td>$value[Matkul_Nama]</td>";
-                                echo "<td>$value[Praktikum_Hari]</td>";
-                                echo "<td>$value[Praktikum_Jam_Mulai]</td>";
-                                echo "<td>$value[Praktikum_Jam_Selesai]</td>";
-                                echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
-                                echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
-                                echo "<td><p><label><input type='checkbox' class='praktikum' name='praktikum[]' value='$value[Kelas_Praktikum_ID]'/><span></span></label></p></td>";
-                                echo "</tr>";
-                            }
+                <?php
+                    for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                        $selectedMatkul = $selectedMatkuls[$i];
+                        $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, p.Praktikum_ID, p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_ID, kp.Kelas_Praktikum_Ruangan, kp.Kelas_Praktikum_Kapasitas FROM Matkul_Kurikulum mk, Matkul m, Praktikum p, Kelas_Praktikum kp
+                        WHERE mk.Praktikum_ID = p.Praktikum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Praktikum_ID = kp.Praktikum_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
+                        $listKelasPraktikum = $conn->query($query);
+                        foreach ($listKelasPraktikum as $key => $value) {
+                            echo "<tr>";
+                            echo "<td>$value[Matkul_Nama]</td>";
+                            echo "<td>$value[Praktikum_Hari]</td>";
+                            echo "<td>$value[Praktikum_Jam_Mulai]</td>";
+                            echo "<td>$value[Praktikum_Jam_Selesai]</td>";
+                            echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
+                            echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
+                            echo "<td><p><label><input type='checkbox' class='praktikum' name='praktikum[]' value='$value[Kelas_Praktikum_ID]'/><span></span></label></p></td>";
+                            echo "</tr>";
                         }
-                    ?>
+                    }
+                ?>
             </table>
             <br>
             <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanFRS.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
-            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnSubmit" name="btnSubmit"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Submit</p></button>
+            <?php
+            if(!$success || $_SESSION['matkul'] == null){
+            ?>
+                <button disabled class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnSubmit" name="btnSubmit"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Submit</p></button>
+            <?php
+            }else{
+            ?>
+                <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnSubmit" name="btnSubmit"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Submit</p></button>
+            <?php
+            }
+            ?>
             </form>
         </div>
         <div id="footer">

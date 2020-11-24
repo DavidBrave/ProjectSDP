@@ -49,7 +49,9 @@
         header("location: halamanUpdatePraktikum.php");
     }
 
-    $query = "SELECT * FROM Praktikum WHERE Praktikum_Nama LIKE '%$nama%'";
+    $query = "SELECT p.Praktikum_ID, p.Praktikum_Nama, m.Matkul_Nama, j.Jurusan_Nama, pe.Periode_Nama, p.Praktikum_Hari, kp.Kelas_Praktikum_Ruangan, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_Kapasitas 
+    FROM Praktikum p, Matkul_Kurikulum mk, Matkul m, Jurusan j, Kelas_Praktikum kp, Periode pe 
+    WHERE mk.Matkul_Kurikulum_ID = p.Matkulkurikulum_ID AND mk.Periode_ID = pe.Periode_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Jurusan_ID = j.Jurusan_ID AND kp.Praktikum_ID = p.Praktikum_ID AND Praktikum_Nama LIKE '%$nama%'";
     $listPraktikum = $conn->query($query);
 ?>
 
@@ -115,42 +117,48 @@
     <div id="content">
         <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
+            
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataMahasiswa.php">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown2" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataDosen.php">Data Dosen</a></li>
                 <li><a href = "insertDataDosen.php">Insert Data Dosen</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown2" style="width: 100%; color: black;">Dosen<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown3" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanJurusan.php">Data Jurusan</a></li>
                 <li><a href = "insertDataJurusan.php">Insert Data Jurusan</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown3" style="width: 100%; color: black;">Jurusan<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown4" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanKurikulum.php">Data Kurikulum</a></li>
-                <li><a href = "insertDataKurikulum.php">Insert Data Kurikulum</a></li>
+                <li><a href = "halamanMajor.php">Data Major</a></li>
+                <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
             <ul id = "dropdown5" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMataKuliah.php">Data Mata Kuliah</a></li>
                 <li><a href = "insertDataMataKuliah.php">Insert Data Mata Kuliah</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown6" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanMajor.php">Data Major</a></li>
-                <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
+                <li><a href = "halamanKurikulum.php">Data Kurikulum</a></li>
+                <li><a href = "insertDataKurikulum.php">Insert Data Kurikulum</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown6" style="width: 100%; color: black;">Kurikulum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
             <ul id = "dropdown7" class = "dropdown-content blue-grey lighten-4">
-                <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
-                <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
+                <li><a href = "halamanPeriode.php">Data Periode</a></li>
+                <li><a href = "insertPeriode.php">Insert Periode</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown7" style="width: 100%; color: black;">Periode<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
             <ul id = "dropdown8" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMatkulKurikulum.php">Data Matkul Kurikulum</a></li>
@@ -166,13 +174,24 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown9" style="width: 100%; color: black;">Praktikum<i class = "mdi-navigation-arrow-drop-down right"></i></a>
 
             <ul id = "dropdown10" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanJadwalKuliah.php">Data Jadwal Kuliah</a></li>
+                <li><a href = "insertJadwalKuliah.php">Insert Jadwal Kuliah</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Jadwal Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+
+            <ul id = "dropdown11" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataKelas.php">Data Kelas</a></li>
                 <li><a href = "insertDataKelas.php">Insert Data Kelas</a></li>
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown10" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
-        </div>   
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        </div>    
         <div id="col-kanan">
             <h3>List Praktikum</h3><br>
             <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
@@ -190,6 +209,7 @@
                         echo "<th>Nama Praktikum</th>";
                         echo "<th>Mata Kuliah</th>";
                         echo "<th>Jurusan</th>";
+                        echo "<th>Periode</th>";
                         echo "<th>Hari</th>";
                         echo "<th>Ruangan</th>";
                         echo "<th>Waktu</th>";
@@ -205,43 +225,16 @@
                     echo "<tr>";
                     echo "<td>$value[Praktikum_ID]</td>";
                     echo "<td>$value[Praktikum_Nama]</td>";
-                    $praktikumId = $value['Praktikum_ID'];
-                    $matkulKurikulumId = $value['Matkulkurikulum_ID'];
-                    $hari = $value['Praktikum_Hari'];
-                    $ruangan = $value['Praktikum_Ruangan'];
                     $waktu = substr($value['Praktikum_Jam_Mulai'],0,5)." - ".substr($value['Praktikum_Jam_Selesai'],0,5);
-                    $kapasitas = $value['Praktikum_Kapasitas'];
-                   
-                    $query = "SELECT * FROM Matkul_Kurikulum WHERE Matkul_Kurikulum_ID = '$matkulKurikulumId'";
-                    $listMatkulKurikulum = $conn->query($query);
-                    foreach ($listMatkulKurikulum as $key) {
-                        $idMatkul = $key['Matkul_ID'];
-                        $idJurusan = $key['Jurusan_ID'];
-
-                        $query = "SELECT * FROM Matkul";
-                        $listMatkul = $conn->query($query);
-                        foreach ($listMatkul as $key => $value) {
-                            if($value['Matkul_ID'] == $idMatkul){
-                                $namaMatkul = $value['Matkul_Nama'];
-                            }
-                        }
-
-                        $query = "SELECT * FROM Jurusan";
-                        $listJurusan = $conn->query($query);
-                        foreach ($listJurusan as $key => $value) {
-                            if($value['Jurusan_ID'] == $idJurusan){
-                                $namaJurusan = $value['Jurusan_Nama'];
-                            }
-                        }
-                    }
-                    echo "<td>$namaMatkul</td>";
-                    echo "<td>$namaJurusan</td>";
-                    echo "<td>$hari</td>";
-                    echo "<td>$ruangan</td>";
+                    echo "<td>$value[Matkul_Nama]</td>";
+                    echo "<td>$value[Jurusan_Nama]</td>";
+                    echo "<td>$value[Periode_Nama]</td>";
+                    echo "<td>$value[Praktikum_Hari]</td>";
+                    echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
                     echo "<td>$waktu</td>";
-                    echo "<td>$kapasitas</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='praktikumId' value='$praktikumId'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='praktikumId' value='$praktikumId'></form></td>";
+                    echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='praktikumId' value='$value[Praktikum_ID]'></form></td>";
+                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='praktikumId' value='$value[Praktikum_ID]'></form></td>";
                     echo "</tr>";
                 }
 

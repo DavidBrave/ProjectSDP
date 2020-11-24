@@ -29,10 +29,17 @@
             $("#menu_jadwal").click(function () {
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
+               $("#menu_item3").hide();
             });
             $("#menu_mahasiswa").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").toggle();
+               $("#menu_item3").hide();
+            });
+            $("#menu_frs").click(function () {
+               $("#menu_item1").hide();
+               $("#menu_item2").hide();
+               $("#menu_item3").toggle();
             });
         });
     </script>
@@ -73,7 +80,13 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "#">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Absen</a>
+            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
+            <div id="menu_item3" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
+                <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
+                <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
             </div>
         </div>
     </div>
