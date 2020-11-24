@@ -211,27 +211,29 @@
             <form action="#" method="post">
             <table>
                 <?php
-                    for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
-                        $selectedMatkul = $selectedMatkuls[$i];
-                        $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, p.Praktikum_ID, p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_ID, kp.Kelas_Praktikum_Ruangan, kp.Kelas_Praktikum_Kapasitas FROM Matkul_Kurikulum mk, Matkul m, Praktikum p, Kelas_Praktikum kp
-                        WHERE mk.Praktikum_ID = p.Praktikum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Praktikum_ID = kp.Praktikum_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
-                        $listKelasPraktikum = $conn->query($query);
-                        foreach ($listKelasPraktikum as $key => $value) {
-                            echo "<tr>";
-                            echo "<td>$value[Matkul_Nama]</td>";
-                            echo "<td>$value[Praktikum_Hari]</td>";
-                            echo "<td>$value[Praktikum_Jam_Mulai]</td>";
-                            echo "<td>$value[Praktikum_Jam_Selesai]</td>";
-                            echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
-                            echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
-                            echo "<td><p><label><input type='checkbox' class='praktikum' name='praktikum[]' value='$value[Kelas_Praktikum_ID]'/><span></span></label></p></td>";
-                            echo "</tr>";
+                    if($selectedMatkuls != null){
+                        for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+                            $selectedMatkul = $selectedMatkuls[$i];
+                            $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, p.Praktikum_ID, p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, kp.Kelas_Praktikum_ID, kp.Kelas_Praktikum_Ruangan, kp.Kelas_Praktikum_Kapasitas FROM Matkul_Kurikulum mk, Matkul m, Praktikum p, Kelas_Praktikum kp
+                            WHERE mk.Praktikum_ID = p.Praktikum_ID AND mk.Matkul_ID = m.Matkul_ID AND p.Praktikum_ID = kp.Praktikum_ID AND mk.Matkul_Kurikulum_ID = '$selectedMatkul'";
+                            $listKelasPraktikum = $conn->query($query);
+                            foreach ($listKelasPraktikum as $key => $value) {
+                                echo "<tr>";
+                                echo "<td>$value[Matkul_Nama]</td>";
+                                echo "<td>$value[Praktikum_Hari]</td>";
+                                echo "<td>$value[Praktikum_Jam_Mulai]</td>";
+                                echo "<td>$value[Praktikum_Jam_Selesai]</td>";
+                                echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
+                                echo "<td>$value[Kelas_Praktikum_Kapasitas]</td>";
+                                echo "<td><p><label><input type='checkbox' class='praktikum' name='praktikum[]' value='$value[Kelas_Praktikum_ID]'/><span></span></label></p></td>";
+                                echo "</tr>";
+                            }
                         }
                     }
                 ?>
             </table>
             <br>
-            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanFRS.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
+            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanBatalTambah.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
             <?php
             if(!$success || $_SESSION['matkul'] == null){
             ?>

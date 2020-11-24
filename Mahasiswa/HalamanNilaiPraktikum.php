@@ -21,10 +21,9 @@
     $semesterLalu = $semester - 1;
 
     $nrp = $_SESSION['user']['user'];
-    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
-    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID 
-    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND p.Semester_Pengambilan = $semester 
-    ORDER BY p.Semester_Pengambilan, m.Matkul_Nama ASC";
+    $query= "SELECT DISTINCT p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, pp.Nilai_Praktikum, kp.Kelas_Praktikum_Ruangan, pp.Jumlah_Ambil_Praktikum 
+    FROM Pengambilan_Praktikum pp, Praktikum p, Mahasiswa mhs, Kelas_Praktikum kp
+    WHERE pp.Kelas_Praktikum_ID = kp.Kelas_Praktikum_ID AND kp.Praktikum_ID = p.Praktikum_ID AND pp.Mahasiswa_ID = '$nrp' AND pp.Semester_Pengambilan_Praktikum = '$semester'";
     $listNilai = $conn->query($query);            
 ?>
 <!DOCTYPE html>
@@ -117,19 +116,18 @@
             </form>
         </div>
         <div id="container">
-            <h4>Nilai</h4>
+            <h4>Nilai Praktikum</h4>
             <table border="1" style="display: hidden">
                 <tr>
                     <?php
                         if(mysqli_num_rows($listNilai) == 0){
                             echo "<h4>Tidak ada data</h4>";
                         }else{
-                            echo "<th>Kelas</th>";
-                            echo "<th>UTS</th>";
-                            echo "<th>UAS</th>";
-                            echo "<th>Quiz</th>";
+                            echo "<th>Praktikum</th>";
+                            echo "<th>Hari</th>";
+                            echo "<th>Waktu</th>";
+                            echo "<th>Ruangan</th>";
                             echo "<th>Nilai Akhir</th>";
-                            echo "<th>Grade</th>";
                             echo "<th>Pengambilan Ke-</th>";
                         }
                     ?>
@@ -138,13 +136,12 @@
                     foreach ($listNilai as $key => $value)
                     {
                         echo "<tr>";
-                            echo "<td>$value[Matkul_Nama]</td>";
-                            echo "<td>$value[UTS]</td>";
-                            echo "<td>$value[UAS]</td>";
-                            echo "<td>$value[Quiz]</td>";
-                            echo "<td>$value[Nilai_Akhir]</td>";
-                            echo "<td>$value[Pengambilan_Grade]</td>";
-                            echo "<td>$value[Jumlah_Ambil]</td>";
+                            echo "<td>$value[Praktikum_Nama]</td>";
+                            echo "<td>$value[Praktikum_Hari]</td>";
+                            echo "<td>$value[Praktikum_Jam_Mulai] - $value[Praktikum_Jam_Selesai]</td>";
+                            echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
+                            echo "<td>$value[Nilai_Praktikum]</td>";
+                            echo "<td>$value[Jumlah_Ambil_Praktikum]</td>";
                         echo "</tr>";
                     }
                     $conn->close();
