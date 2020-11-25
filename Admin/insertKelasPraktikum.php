@@ -30,9 +30,6 @@
             echo '</script>';
         }
     }
-
-    $query = "SELECT * FROM Praktikum";
-    $listPraktikum = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +55,21 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#periode").change(function () {
+                var periodeId = $("#periode").val();
+                $.ajax({
+                    method : "post",
+                    url : "cekPraktikumPeriode.php",
+                    data : {
+                        id : periodeId
+                    },
+                    success : function (hasil) {
+                        $("#praktikum-container1").hide();
+                        $("#praktikum-container2").html(hasil);
+                    }
+                });
+            });
          });
     </script>
 </head>
@@ -71,7 +83,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -141,21 +153,39 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>  
         <div id="col-kanan">
             <div style="width: 50%;">
-                <h3>Insert Data Praktikum</h3><br>
+                <h3>Insert Data Kelas Praktikum</h3><br>
                 <form action = "#" method = "post">
-                    <p>Matkul Kurikulum : </p>
                     <div class="input-field col s12">
-                        <select name="praktikum">
-                            <option value="none" disabled selected>Pilih Praktikum</option>
+                        <select name="periode" id="periode">
+                            <option value="none" disabled selected>Pilih Periode</option>
                             <?php
-                                foreach ($listPraktikum as $key => $value) {
-                                    echo "<option value='$value[Praktikum_ID]'>".$value['Praktikum_ID']." - ".$value['Praktikum_Nama']."</option>";
+                                $query = "SELECT * FROM Periode";
+                                $periode = $conn->query($query);
+                                foreach ($periode as $key) {
+                                    echo "<option value='$key[Periode_ID]'>$key[Periode_Nama]</option>";
                                 }
                             ?>
                         </select>
+                    </div>
+                    <p>Praktikum : </p>
+                    <div class="input-field col s12">
+                        <div id="praktikum-container1">
+                            <select name="praktikum" disabled>
+                                <option value="none" selected disabled>Pilih Matkul Kurikulum</option>
+                            </select>
+                        </div>
+                        <div id="praktikum-container2">
+
+                        </div>
                     </div>
                     <p>Ruangan : </p>
                     <input type="text" name="ruangan">

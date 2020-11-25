@@ -219,6 +219,12 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+            
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>    
         <div id="col-kanan">
             <h3>List Dosen</h3><br>
@@ -253,18 +259,14 @@
                     //Ganti Data Lain ato hapus
                     //echo "<td>$value[Dosen_Pass]</td>";
                     echo "<td>";
-                        echo"<table>";
-                            $query="SELECT * FROM Jabatan_Dosen jd,Jabatan j WHERE j.Jabatan_ID=jd.Jabatan_ID AND Dosen_ID=$value[Dosen_ID]";
-                            $listJabatanDosen = $conn->query($query);
-                            foreach ($listJabatanDosen as $key=>$value2)
-                            {
-                                echo"<tr>";
-                                    echo"<td>$value2[Jabatan_Nama]</td>";
-                                    echo"<td><button class='btn waves-effect red darken-3' type='submit' name='btnDeleteJabatan' id='$value[Dosen_ID]' onClick='DeleteJabatan(`$value2[Dosen_ID]`,`$value2[Jabatan_ID]`)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button></td>";
-                                echo"</tr>";
-                            }
-                        echo"</table>";
-                    echo"</td>";
+                        $query="SELECT * FROM Jabatan_Dosen jd,Jabatan j WHERE j.Jabatan_ID=jd.Jabatan_ID AND Dosen_ID=$value[Dosen_ID]";
+                        $listJabatanDosen = $conn->query($query);
+                        foreach ($listJabatanDosen as $key=>$value2)
+                        {
+                            echo "<p style='display: inline; margin-right: 10px;'>$value2[Jabatan_Nama]</p>";
+                            echo "<button class='btn-floating btn waves-effect red darken-3' type='submit' name='btnDeleteJabatan' id='$value[Dosen_ID]' onClick='DeleteJabatan(`$value2[Dosen_ID]`,`$value2[Jabatan_ID]`)' style='margin-right: 20px; width: 35px; height: 35px; opacity: 0.5;'>X<i class='material-icons right'>delete</i></button>";
+                        }
+                    echo "</td>";
                     echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 150px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idDosen' value='$value[Dosen_ID]'></form></td>";
                     echo "<td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='$value[Dosen_ID]' onClick='DeleteClick(this.id)' style='width: 150px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' id='Nama$value[Dosen_ID]' value='$value[Dosen_Nama]'</form></td>";
                     echo "</tr>";

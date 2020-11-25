@@ -11,7 +11,7 @@
             $nama = $value['Mahasiswa_Nama'];
         }
 
-        $query = "UPDATE Ambil SET Ambil_Status = 'Ditolak' WHERE Mahasiswa_ID = '$id'";
+        $query = "UPDATE FRS SET FRS_Status = 'Ditolak' WHERE Mahasiswa_ID = '$id'";
         $conn->query($query);
 
         $message = "Gagal Delete";

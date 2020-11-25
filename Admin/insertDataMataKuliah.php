@@ -24,6 +24,7 @@
             $query = "SELECT Matkul_ID FROM Matkul";
             $result = $conn->query($query);
             $ctr = 0;
+            $grade = "";
 
             foreach($result as $key => $value) {
                 $ctr = substr($value['Matkul_ID'], 2) + 1;
@@ -41,9 +42,37 @@
             else {
                 $id .= $ctr;
             }
+
+            if ($nilai <= 45) {
+                $grade = "E";
+            }
+            if ($nilai > 45) {
+                $grade = "E+";
+            }
+            if ($nilai > 50) {
+                $grade = "D";
+            }
+            if ($nilai > 55) {
+                $grade = "D+";
+            }
+            if ($nilai > 60) {
+                $grade = "C";
+            }
+            if ($nilai > 65) {
+                $grade = "C+";
+            }
+            if ($nilai > 70) {
+                $grade = "B";
+            }
+            if ($nilai > 80) {
+                $grade = "B+";
+            }
+            if ($nilai > 90) {
+                $grade = "A";
+            }
             
             //Proses Insert
-            $query = "INSERT INTO Matkul VALUES('$id', '$nama', '$nilai')";
+            $query = "INSERT INTO Matkul VALUES('$id', '$nama', '$nilai', '$grade')";
             $conn->query($query);
 
             if($conn){
@@ -171,6 +200,12 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>  
         <div id="col-kanan">
             <div style="width: 50%;">

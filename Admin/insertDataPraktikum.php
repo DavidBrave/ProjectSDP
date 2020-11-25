@@ -21,37 +21,52 @@
 
         if ($nama != "" && $hari != "" && $matkulKurikulum != "" && $mulai != "" && $selesai != "" && $minimum != "") {
             $query = "SELECT * FROM Praktikum";
-            $jumlah = mysqli_num_rows($conn->query($query)) + 1;
-
-            if($jumlah == 1){
-                $id = "P0001";
-            }else{
-                $query = "SELECT * FROM Praktikum ORDER BY Praktikum_ID DESC LIMIT 1";
-                $last = $conn->query($query);
-                foreach ($last as $key => $value) {
-                    $jumlah = (int)(substr($value['Praktikum_ID'],1,4))+1;
-                }
-
-                if($jumlah < 10){
-                    $id = "P000".$jumlah;
-                }else if($jumlah > 9 && $jumlah < 100){
-                    $id = "P00".$jumlah;
-                }else if($jumlah > 99 && $jumlah < 1000){
-                    $id = "P0".$jumlah;
-                }else{
-                    $id = "P".$jumlah;
+            $praktikum = $conn->query($query);
+            $isCollision = false;
+            foreach ($praktikum as $key => $value) {
+                if($value['Praktikum_Jam_Mulai'] == $mulai.":00" && $value['Praktikum_Hari'] == $hari){
+                    $isCollision = true;
                 }
             }
 
-            $query = "INSERT INTO Praktikum VALUES('$id', '$matkulKurikulum', '$nama', '$hari', '$mulai', '$selesai', $minimum)";
-            $conn->query($query);
+            if($isCollision){
+                echo '<script language = "javascript">';
+                echo "alert('Jadwal Praktikum $nama Bertabrakan dengan Jadwal Praktikum Lain')";
+                echo '</script>';
+            }else{
+                $query = "SELECT * FROM Praktikum";
+                $jumlah = mysqli_num_rows($conn->query($query)) + 1;
 
-            $query = "UPDATE Matkul_Kurikulum SET Praktikum_ID = '$id' WHERE Matkul_Kurikulum_ID = '$matkulKurikulum'";
-            $conn->query($query);
-            
-            echo '<script language = "javascript">';
-            echo "alert('Berhasil Insert Praktikum $nama')";
-            echo '</script>';
+                if($jumlah == 1){
+                    $id = "P0001";
+                }else{
+                    $query = "SELECT * FROM Praktikum ORDER BY Praktikum_ID DESC LIMIT 1";
+                    $last = $conn->query($query);
+                    foreach ($last as $key => $value) {
+                        $jumlah = (int)(substr($value['Praktikum_ID'],1,4))+1;
+                    }
+
+                    if($jumlah < 10){
+                        $id = "P000".$jumlah;
+                    }else if($jumlah > 9 && $jumlah < 100){
+                        $id = "P00".$jumlah;
+                    }else if($jumlah > 99 && $jumlah < 1000){
+                        $id = "P0".$jumlah;
+                    }else{
+                        $id = "P".$jumlah;
+                    }
+                }
+
+                $query = "INSERT INTO Praktikum VALUES('$id', '$matkulKurikulum', '$nama', '$hari', '$mulai', '$selesai', $minimum)";
+                $conn->query($query);
+
+                $query = "UPDATE Matkul_Kurikulum SET Praktikum_ID = '$id' WHERE Matkul_Kurikulum_ID = '$matkulKurikulum'";
+                $conn->query($query);
+                
+                echo '<script language = "javascript">';
+                echo "alert('Berhasil Insert Praktikum $nama')";
+                echo '</script>';
+            }
         }
         else {
             echo '<script language = "javascript">';
@@ -87,6 +102,21 @@
     <script>
          $(document).ready(function() {
             $('select').material_select();
+
+            $("#periode").change(function () {
+                var periodeId = $("#periode").val();
+                $.ajax({
+                    method : "post",
+                    url : "cekMatkulkurikulumPeriode.php",
+                    data : {
+                        id : periodeId
+                    },
+                    success : function (hasil) {
+                        $("#matkulKurikulum-container1").hide();
+                        $("#matkulKurikulum-container2").html(hasil);
+                    }
+                });
+            });
          });
     </script>
 </head>
@@ -100,7 +130,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -170,41 +200,39 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div>  
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Insert Data Praktikum</h3><br>
                 <form action = "#" method = "post">
-                    <p>Matkul Kurikulum : </p>
                     <div class="input-field col s12">
-                        <select name="matkulKurikulum">
-                            <option value="none" disabled selected>Pilih Matkul Kurikulum</option>
+                        <select name="periode" id="periode">
+                            <option value="none" disabled selected>Pilih Periode</option>
                             <?php
-                                foreach ($listMatkulKurikulum as $key) {
-                                    $idMatkulKurikulum = $key['Matkul_Kurikulum_ID'];
-                                    $idMatkul = $key['Matkul_ID'];
-                                    $idJurusan = $key['Jurusan_ID'];
-
-                                    $query = "SELECT * FROM Matkul";
-                                    $listMatkul = $conn->query($query);
-                                    foreach ($listMatkul as $key => $value) {
-                                        if($value['Matkul_ID'] == $idMatkul){
-                                            $namaMatkul = $value['Matkul_Nama'];
-                                        }
-                                    }
-
-                                    $query = "SELECT * FROM Jurusan";
-                                    $listJurusan = $conn->query($query);
-                                    foreach ($listJurusan as $key => $value) {
-                                        if($value['Jurusan_ID'] == $idJurusan){
-                                            $namaJurusan = $value['Jurusan_Nama'];
-                                        }
-                                    }
-
-                                    echo "<option value='$idMatkulKurikulum'>".$namaMatkul." - ".$namaJurusan."</option>";
+                                $query = "SELECT * FROM Periode";
+                                $periode = $conn->query($query);
+                                foreach ($periode as $key) {
+                                    echo "<option value='$key[Periode_ID]'>$key[Periode_Nama]</option>";
                                 }
                             ?>
                         </select>
+                    </div>
+                    <p>Matkul Kurikulum : </p>
+                    <div class="input-field col s12">
+                        <div id="matkulKurikulum-container1">
+                            <select name="matkulKurikulum" disabled>
+                                <option value="none" selected disabled>Pilih Matkul Kurikulum</option>
+                            </select>
+                        </div>
+                        <div id="matkulKurikulum-container2">
+
+                        </div>
                     </div>
                     <p>Nama Praktikum : </p>
                     <input type="text" name="nama">

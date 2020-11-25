@@ -6,7 +6,7 @@
         $nama = "";
     }
 
-    $query = "SELECT * FROM Mahasiswa WHERE Mahasiswa_Nama LIKE '%$nama%'";
+    $query = "SELECT m.*, d.Dosen_Nama FROM Mahasiswa m, Dosen d WHERE m.Dosen_Wali_ID = d.Dosen_ID AND m.Mahasiswa_Nama LIKE '%$nama%'";
     $listMahasiswa = $conn->query($query);
 
     $count = mysqli_num_rows($listMahasiswa);
@@ -34,7 +34,7 @@
             echo "<tr>";
             echo "<td>$value[Mahasiswa_ID]</td>";
                 echo "<td>$value[Mahasiswa_Nama]</td>";
-                echo "<td>$value[Dosen_Wali_ID]</td>";
+                echo "<td>$value[Dosen_Nama]</td>";
                 echo "<td>$value[Mahasiswa_Alamat]</td>";
                 echo "<td>$value[Mahasiswa_Email]</td>";
                 echo "<td>$value[Mahasiswa_NoTelp]</td>";

@@ -2,6 +2,7 @@
     session_start();
     require_once("../Required/Connection.php");
     $id = "";
+    $semester = 0;
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -19,6 +20,7 @@
         $mahasiswa = $conn->query($query);
         foreach($mahasiswa as $key => $value) {
             $nama = $value['Mahasiswa_Nama'];
+            $semester = $value['Mahasiswa_Semester'];
         }
 
         $query = "SELECT * FROM Pengambilan_Praktikum WHERE Mahasiswa_ID = $id";
@@ -30,7 +32,7 @@
     if(isset($_POST['btnRemove'])){
         $matkulkurikulumid = $_POST['hidId'];
         $str = "";
-        for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
+        for ($i=0; $i < sizeof($selectedMatkuls)-1; $i++) { 
             if($selectedMatkuls[$i] != $matkulkurikulumid){
                 if($i == sizeof($selectedMatkuls)-1){
                     $str = $str.$selectedMatkuls[$i];
@@ -39,8 +41,11 @@
                 }
             }
         }
+        $str = $str.$selectedMatkuls[sizeof($selectedMatkuls)-1];
         $_SESSION['matkul'] = $str;
     }
+
+    $selectedMatkuls = explode(",", $_SESSION['matkul']);
 
     if(isset($_POST['btnSubmit'])){
         $praktikum = $_POST['praktikum'];
@@ -51,12 +56,14 @@
 
         for ($i=0; $i < sizeof($praktikum); $i++) { 
             $kelas = $praktikum[$i];
-            $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$id','$kelas',0,0,1)";
+            $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$id','$kelas',0,1, $semester)";
             $conn->query($query);
         }
         for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
             $matkul = $selectedMatkuls[$i];
             $query = "INSERT INTO FRS VALUES('', '$id', '$matkul', 'Diterima')";
+            $conn->query($query);
+            $query = "INSERT INTO Pengambilan VALUES('', '$id', '', 0,0,0,0,'',0,0,1, $semester)";
             $conn->query($query);
         }
         header("location: halamanFRSpending.php");
@@ -83,18 +90,18 @@
     </style>
     <script>
         $(document).ready(function () {
-            $("#menu_nilai").click(function () {
-               $("#menu_item1").toggle(); 
+            $("#menu_jadwal").click(function () {
+               $("#menu_item1").toggle();
                $("#menu_item2").hide();
                $("#menu_item3").hide();
             });
-            $("#menu_jadwal").click(function () {
-               $("#menu_item1").hide(); 
+            $("#menu_mahasiswa").click(function () {
+               $("#menu_item1").hide();
                $("#menu_item2").toggle();
                $("#menu_item3").hide();
             });
-            $("#menu_rencana").click(function () {
-               $("#menu_item1").hide(); 
+            $("#menu_frs").click(function () {
+               $("#menu_item1").hide();
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
             });
@@ -135,12 +142,14 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "#">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
+                <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
             </div>
         </div>
     </div>
@@ -169,6 +178,7 @@
                     <th></th>
                 </tr>
             <?php
+                $success = true;
                 for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
                     $selectedMatkul = $selectedMatkuls[$i];
                     $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
@@ -181,7 +191,27 @@
                     $jadwalMulai = $matkul['Jadwal_Mulai'];
                     $jadwalSelesai = $matkul['Jadwal_Selesai'];
                     $sks = $matkul['SKS'];
-                    echo "<tr>";
+                    $isCollision = false;
+                    for ($j=0; $j < sizeof($selectedMatkuls); $j++) { 
+                        $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS 
+                        FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk
+                        WHERE mk.Matkul_ID = m.Matkul_ID 
+                        AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID 
+                        AND k.Kelas_ID = jk.Kelas_ID 
+                        AND mk.Matkul_Kurikulum_ID = '$selectedMatkuls[$j]'";
+                        $matkul2 = mysqli_fetch_array($conn->query($query));
+                        $jadwalMulai2 = $matkul2['Jadwal_Mulai'];
+                        $jadwalHari2 = $matkul2['Jadwal_Hari'];
+                        if($jadwalHari2 == $jadwalHari && $jadwalMulai2 == $jadwalMulai && $selectedMatkuls[$j] != $selectedMatkul){
+                            $isCollision = true;
+                        }
+                    }
+                    if($isCollision){
+                        $success = false;
+                        echo "<tr style='background-color: maroon; color: white;'>";
+                    }else{
+                        echo "<tr>";
+                    }
                     echo "<td>$matkulkurikulumid</td>";
                     echo "<td>$matkulnama</td>";
                     echo "<td>$jadwalHari</td>";
@@ -230,8 +260,18 @@
                 ?>
             </table>
             <br>
-            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanFRS.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
-            <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnSubmit" name="btnSubmit"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Terima</p></button>
+            <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnBack"><a href="HalamanDetailFRSpending.php" style="color: black;"><i class="material-icons left">navigate_before</i>Back</a></button>
+            <?php
+            if(!$success || $_SESSION['matkul'] == null){
+            ?>
+                <button disabled class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnSubmit" name="btnSubmit"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Terima</p></button>
+            <?php
+            }else{
+            ?>
+                <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px; float: right;" type="submit" id="btnSubmit" name="btnSubmit"><i class="material-icons right" style="color: black;">navigate_next</i><p style="color: black; margin: 0px;">Terima</p></button>
+            <?php
+            }
+            ?>
             </form>
         </div>
         <div id="footer">

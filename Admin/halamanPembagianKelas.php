@@ -23,7 +23,7 @@
         $query = "UPDATE Kelas SET Kelas_Kapasitas = $count WHERE Kelas_Id = '$kelas'";
         $conn->query($query);
 
-        $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_Id = '$mahasiswa'";
+        $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_Id = '$mahasiswa' AND Kelas_ID = '' LIMIT 1";
         $conn->query($query);
     }
 ?>
@@ -38,7 +38,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-
+        #content{
+            height: 1200px;
+        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -50,16 +52,17 @@
         $(document).ready(function() {
             $('select').material_select();
 
-            $('#kelas').change(function () {
+            $("#jurusan").change(function () {
+                var jurusanlId = $("#jurusan").val();
                 $.ajax({
-                    method : 'post',
-                    url : 'daftarAmbilMahasiswa.php',
+                    method : "post",
+                    url : "cekJurusanKelas.php",
                     data : {
-                        id : $('#kelas').val()
+                        id : jurusanlId
                     },
                     success : function (hasil) {
-                        $("#content-mahasiswa").html(hasil);
-                        $("#temp").hide();
+                        $("#kelas-container1").hide();
+                        $("#kelas-container2").html(hasil);
                     }
                 });
             });
@@ -76,7 +79,7 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
@@ -146,26 +149,42 @@
                 <li><a href = "halamanPembagianKelas.php">Pembagian Kelas</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown11" style="width: 100%; color: black;">Kelas<i class = "mdi-navigation-arrow-drop-down right"></i></a>
+        
+            <ul id = "dropdown12" class = "dropdown-content blue-grey lighten-4">
+                <li><a href = "halamanDataJadwalPenting.php">Data Jadwal Ujian & Quiz</a></li>
+                <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
+            </ul>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Pembagian Kelas</h3><br>
                 <form action="#" method="post">
-                    <p>Kelas : </p>
+                    <h5 style="font-size:20px;">Jurusan : </h5>
                     <div class="input-field col s12">
-                        <select name="kelas" id="kelas">
-                            <option value="none" disabled selected>Pilih Kelas</option>
+                        <select name="jurusan" id="jurusan">
+                            <option value="none" disabled selected>Pilih Jurusan</option>
                             <?php
-                                $query = "SELECT kls.Kelas_ID, kls.Kelas_Nama, kls.Matkulkurikulum_ID, mk.Matkul_Nama, j.Jurusan_Nama, kls.Kelas_Ruangan, kls.Kelas_Kapasitas FROM Kelas kls, Matkul_Kurikulum mkl, Matkul mk, Jurusan j
-                                WHERE kls.Matkulkurikulum_ID = mkl.Matkul_Kurikulum_ID AND mkl.Matkul_ID = mk.Matkul_ID AND mkl.Jurusan_ID = j.Jurusan_ID";
-                                $listKelas = $conn->query($query);
-                                foreach ($listKelas as $key => $value) {
-                                    echo "<option value='$value[Kelas_ID]'>[ ".$value['Kelas_Nama']." ] ".$value['Matkul_Nama']." - ".$value['Jurusan_Nama']." - ".$value['Kelas_Ruangan']." - ".$value['Kelas_Kapasitas']."</option>";
+                                $query = "SELECT * FROM Jurusan";
+                                $listJurusan = $conn->query($query);
+                                foreach ($listJurusan as $key) {
+                                    echo "<option value='$key[Jurusan_ID]'>$key[Jurusan_Nama]</option>";
                                 }
                             ?>
                         </select>
                     </div>
-                    <p>Mahasiswa : </p>
+                    <h5 style="font-size:20px;">Kelas : </h5>
+                    <div class="input-field col s12">
+                        <div id="kelas-container1">
+                            <select name="kelas" disabled>
+                                <option value="none" selected disabled>Pilih Kelas</option>
+                            </select>
+                        </div>
+                        <div id="kelas-container2">
+
+                        </div>
+                    </div>
+                    <h5 style="font-size:20px;">Mahasiswa : </h5>
                     <div class="input-field col s12" id="content-mahasiswa">
                         <select name="temp" id="temp" disabled>
                             <option value="none" selected>Pilih Mahasiswa</option>
