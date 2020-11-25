@@ -21,8 +21,8 @@
     $semesterLalu = $semester - 1;
 
     $nrp = $_SESSION['user']['user'];
-    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
-    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID 
+    $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+    WHERE mhs.Mahasiswa_ID = '$nrp' AND p.Kelas_ID = k.Kelas_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND m.Matkul_ID = mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
     AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND p.Semester_Pengambilan = $semester 
     ORDER BY p.Semester_Pengambilan, m.Matkul_Nama ASC";
     $listNilai = $conn->query($query);            
