@@ -200,7 +200,7 @@
                         }
                         if($isCollision){
                             $success = false;
-                            echo "<tr style='background-color: red;'>";
+                            echo "<tr style='background-color: maroon; color: white;'>";
                         }else{
                             echo "<tr>";
                         }

@@ -33,6 +33,10 @@
         header("location: halamanFRSpraktikum.php");
     }
 
+    if(isset($_POST['btnBack'])){
+        header("location: halamanFRSpending.php");
+    }
+
     $query = "SELECT m.Matkul_Nama, mk.Matkul_Kurikulum_ID FROM FRS a, Matkul m, Matkul_Kurikulum mk 
     WHERE a.Mahasiswa_ID = $id
     AND a.Matkul_Kurikulum_ID = mk.Matkul_Kurikulum_ID
@@ -175,6 +179,7 @@
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
+                <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
             </div>
         </div>
     </div>

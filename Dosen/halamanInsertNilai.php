@@ -72,18 +72,18 @@
         $(document).ready(function () {
             $('select').material_select();
 
-            $("#menu_nilai").click(function () {
-               $("#menu_item1").toggle(); 
+            $("#menu_jadwal").click(function () {
+               $("#menu_item1").toggle();
                $("#menu_item2").hide();
                $("#menu_item3").hide();
             });
-            $("#menu_jadwal").click(function () {
-               $("#menu_item1").hide(); 
+            $("#menu_mahasiswa").click(function () {
+               $("#menu_item1").hide();
                $("#menu_item2").toggle();
                $("#menu_item3").hide();
             });
-            $("#menu_rencana").click(function () {
-               $("#menu_item1").hide(); 
+            $("#menu_frs").click(function () {
+               $("#menu_item1").hide();
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
             });
@@ -140,6 +140,7 @@
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
+                <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
             </div>
         </div>
     </div>
