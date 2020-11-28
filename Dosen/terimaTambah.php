@@ -16,7 +16,7 @@
 
         $query = "UPDATE FRS SET FRS_Status = 'Diterima' WHERE Mahasiswa_ID = '$id' AND Matkul_Kurikulum_ID = '$matkul'";
         $conn->query($query);
-        $query = "INSERT INTO Pengambilan VALUES('', '$id', '', 0,0,0,0,'',0,0,1, $semester)";
+        $query = "INSERT INTO Pengambilan VALUES('', '$id', '', 0, 0, 0, 0, '', 0, 0, 1, $semester, '')";
         $conn->query($query);
 
         $message = "Gagal Delete";

@@ -90,7 +90,6 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>
@@ -115,7 +114,7 @@
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
+                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date, k.Kelas_Ruangan FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
                     WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'quiz' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester'
                     AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal'
                     ORDER BY Penting_Date";
@@ -125,6 +124,7 @@
                     }else{
                         echo "<th>Matkul</th>";
                         echo "<th>Tanggal</th>";
+                        echo "<th>Ruangan</th>";
                     }
                 ?>
             </tr>
@@ -133,6 +133,7 @@
                     echo "<tr>";
                     echo "<td>$value[Matkul_Nama]</td>";
                     echo "<td>$value[Penting_Date]</td>";
+                    echo "<td>$value[Kelas_Ruangan]</td>";
                     echo "</tr>";
                 }
             ?>
@@ -142,7 +143,7 @@
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
+                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date, k.Kelas_Ruangan FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
                     WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uts' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester'
                     AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' 
                     ORDER BY Penting_Date";
@@ -152,6 +153,7 @@
                     }else{
                         echo "<th>Matkul</th>";
                         echo "<th>Tanggal</th>";
+                        echo "<th>Ruangan</th>";
                     }
                 ?>
             </tr>
@@ -160,6 +162,7 @@
                     echo "<tr>";
                     echo "<td>$value[Matkul_Nama]</td>";
                     echo "<td>$value[Penting_Date]</td>";
+                    echo "<td>$value[Kelas_Ruangan]</td>";
                     echo "</tr>";
                 }
             ?>
@@ -169,7 +172,7 @@
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
-                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
+                    $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date, k.Kelas_Ruangan FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
                     WHERE p.Kelas_ID = k.Kelas_ID AND jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND jp.Keterangan = 'uas' AND p.Kelas_ID = k.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = '$semester'
                     AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal'
                     ORDER BY Penting_Date";
@@ -179,6 +182,7 @@
                     }else{
                         echo "<th>Matkul</th>";
                         echo "<th>Tanggal</th>";
+                        echo "<th>Ruangan</th>";
                     }
                 ?>
             </tr>
@@ -187,6 +191,7 @@
                     echo "<tr>";
                     echo "<td>$value[Matkul_Nama]</td>";
                     echo "<td>$value[Penting_Date]</td>";
+                    echo "<td>$value[Kelas_Ruangan]</td>";
                     echo "</tr>";
                 }
             ?>

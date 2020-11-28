@@ -6,22 +6,15 @@
     $username = $_POST['username'];
     $password = $_POST['password'];
     $jabatan = $_POST['jabatan'];
-    $jabatan2=$_POST['jabatan2'];
     $photo = $_POST['photo'];
 
-    if ($jabatan2!="none")
+    if ($jabatan != "")
     {
-        $query="SELECT Jabatan_ID FROM Jabatan WHERE Jabatan_Nama='$jabatan2'";
-        $result = $conn->query($query);
-        $id_jabatan="";
-        foreach($result as $key => $value) {
-            $id_jabatan = $value['Jabatan_ID'];
-        }
-        $query = "INSERT INTO Jabatan_Dosen VALUES('$id', '$id_jabatan')";
+        $query = "INSERT INTO Jabatan_Dosen VALUES(null, '$id', '$jabatan')";
         $conn->query($query);
     }
 
-    $query = "UPDATE Dosen SET Dosen_Nama = '$nama', Dosen_User = '$username', Dosen_Pass = '$password', Dosen_Jabatan = '$jabatan', Dosen_Photo = '$photo' WHERE Dosen_ID = '$id'";
+    $query = "UPDATE Dosen SET Dosen_Nama = '$nama', Dosen_User = '$username', Dosen_Pass = '$password', Dosen_Photo = '$photo' WHERE Dosen_ID = '$id'";
     $conn->query($query);
 
     if($conn){
