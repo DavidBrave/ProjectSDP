@@ -1,9 +1,6 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-?>
-
-<?php
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -12,6 +9,14 @@
     if(isset($_POST['btnLogout'])){
         unset($_SESSION['user']);
         header("location: ../login.php");
+    }
+
+    if(isset($_POST['btnSubmit'])){
+        $tglBuka = $_POST['buka'];
+        $tglTutup = $_POST['tutup'];
+        $query = "UPDATE Jadwal_Pengisian_FRS SET Tanggal_Buka = '$tglBuka', Tanggal_Tutup = '$tglTutup' WHERE id = 1";
+        $conn->query($query);
+        echo "<script>alert('Berhasil')</script>";
     }
 ?>
 
@@ -137,73 +142,13 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
-            <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
-            <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">
-                <div id="dosen" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">DOSEN</p>
-                    <?php
-                        $query = "SELECT * FROM Dosen";
-                        $listDosen = $conn->query($query);
-                        $totalDosen = mysqli_num_rows($listDosen);
-                    ?>
-                    <p id="totalDosen" style="margin: 0px;">Jumlah: <?=$totalDosen?></p>
-                </div>
-                <div id="mahasiswa" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">MAHASISWA</p>
-                    <?php
-                        $query = "SELECT * FROM Mahasiswa";
-                        $listMahasiswa = $conn->query($query);
-                        $totalMahasiswa = mysqli_num_rows($listMahasiswa);
-                    ?>
-                    <p id="totalMahasiswa" style="margin: 0px;">Jumlah: <?=$totalMahasiswa?></p>
-                </div>
-                <div id="admin" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">ADMIN</p>
-                    <?php
-                        $query = "SELECT * FROM Administrator";
-                        $listAdministrator = $conn->query($query);
-                        $totalAdministrator = mysqli_num_rows($listAdministrator);
-                    ?>
-                    <p id="totalAdmin" style="margin: 0px;">Jumlah: <?=$totalAdministrator?></p>
-                </div>
-            </div>
-            <div id="piechart"></div>
-            <a href="halamanTanggalFRS.php" class="waves-effect blue lighten-1 btn" style="position: absolute; margin: 10px; bottom: 0px">Atur tanggal FRS</a>
+            <h4>Set Tanggal FRS</h4><br><br>
+            <form action="#" method="post" style="width: 500px;">
+                Tanggal buka: <input type="date" name="buka"><br>
+                Tanggal tutup: <input type="date" name="tutup"><br>
+                <button class="btn waves-effect blue lighten-1" type="submit" name="btnSubmit">Submit</button>
+            </form>
         </div>
     </div>
 </body>
 </html>
-<script>
-    $("#btn").click(function () {
-        alert('Total administrator : ' + <?=$totalAdministrator?>);
-    });
-    // Load google charts
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    // Draw the chart and set the chart values
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        ['Job', 'Jumlah'],
-        ['Dosen', <?=$totalDosen?>],
-        ['Mahasiswa', <?=$totalMahasiswa?>],
-        ['Admin', <?=$totalAdministrator?>]
-        ]);
-
-        // Optional; add a title and set the width and height of the chart
-        var options = {
-            'title':'Persentase', 
-            'width':600, 
-            'height':450,
-            slices: {
-                0: { color: 'green' },
-                1: { color: 'plum' },
-                2: { color: 'lightblue' }
-            }
-        };
-
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-    }
-</script>

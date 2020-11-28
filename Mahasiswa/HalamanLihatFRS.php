@@ -44,9 +44,7 @@
             $mahasiswa = $_SESSION['user']['user'];
             for ($i=0; $i < sizeof($praktikum); $i++) { 
                 $kelas = $praktikum[$i];
-                $query = "SELECT * FROM Pengambilan_Praktikum WHERE Mahasiswa_ID = '$mahasiswa' AND Kelas_Praktikum_ID = $praktikum[$i]";
-                $jumlah = (int)mysqli_num_rows($conn->query($query)) + 1;
-                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$mahasiswa', '$kelas', 0, $jumlah, $semester, '')";
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$mahasiswa', '$kelas', 0, 1, $semester+1, '')";
                 $conn->query($query);
             }
             for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 

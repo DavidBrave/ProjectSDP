@@ -21,7 +21,7 @@
     $semesterLalu = $semester - 1;
 
     $nrp = $_SESSION['user']['user'];
-    $query= "SELECT DISTINCT p.Praktikum_Nama, p.Praktikum_Hari, p.Praktikum_Jam_Mulai, p.Praktikum_Jam_Selesai, pp.Nilai_Praktikum, kp.Kelas_Praktikum_Ruangan, pp.Jumlah_Ambil_Praktikum 
+    $query= "SELECT DISTINCT p.Praktikum_Nama, p.Praktikum_Hari, SUBSTR(p.Praktikum_Jam_Mulai,1,5) as Jadwal_Mulai, SUBSTR(p.Praktikum_Jam_Selesai,1,5) as Jadwal_Selesai, pp.Nilai_Praktikum, kp.Kelas_Praktikum_Ruangan, pp.Jumlah_Ambil_Praktikum 
     FROM Pengambilan_Praktikum pp, Praktikum p, Mahasiswa mhs, Kelas_Praktikum kp
     WHERE pp.Kelas_Praktikum_ID = kp.Kelas_Praktikum_ID AND kp.Praktikum_ID = p.Praktikum_ID AND pp.Mahasiswa_ID = '$nrp' AND pp.Semester_Pengambilan_Praktikum = '$semester'";
     $listNilai = $conn->query($query);            
@@ -128,7 +128,6 @@
                             echo "<th>Waktu</th>";
                             echo "<th>Ruangan</th>";
                             echo "<th>Nilai Akhir</th>";
-                            echo "<th>Pengambilan Ke-</th>";
                         }
                     ?>
                 </tr>
@@ -138,10 +137,9 @@
                         echo "<tr>";
                             echo "<td>$value[Praktikum_Nama]</td>";
                             echo "<td>$value[Praktikum_Hari]</td>";
-                            echo "<td>$value[Praktikum_Jam_Mulai] - $value[Praktikum_Jam_Selesai]</td>";
+                            echo "<td>$value[Jadwal_Mulai] - $value[Jadwal_Selesai]</td>";
                             echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
                             echo "<td>$value[Nilai_Praktikum]</td>";
-                            echo "<td>$value[Jumlah_Ambil_Praktikum]</td>";
                         echo "</tr>";
                     }
                     $conn->close();
