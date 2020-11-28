@@ -72,7 +72,9 @@
             }else if($value['Pengambilan_Grade'] == "E"){
                 $total += 0;
             }
-            $counter+=$value['SKS'];
+            if($value['Pengambilan_Grade'] != ''){
+                $counter+=$value['SKS'];
+            }
         }
         if($counter > 0){
             $totalIPS += $total/$counter;
