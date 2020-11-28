@@ -291,7 +291,7 @@
                     </select>
                 </div>
                 Nilai : <input type="text" name="nilai" id="">
-                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnInsert">Insert</button>
+                <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit">Insert</button>
             </form>
         </div>
         <div id="footer">
