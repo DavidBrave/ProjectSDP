@@ -2,6 +2,15 @@
     session_start();
     require_once('../Required/Connection.php');
 
+    //Cek apakah hari ini masih tanggal pengisian frs
+    $query = "SELECT * FROM Jadwal_Pengisian_FRS WHERE id = 1";
+    $jadwalFRS = mysqli_fetch_array($conn->query($query));
+    $today = date('Y-m-d');
+    if($today < $jadwalFRS['Tanggal_Buka'] || $today > $jadwalFRS['Tanggal_Tutup']){
+        $_SESSION['pesan'] = "FRS belum dibuka";
+        header("location: Home.php");
+    }
+
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
     } 
