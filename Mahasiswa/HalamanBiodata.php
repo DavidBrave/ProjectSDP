@@ -54,26 +54,65 @@
     $totalIPS = 0;
     $countIPS = 0;
     for ($i=1; $i < 9; $i++) { 
-        $query = "SELECT p.Pengambilan_Grade, mk.SKS FROM Pengambilan p, Kelas k,Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+        $query = "SELECT * FROM Pengambilan p, Kelas k,Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
         WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
         AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $i";
         $pengambilan = $conn->query($query);
         $counter = 0;
         $total = 0;
-        foreach ($pengambilan as $key => $value) {
-            if($value['Pengambilan_Grade'] == "A"){
-                $total += 4*$value['SKS'];
-            }else if($value['Pengambilan_Grade'] == "B" || $value['Pengambilan_Grade'] == "B+"){
-                $total += 3*$value['SKS'];
-            }else if($value['Pengambilan_Grade'] == "C" || $value['Pengambilan_Grade'] == "C+"){
-                $total += 2*$value['SKS'];
-            }else if($value['Pengambilan_Grade'] == "D"){
-                $total += 1*$value['SKS'];
-            }else if($value['Pengambilan_Grade'] == "E"){
-                $total += 0;
+        // foreach ($pengambilan as $key => $value) {
+        //     if($value['Pengambilan_Grade'] == "A"){
+        //         $total += 4*$value['SKS'];
+        //     }else if($value['Pengambilan_Grade'] == "B" || $value['Pengambilan_Grade'] == "B+"){
+        //         $total += 3*$value['SKS'];
+        //     }else if($value['Pengambilan_Grade'] == "C" || $value['Pengambilan_Grade'] == "C+"){
+        //         $total += 2*$value['SKS'];
+        //     }else if($value['Pengambilan_Grade'] == "D"){
+        //         $total += 1*$value['SKS'];
+        //     }else if($value['Pengambilan_Grade'] == "E"){
+        //         $total += 0;
+        //     }
+        //     if($value['Pengambilan_Grade'] != ''){
+        //         $counter+=$value['SKS'];
+        //     }
+        // }
+        foreach ($pengambilan as $key => $value)
+        {
+            $grade = $value['Pengambilan_Grade'];
+            $sks = $value['SKS'];
+            $matkulId = $value['Matkul_ID'];
+            $sems = $value['Semester_Pengambilan'];
+
+            $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+            WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
+            AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $i AND mk.Matkul_ID = '$matkulId'
+            ORDER BY m.Matkul_Nama ASC";
+            $listNilai2 = $conn->query($query);
+            $hide = false;
+            foreach ($listNilai2 as $key => $value) {
+                if($matkulId == $value['Matkul_ID'] && $sems < $value['Semester_Pengambilan']){
+                    $hide = true;
+                }else if($matkulId == $value['Matkul_ID'] && $sems >= $value['Semester_Pengambilan']){
+                    $hide = false;
+                }
             }
-            if($value['Pengambilan_Grade'] != ''){
-                $counter+=$value['SKS'];
+
+            if(!$hide){
+                if($grade == "A"){
+                    $total+=4*$sks;
+                }else if($grade == "B" || $grade == "B+"){
+                    $total+=3*$sks;
+                }else if($grade == "C" || $grade == "C+"){
+                    $total+=2*$sks;
+                }else if($grade == "D"){
+                    $total+=1*$sks;
+                }else{
+                    $total+=0;
+                }
+                
+                if($grade != ''){
+                    $counter+=$sks;
+                }
             }
         }
         if($counter > 0){
@@ -81,7 +120,6 @@
             $countIPS++;
         }
     }
-    
 ?>
 <!DOCTYPE html>
 <html lang="en">
