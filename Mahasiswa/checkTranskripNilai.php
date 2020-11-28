@@ -33,13 +33,13 @@
         foreach ($listNilai as $key => $value)
         {
             if($value['Pengambilan_Grade'] == "A"){
-                $total+=4;
+                $total+=4*$value['SKS'];
             }else if($value['Pengambilan_Grade'] == "B" || $value['Pengambilan_Grade'] == "B+"){
-                $total+=3;
+                $total+=3*$value['SKS'];
             }else if($value['Pengambilan_Grade'] == "C" || $value['Pengambilan_Grade'] == "C+"){
-                $total+=2;
+                $total+=2*$value['SKS'];
             }else if($value['Pengambilan_Grade'] == "D"){
-                $total+=1;
+                $total+=1*$value['SKS'];
             }else{
                 $total+=0;
             }
@@ -52,7 +52,7 @@
                 echo "<td>$value[Pengambilan_Grade]</td>";
                 echo "<td>$value[Jumlah_Ambil]</td>";
             echo "</tr>";
-            $counter++;
+            $counter+=$value['SKS'];
         }
         $conn->close();
     ?>        

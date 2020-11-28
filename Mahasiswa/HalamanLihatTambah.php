@@ -47,9 +47,8 @@
                 $conn->query($query);
             }
         }
-        echo '<script language = "javascript">';
-        echo "alert('Berhasil tambah matkul')";
-        echo '</script>';
+        $_SESSION['pesan'] = "FRS berhasil";
+        header("location: Home.php");
     }
 ?>
 <!DOCTYPE html>
@@ -124,7 +123,6 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>
