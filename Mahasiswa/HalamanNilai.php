@@ -137,7 +137,11 @@
                 <?php
                     foreach ($listNilai as $key => $value)
                     {
-                        echo "<tr>";
+                        if($value['Pengambilan_Status'] == "Lulus" || $value['Pengambilan_Grade'] == ''){
+                            echo "<tr>";
+                        }else{
+                            echo "<tr style='background-color: crimson;'>";
+                        }
                             echo "<td>$value[Matkul_Nama]</td>";
                             echo "<td>$value[UTS]</td>";
                             echo "<td>$value[UAS]</td>";

@@ -63,9 +63,9 @@
         foreach ($pengambilan as $key => $value) {
             if($value['Pengambilan_Grade'] == "A"){
                 $total += 4*$value['SKS'];
-            }else if($value['Pengambilan_Grade'] == "B"){
+            }else if($value['Pengambilan_Grade'] == "B" || $value['Pengambilan_Grade'] == "B+"){
                 $total += 3*$value['SKS'];
-            }else if($value['Pengambilan_Grade'] == "C"){
+            }else if($value['Pengambilan_Grade'] == "C" || $value['Pengambilan_Grade'] == "C+"){
                 $total += 2*$value['SKS'];
             }else if($value['Pengambilan_Grade'] == "D"){
                 $total += 1*$value['SKS'];

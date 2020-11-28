@@ -43,7 +43,12 @@
             }else{
                 $total+=0;
             }
-            echo "<tr>";
+            
+            if($value['Pengambilan_Status'] == "Lulus" || $value['Pengambilan_Grade'] == '') {
+                echo "<tr>";
+            }else{
+                echo "<tr style='background-color: crimson;'>";
+            }
                 echo "<td>$value[Matkul_Nama]</td>";
                 echo "<td>$value[UTS]</td>";
                 echo "<td>$value[UAS]</td>";
@@ -52,7 +57,10 @@
                 echo "<td>$value[Pengambilan_Grade]</td>";
                 echo "<td>$value[Jumlah_Ambil]</td>";
             echo "</tr>";
-            $counter+=$value['SKS'];
+            
+            if($value['Pengambilan_Grade'] != ''){
+                $counter+=$value['SKS'];
+            }
         }
         $conn->close();
     ?>        

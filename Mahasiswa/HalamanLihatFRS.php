@@ -62,6 +62,8 @@
                 $conn->query($query);
             }
         }
+        $query = "UPDATE Mahasiswa SET Mahasiswa_Semester = $semester+1 WHERE Mahasiswa_ID = '$nrp'";
+        $conn->query($query);
         $_SESSION['pesan'] = "FRS berhasil";
         header("location: Home.php");
     }
