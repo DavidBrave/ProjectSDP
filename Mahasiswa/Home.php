@@ -187,7 +187,31 @@
                         echo "</tr>";
                     }
                 ?>
-            </table>
+            </table><br><br>
+            <?php
+                $query = "SELECT * FROM Skripsi WHERE Mahasiswa_ID = '$nrp'";
+                $skripsi = mysqli_fetch_array($conn->query($query));
+                $count = mysqli_num_rows($conn->query($query));
+                if($count != 0){
+                ?>
+                    <h4>Jadwal Sidang Skripsi</h4>
+                    <table style="width: 800px;">
+                        <tr>
+                            <th>Judul Skripsi</th>
+                            <th>Tanggal</th>
+                            <th>Waktu</th>
+                            <th>Ruangan</th>
+                        </tr>
+                        <tr>
+                            <td><?=$skripsi['Judul_Skripsi']?></td>
+                            <td><?=$skripsi['Tanggal_Skripsi']?></td>
+                            <td><?=substr($skripsi['Jam_Mulai'], 0, 5)?> - <?=substr($skripsi['Jam_Selesai'], 0, 5)?></td>
+                            <td><?=$skripsi['Ruangan_Skripsi']?></td>
+                        </tr>
+                    </table>
+                <?php
+                }
+            ?>
         </div>
         <div id="footer">
 
