@@ -75,6 +75,7 @@
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataMahasiswa.php">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
+                <li><a href = "halamanSkripsiMahasiswa.php">Skripsi Mahasiswa</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             

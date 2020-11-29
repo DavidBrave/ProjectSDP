@@ -11,43 +11,10 @@
         header("location: ../login.php");
     }
 
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
+    if(isset($_POST['btnDetail'])){
+        $_SESSION['mahasiswa']['id'] = $_POST['mahasiswa'];
+        header("location: detailSkripsi.php");
     }
-
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idKelas'];
-
-        $query = "DELETE FROM Kelas WHERE Kelas_ID = '$id'";
-        $conn->query($query);
-
-        echo '<script language = "javascript">';
-        echo "alert('Berhasil Delete Kelas $id')";
-        echo '</script>';
-    }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idKelas'];
-        $query = "SELECT * FROM Kelas";
-        $listKelas = $conn->query($query);
-        foreach ($listKelas as $key => $value) {
-            if($value['Kelas_ID'] == $id){
-                $_SESSION['kelas']['id'] = $value['Kelas_ID'];
-                $_SESSION['kelas']['matkulkurikulum'] = $value['Matkulkurikulum_ID'];
-                $_SESSION['kelas']['dosen'] = $value['DosenPengajar_ID'];
-                $_SESSION['kelas']['nama'] = $value['Kelas_Nama'];
-                $_SESSION['kelas']['ruangan'] = $value['Kelas_Ruangan'];
-                $_SESSION['kelas']['kapasitas'] = $value['Kelas_Kapasitas'];
-            }
-        }
-        header("location: halamanUpdateKelas.php");
-    }
-
-    $query = "SELECT kls.Kelas_ID, kls.Kelas_Nama, mk.Matkul_Nama, j.Jurusan_Nama, d.Dosen_Nama, kls.Kelas_Ruangan, kls.Kelas_Kapasitas FROM Kelas kls, Matkul_Kurikulum mkl, Matkul mk, Jurusan j, Dosen d
-    WHERE kls.Matkulkurikulum_ID = mkl.Matkul_Kurikulum_ID AND mkl.Matkul_ID = mk.Matkul_ID AND mkl.Jurusan_ID = j.Jurusan_ID AND kls.DosenPengajar_ID = d.Dosen_ID AND mk.Matkul_Nama LIKE '%$nama%'";
-    $listKelas = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -55,27 +22,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matkul Kurikulum</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -85,15 +36,18 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#btnSearch").click(function () {
+            $('select').material_select();
+
+            $("#jurusan").change(function () {
+                var jurusanlId = $("#jurusan").val();
                 $.ajax({
                     method : "post",
-                    url : "daftarKelas.php",
+                    url : "daftarSkripsiMahasiswa.php",
                     data : {
-                        nama : $("#nama").val()
+                        id : jurusanlId
                     },
                     success : function (hasil) {
-                        $("#dataKelas").html(hasil);
+                        $("#mhs-container").html(hasil);
                     }
                 });
             });
@@ -187,51 +141,24 @@
                 <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>   
+        </div> 
         <div id="col-kanan">
-            <h3>List Matkul Kurikulum</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            
-            <table id = "dataKelas" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listKelas) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Kelas</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Matkul</th>";
-                        echo "<th>Jurusan</th>";
-                        echo "<th>Dosen</th>";
-                        echo "<th>Ruangan</th>";
-                        echo "<th>Kapasitas</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
+            <h4>Daftar Skripsi Mahasiswa</h4>
+            <div class="input-field col s12" style="width: 500px;">
+                <select name="jurusan" id="jurusan">
+                    <option value="none" disabled selected>Pilih Jurusan</option>
+                    <?php
+                        $query = "SELECT * FROM Jurusan";
+                        $listJurusan = $conn->query($query);
+                        foreach ($listJurusan as $key) {
+                            echo "<option value='$key[Jurusan_ID]'>$key[Jurusan_Nama]</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+            <div id="mhs-container">
 
-            <?php
-                foreach ($listKelas as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Kelas_ID]</td>";
-                    echo "<td>$value[Kelas_Nama]</td>";
-                    echo "<td>$value[Matkul_Nama]</td>";
-                    echo "<td>$value[Jurusan_Nama]</td>";
-                    echo "<td>$value[Dosen_Nama]</td>";
-                    echo "<td>$value[Kelas_Ruangan]</td>";
-                    echo "<td>$value[Kelas_Kapasitas]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idKelas' value='$value[Kelas_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idKelas' value='$value[Kelas_ID]'></form></td>";
-                    echo "</tr>";
-                }
-
-                $conn->close();
-            ?>
-            </table>
+            </div>
         </div>
     </div>
 </body>
