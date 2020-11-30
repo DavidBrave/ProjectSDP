@@ -60,7 +60,9 @@
                 }
 
                 if ($valid_input == true) {
-
+                    var days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                    var d = new Date($("#tanggal_mulai").val());
+                    var dayName = days[d.getDay()];
                     $.ajax({
                         method : "post",
                         url : "insertJadwal.php",
@@ -68,7 +70,8 @@
                         data : {
                             id : $("#jadwal_id").val(),
                             kelas : $("#kelas").val(),
-                            hari : $("#hari").val(),
+                            hari : dayName,
+                            tanggal : $("#tanggal_mulai").val(),
                             mulai : $("#waktu_mulai").val(),
                             selesai : $("#waktu_selesai").val()
                         },
@@ -237,15 +240,8 @@
                     </select>
                 </div>
                 <div class="input-field col s12">
-                    <select name="hari" id="hari">
-                        <option value="none" disabled selected>Pilih Hari</option>
-                        <option value='monday'>Senin</option>
-                        <option value='tuesday'>Selasa</option>
-                        <option value='wednesday'>Rabu</option>
-                        <option value='thursday'>Kamis</option>
-                        <option value='friday'>Jumat</option>
-                        <option value='saturday'>Sabtu</option>
-                    </select>
+                    Tanggal Mulai Kuliah
+                    <input type="date" name="tanggal_mulai" id="tanggal_mulai">
                 </div>
                 Jadwal Mulai
                 <input type="time" name="waktu_mulai" id="waktu_mulai">
