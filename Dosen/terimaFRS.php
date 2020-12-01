@@ -19,7 +19,7 @@
         $query = "SELECT * FROM FRS WHERE Mahasiswa_ID = '$id'";
         $matkuls = $conn->query($query);
         foreach($matkuls as $key => $value) {
-            $query = "INSERT INTO Pengambilan VALUES('', '$id', '', 0,0,0,0,'',0,0,1, $semester)";
+            $query = "INSERT INTO Pengambilan VALUES('', '$id', '', 0, 0, 0, 0, '', 0, 0, 1, $semester, '')";
             $conn->query($query);
         }
 

@@ -21,8 +21,8 @@
     $semesterLalu = $semester - 1;
 
     $nrp = $_SESSION['user']['user'];
-    $query="SELECT * FROM Pengambilan p,Kelas k,Matkul m,Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
-    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID 
+    $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+    WHERE mhs.Mahasiswa_ID = '$nrp' AND p.Kelas_ID = k.Kelas_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND m.Matkul_ID = mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
     AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND p.Semester_Pengambilan = $semester 
     ORDER BY p.Semester_Pengambilan, m.Matkul_Nama ASC";
     $listNilai = $conn->query($query);            
@@ -97,7 +97,6 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>
@@ -138,7 +137,11 @@
                 <?php
                     foreach ($listNilai as $key => $value)
                     {
-                        echo "<tr>";
+                        if($value['Pengambilan_Status'] == "Lulus" || $value['Pengambilan_Grade'] == ''){
+                            echo "<tr>";
+                        }else{
+                            echo "<tr style='background-color: crimson;'>";
+                        }
                             echo "<td>$value[Matkul_Nama]</td>";
                             echo "<td>$value[UTS]</td>";
                             echo "<td>$value[UAS]</td>";

@@ -2,6 +2,15 @@
     session_start();
     require_once("../Required/Connection.php");
 
+    //Cek apakah hari ini masih tanggal pengisian frs
+    $query = "SELECT * FROM Jadwal_Pengisian_FRS WHERE id = 1";
+    $jadwalFRS = mysqli_fetch_array($conn->query($query));
+    $today = date('Y-m-d');
+    if($today < $jadwalFRS['Tanggal_Buka'] || $today > $jadwalFRS['Tanggal_Tutup']){
+        $_SESSION['pesan'] = "FRS belum dibuka";
+        header("location: Home.php");
+    }
+
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
     } 
@@ -39,7 +48,8 @@
 
     $query = "SELECT mk.Matkul_Kurikulum_ID, m.Matkul_Nama, jk.Jadwal_Hari, jk.Jadwal_Mulai, jk.Jadwal_Selesai,mk.Semester, mk.SKS 
     FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Jadwal_Kuliah jk, Pengambilan p, Mahasiswa mhs, FRS f
-    WHERE p.Kelas_ID = k.Kelas_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND p.Mahasiswa_ID = '$nrp' AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Semester_Pengambilan = mhs.Mahasiswa_Semester AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID
+    WHERE p.Kelas_ID = k.Kelas_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID AND k.Kelas_ID = jk.Kelas_ID AND p.Mahasiswa_ID = '$nrp' 
+    AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND p.Semester_Pengambilan = mhs.Mahasiswa_Semester AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
     AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal'";
     $selectedMatkuls = $conn->query($query);
 
@@ -125,7 +135,6 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>

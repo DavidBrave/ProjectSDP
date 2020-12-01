@@ -92,7 +92,7 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-            <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
+            <a class = "btn dropdown-button blue lighten-2" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
                 <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
@@ -133,6 +133,7 @@
                                 <select name="kelas" id="kelas">
                                     <option value="none" disabled selected>Pilih Kelas</option>
                                     <?php
+                                        $kelas = "";
                                         foreach ($listKelas as $key => $value) {
                                             echo "<option value='" . $value['Kelas_ID'] . "'>" . $value['Matkul_Nama'] . " - " . $value['Kelas_Ruangan'] . " - " . $value['Kelas_Nama'] . "</option>";
                                         }
@@ -142,6 +143,13 @@
                             <td>
                                 <select name="jadwal" id="jadwal">
                                     <option value="none" disabled selected>Pilih Tanggal</option>
+                                    <?php
+                                        $query = "SELECT * FROM Jadwal_Kuliah WHERE Kelas_ID = '$kelas'";
+                                        $listTanggal = $conn->query($query);
+                                        foreach ($listTanggal as $key => $value) {
+                                            echo "<option value='" . $value['Tanggal_Kuliah'] . "'>" . $value['Tanggal_Kuliah'] . "</option>";
+                                        }
+                                    ?>
                                 </select>
                             </td>
                         </tr>
@@ -171,5 +179,20 @@
                 $("#listAbsen").html(hasil);
             }
         });
+    }
+
+    function getType() {
+        var x = document.getElementById("food").value;
+        var items;
+        if (x === "fruit") {
+            items = ["Apple", "Oranges", "Bananas"];
+        } else {
+            items = ["Eggplants", "Olives"]
+        }
+        var str = ""
+        for (var item of items) {
+            str += "<option>" + item + "</option>"
+        }
+        document.getElementById("pickone").innerHTML = str;
     }
 </script>

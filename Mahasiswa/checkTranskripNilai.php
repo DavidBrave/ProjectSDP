@@ -4,8 +4,8 @@
     $id = $_POST['id'];
 
     $nrp = $_SESSION['user']['user'];
-    $query="SELECT * FROM Pengambilan p, Kelas k,Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
-    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID 
+    $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
     AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $id
     ORDER BY m.Matkul_Nama ASC";
     $listNilai = $conn->query($query);
@@ -23,7 +23,6 @@
                 echo "<th>Quiz</th>";
                 echo "<th>Nilai Akhir</th>";
                 echo "<th>Grade</th>";
-                echo "<th>Pengambilan Ke-</th>";
             }
         ?>
     </tr>
@@ -32,27 +31,61 @@
         $counter = 0;
         foreach ($listNilai as $key => $value)
         {
-            if($value['Pengambilan_Grade'] == "A"){
-                $total+=4;
-            }else if($value['Pengambilan_Grade'] == "B" || $value['Pengambilan_Grade'] == "B+"){
-                $total+=3;
-            }else if($value['Pengambilan_Grade'] == "C" || $value['Pengambilan_Grade'] == "C+"){
-                $total+=2;
-            }else if($value['Pengambilan_Grade'] == "D"){
-                $total+=1;
-            }else{
-                $total+=0;
+            $grade = $value['Pengambilan_Grade'];
+            $sks = $value['SKS'];
+            $status = $value['Pengambilan_Status'];
+            $matkul = $value['Matkul_Nama'];
+            $matkulId = $value['Matkul_ID'];
+            $uts = $value['UTS'];
+            $uas = $value['UAS'];
+            $quiz = $value['Quiz'];
+            $nilaiAkhir = $value['Nilai_Akhir'];
+            $sems = $value['Semester_Pengambilan'];
+
+            $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+            WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
+            AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $id AND mk.Matkul_ID = '$matkulId'
+            ORDER BY m.Matkul_Nama ASC";
+            $listNilai2 = $conn->query($query);
+            $hide = false;
+            foreach ($listNilai2 as $key => $value) {
+                if($matkulId == $value['Matkul_ID'] && $sems < $value['Semester_Pengambilan']){
+                    $hide = true;
+                }else if($matkulId == $value['Matkul_ID'] && $sems >= $value['Semester_Pengambilan']){
+                    $hide = false;
+                }
             }
-            echo "<tr>";
-                echo "<td>$value[Matkul_Nama]</td>";
-                echo "<td>$value[UTS]</td>";
-                echo "<td>$value[UAS]</td>";
-                echo "<td>$value[Quiz]</td>";
-                echo "<td>$value[Nilai_Akhir]</td>";
-                echo "<td>$value[Pengambilan_Grade]</td>";
-                echo "<td>$value[Jumlah_Ambil]</td>";
-            echo "</tr>";
-            $counter++;
+
+            if(!$hide){
+                if($grade == "A"){
+                    $total+=4*$sks;
+                }else if($grade == "B" || $grade == "B+"){
+                    $total+=3*$sks;
+                }else if($grade == "C" || $grade == "C+"){
+                    $total+=2*$sks;
+                }else if($grade == "D"){
+                    $total+=1*$sks;
+                }else{
+                    $total+=0;
+                }
+                
+                if($status == "Lulus" || $grade == '') {
+                    echo "<tr>";
+                }else{
+                    echo "<tr style='background-color: crimson;'>";
+                }
+                    echo "<td>$matkul</td>";
+                    echo "<td>$uts</td>";
+                    echo "<td>$uas</td>";
+                    echo "<td>$quiz</td>";
+                    echo "<td>$nilaiAkhir</td>";
+                    echo "<td>$grade</td>";
+                echo "</tr>";
+                
+                if($grade != ''){
+                    $counter+=$sks;
+                }
+            }
         }
         $conn->close();
     ?>        

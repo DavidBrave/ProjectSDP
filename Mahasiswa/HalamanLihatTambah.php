@@ -25,31 +25,38 @@
         $selectedMatkuls = $_SESSION['matkul'];
     }
 
+    $nrp = $_SESSION['user']['user'];
+    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
+              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
+    $mahasiswa = mysqli_fetch_array($conn->query($query));
+    $nrp = $mahasiswa['Mahasiswa_ID'];
+    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+    $jurusan = $mahasiswa['Jurusan_ID'];
+    $semesterLalu = $semester - 1;
+
     if(isset($_POST['btnSubmit'])){
         if(isset($_POST['praktikum'])){
             $praktikum = $_POST['praktikum'];
-            $mahasiswa = $_SESSION['user']['user'];
             for ($i=0; $i < sizeof($praktikum); $i++) { 
                 $kelas = $praktikum[$i];
-                $query = "INSERT INTO Pengambilan_Praktikum VALUES('','$mahasiswa','$kelas',0,0,1)";
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$nrp', '$kelas', 0, 1, $semester, '')";
                 $conn->query($query);
             }
             for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
                 $matkul = $selectedMatkuls[$i];
-                $query = "INSERT INTO FRS VALUES('', '$mahasiswa', '$matkul', 'Tambah')";
+                $query = "INSERT INTO FRS VALUES('', '$nrp', '$matkul', 'Tambah')";
                 $conn->query($query);
             }
         }else{
             $mahasiswa = $_SESSION['user']['user'];
             for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
                 $matkul = $selectedMatkuls[$i];
-                $query = "INSERT INTO FRS VALUES('', '$mahasiswa', '$matkul', 'Tambah')";
+                $query = "INSERT INTO FRS VALUES('', '$nrp', '$matkul', 'Tambah')";
                 $conn->query($query);
             }
         }
-        echo '<script language = "javascript">';
-        echo "alert('Berhasil tambah matkul')";
-        echo '</script>';
+        $_SESSION['pesan'] = "FRS berhasil";
+        header("location: Home.php");
     }
 ?>
 <!DOCTYPE html>
@@ -124,7 +131,6 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>

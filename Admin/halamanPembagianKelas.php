@@ -25,6 +25,7 @@
 
         $query = "UPDATE Pengambilan SET Kelas_ID = '$kelas' WHERE Mahasiswa_Id = '$mahasiswa' AND Kelas_ID = '' LIMIT 1";
         $conn->query($query);
+        echo "<script type='text/javascript'>alert('Berhasil memasukkan mahasiswa $mahasiswa ke kelas $kelas')</script>";
     }
 ?>
 
@@ -85,6 +86,7 @@
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataMahasiswa.php">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
+                <li><a href = "halamanSkripsiMahasiswa.php">Skripsi Mahasiswa</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             
@@ -186,11 +188,10 @@
                     </div>
                     <h5 style="font-size:20px;">Mahasiswa : </h5>
                     <div class="input-field col s12" id="content-mahasiswa">
-                        <select name="temp" id="temp" disabled>
+                        <!-- <select name="temp" id="temp" disabled>
                             <option value="none" selected>Pilih Mahasiswa</option>
-                        </select>
+                        </select> -->
                     </div>
-                    <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnInsert">Insert</button>
                 </form>
             </div>
         </div>

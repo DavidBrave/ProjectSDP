@@ -44,7 +44,7 @@
             $('select').material_select();
 
             $("#btnUpdate").click(function () {
-                if($("#nama").val() != "" && $("#username").val() != "" && $("#password").val() != "" && $("#jabatan").val() != ""){
+                if($("#nama").val() != "" && $("#username").val() != "" && $("#password").val() != ""){
                     $.ajax({
                         method : "post",
                         url : "updateDosen.php",
@@ -54,7 +54,6 @@
                             username : $("#username").val(),
                             password : $("#password").val(),
                             jabatan : $("#jabatan").val(),
-                            jabatan2 : $('#jabatan2').val(),
                             photo : $("#hidFile").val()
                         },
                         success : function (hasil) {
@@ -123,12 +122,13 @@
         </form>
     </div>
     <div id="content">
-    <div id="col-kiri">
+        <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
             
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataMahasiswa.php">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
+                <li><a href = "halamanSkripsiMahasiswa.php">Skripsi Mahasiswa</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
             
@@ -203,68 +203,57 @@
         <div id="col-kanan">
             <div style="width: 50%;">
                 <h3>Update Data Dosen</h3><br>
-                <div id="photo" style="background-image: url('../Photo/<?=$_SESSION['dosen']['photo']?>');">
-                    
-                </div><br>
+                <div id="photo" style="background-image: url('../Photo/<?=$_SESSION['dosen']['photo']?>');"></div><br>
                 <input type="file" name="file" id="file">
                 <input type="hidden" id="hidFile"><br><br>
                 <button class="btn waves-effect waves-light" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpload">Upload<i class="material-icons right">file_upload</i></button>
                 <button class="btn waves-effect red darken-3" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnRemove">Remove<i class="material-icons right">delete</i></button><br><br><br><br>
-                ID: <input type="text" id="id" value="<?=$_SESSION['dosen']['id']?>" disabled><br>
-                Nama Lengkap: <input type="text" id="nama" value="<?=$_SESSION['dosen']['nama']?>"><br>
-                Username: <input type="text" id="username" value="<?=$_SESSION['dosen']['username']?>">
-                
+                <b>ID:</b> <input type="text" id="id" value="<?=$_SESSION['dosen']['id']?>" disabled><br>
+                <b>Nama Lengkap:</b> <input type="text" id="nama" value="<?=$_SESSION['dosen']['nama']?>"><br>
+                <b>Username:</b> <input type="text" id="username" value="<?=$_SESSION['dosen']['username']?>">
                 <div class="input-field col s12">
-                    <select name="jabatan" id="jabatan">
-                        <?php
-                            $query = "SELECT * FROM Dosen";
-                            $listDosen = $conn->query($query);
-                            foreach ($listDosen as $key => $value) {
-                                if($value['Dosen_ID'] == $_SESSION['dosen']['id']){
-                                    if($value['Dosen_Jabatan'] == "Dosen"){
-                                        echo "<option value='Dosen' selected>Dosen</option>";
-                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
-                                        echo "<option value='Rektor'>Rektor</option>";
-                                    }else if($value['Dosen_Jabatan'] == "Dosen Wali"){
-                                        echo "<option value='Dosen'>Dosen</option>";
-                                        echo "<option value='Dosen Wali' selected>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
-                                        echo "<option value='Rektor'>Rektor</option>";
-                                    }else if($value['Dosen_Jabatan'] == "Wakil Rektor"){
-                                        echo "<option value='Dosen'>Dosen</option>";
-                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor' selected>Wakil Rektor</option>";
-                                        echo "<option value='Rektor'>Rektor</option>";
-                                    }else if($value['Dosen_Jabatan'] == "Rektor"){
-                                        echo "<option value='Dosen'>Dosen</option>";
-                                        echo "<option value='Dosen Wali'>Dosen Wali</option>";
-                                        echo "<option value='Wakil Rektor'>Wakil Rektor</option>";
-                                        echo "<option value='Rektor' selected>Rektor</option>";
-                                    }
-                                }
+                    <?php
+                        $id = $_SESSION['dosen']['id'];
+                        $query = "SELECT d.Dosen_ID, j.Jabatan_Nama FROM Dosen d, Jabatan_Dosen jd, Jabatan j 
+                        WHERE jd.Jabatan_ID = j.Jabatan_ID AND jd.Dosen_ID = d.Dosen_ID AND d.Dosen_ID = '$id'";
+                        $jabatan = $conn->query($query);
+                        $count = 1;
+                        foreach ($jabatan as $key => $value) {
+                            echo "<b>Jabatan $count:</b>";
+                            if($value['Jabatan_Nama'] == "Dosen"){
+                                echo "<input type='text' value='Dosen' disabled>";
+                            }else if($value['Jabatan_Nama'] == "Dosen Wali"){
+                                echo "<input type='text' value='Dosen Wali' disabled>";
+                            }else if($value['Jabatan_Nama'] == "Wakil Rektor"){
+                                echo "<input type='text' value='Wakil Rektor' disabled>";
+                            }else if($value['Jabatan_Nama'] == "Rektor"){
+                                echo "<input type='text' value='Rektor' disabled>";
                             }
-                        ?>
-                    </select>
+                            $count++;
+                        }
+                    ?>
                 </div>
 
-                Password: <input type="password" id="password" value="<?=$_SESSION['dosen']['password']?>">
+                <b>Password:</b> <input type="password" id="password" value="<?=$_SESSION['dosen']['password']?>">
                 <div>
                     <input type="checkbox" id="hide_pass" onclick="TogglePassword()">
                     <label for="hide_pass"><b id="text_showHide">Show Password</b></label>
                 </div>
                 <br>
 
-                Tambah Jabatan : <br>
+                <b>Tambah Jabatan</b> : <br>
                 <div class="input-field col s12">
-                        <select name="jabatan2">
-                            <option value="none" disabled selected>Pilih Jabatan</option>
-                            <option value='Dosen Pengajar'>Dosen</option>
-                            <option value='Dosen Wali'>Dosen Wali</option>
-                            <option value='Rektor'>Rektor</option>
-                            <option value='Wakil Rektor'>Wakil Rektor</option>
-                        </select>
-                    </div>
+                    <select name="jabatan" id="jabatan">
+                        <option value="none" disabled selected>Pilih Jabatan</option>
+                        <?php
+                            $query = "SELECT * FROM Jabatan";
+                            $jabatan = $conn->query($query);
+                            foreach ($jabatan as $key => $value) {
+                                echo "<option value='$value[Jabatan_ID]'>$value[Jabatan_Nama]</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
 
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>

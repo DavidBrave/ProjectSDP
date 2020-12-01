@@ -44,9 +44,7 @@
             $mahasiswa = $_SESSION['user']['user'];
             for ($i=0; $i < sizeof($praktikum); $i++) { 
                 $kelas = $praktikum[$i];
-                $query = "SELECT * FROM Pengambilan_Praktikum WHERE Mahasiswa_ID = '$mahasiswa' AND Kelas_Praktikum_ID = $praktikum[$i]";
-                $jumlah = (int)mysqli_num_rows($conn->query($query)) + 1;
-                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$mahasiswa', '$kelas', 0, $jumlah, $semester)";
+                $query = "INSERT INTO Pengambilan_Praktikum VALUES('', '$mahasiswa', '$kelas', 0, 1, $semester+1, '')";
                 $conn->query($query);
             }
             for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
@@ -62,9 +60,10 @@
                 $conn->query($query);
             }
         }
-        echo '<script language = "javascript">';
-        echo "alert('FRS berhasil')";
-        echo '</script>';
+        $query = "UPDATE Mahasiswa SET Mahasiswa_Semester = $semester+1 WHERE Mahasiswa_ID = '$nrp'";
+        $conn->query($query);
+        $_SESSION['pesan'] = "FRS berhasil";
+        header("location: Home.php");
     }
 ?>
 <!DOCTYPE html>
@@ -138,7 +137,6 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
                 <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>

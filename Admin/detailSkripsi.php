@@ -11,43 +11,27 @@
         header("location: ../login.php");
     }
 
-    if(isset($_POST['nama'])){
-        $nama = $_POST['nama'];
-    }else{
-        $nama = "";
-    }
+    $nrp = $_SESSION['mahasiswa']['id'];
+    $query = "SELECT * FROM Skripsi s, Mahasiswa m WHERE s.Mahasiswa_ID = m.Mahasiswa_ID AND m.Mahasiswa_ID = '$nrp'";
+    $skripsi = mysqli_fetch_array($conn->query($query));
 
-    if (isset($_POST['btnDelete'])) {
-        $id = $_POST['idKelas'];
-
-        $query = "DELETE FROM Kelas WHERE Kelas_ID = '$id'";
-        $conn->query($query);
-
-        echo '<script language = "javascript">';
-        echo "alert('Berhasil Delete Kelas $id')";
-        echo '</script>';
-    }
-
-    if(isset($_POST['btnUpdate'])){
-        $id = $_POST['idKelas'];
-        $query = "SELECT * FROM Kelas";
-        $listKelas = $conn->query($query);
-        foreach ($listKelas as $key => $value) {
-            if($value['Kelas_ID'] == $id){
-                $_SESSION['kelas']['id'] = $value['Kelas_ID'];
-                $_SESSION['kelas']['matkulkurikulum'] = $value['Matkulkurikulum_ID'];
-                $_SESSION['kelas']['dosen'] = $value['DosenPengajar_ID'];
-                $_SESSION['kelas']['nama'] = $value['Kelas_Nama'];
-                $_SESSION['kelas']['ruangan'] = $value['Kelas_Ruangan'];
-                $_SESSION['kelas']['kapasitas'] = $value['Kelas_Kapasitas'];
-            }
+    if(isset($_POST['btnSubmit'])){
+        if(isset($_POST['dosen1']) && isset($_POST['dosen2']) && isset($_POST['dosen3']) && isset($_POST['tanggal']) && isset($_POST['mulai']) && isset($_POST['selesai']) && isset($_POST['ruangan'])){
+            $dosen1 = $_POST['dosen1'];
+            $dosen2 = $_POST['dosen2'];
+            $dosen3 = $_POST['dosen3'];
+            $tanggal = $_POST['tanggal'];
+            $mulai = $_POST['mulai'];
+            $selesai = $_POST['selesai'];
+            $ruangan = $_POST['ruangan'];
+            $query = "UPDATE Skripsi SET Dosen_Penguji1 = '$dosen1', Dosen_Penguji2 = '$dosen2', Dosen_Penguji3 = '$dosen3', Tanggal_Skripsi = '$tanggal', Jam_Mulai = '$mulai', Jam_Selesai = '$selesai', Ruangan_Skripsi = '$ruangan'
+            WHERE Mahasiswa_ID = '$nrp'";
+            $conn->query($query);
+            echo "<script>alert('Berhasil')</script>";
+        }else{
+            echo "<script>alert('Inputan harus diisi')</script>";
         }
-        header("location: halamanUpdateKelas.php");
     }
-
-    $query = "SELECT kls.Kelas_ID, kls.Kelas_Nama, mk.Matkul_Nama, j.Jurusan_Nama, d.Dosen_Nama, kls.Kelas_Ruangan, kls.Kelas_Kapasitas FROM Kelas kls, Matkul_Kurikulum mkl, Matkul mk, Jurusan j, Dosen d
-    WHERE kls.Matkulkurikulum_ID = mkl.Matkul_Kurikulum_ID AND mkl.Matkul_ID = mk.Matkul_ID AND mkl.Jurusan_ID = j.Jurusan_ID AND kls.DosenPengajar_ID = d.Dosen_ID AND mk.Matkul_Nama LIKE '%$nama%'";
-    $listKelas = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -55,27 +39,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matkul Kurikulum</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="admin2.css">
     <style>
-        .kotak{
-            width: 200px;
-            height: 100px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        #dosen{
-            background-color: green;
-        }
-        #mahasiswa{
-            background-color: plum;
-        }
-        #admin{
-            background-color: lightblue;
-        }
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -85,23 +53,12 @@
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script>
         $(document).ready(function () {
-            $("#btnSearch").click(function () {
-                $.ajax({
-                    method : "post",
-                    url : "daftarKelas.php",
-                    data : {
-                        nama : $("#nama").val()
-                    },
-                    success : function (hasil) {
-                        $("#dataKelas").html(hasil);
-                    }
-                });
-            });
+            $('select').material_select();
         });
     </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -187,51 +144,60 @@
                 <li><a href = "insertDataJadwalPenting.php">Insert Data Jadwal Ujian & Quiz</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-        </div>   
+        </div> 
         <div id="col-kanan">
-            <h3>List Matkul Kurikulum</h3><br>
-            <input type="text" id="nama" style="width: 30%;" placeholder="Masukkan Nama">
-            <button class="btn waves-effect grey lighten-1" id="btnSearch" type="submit" name="action">Search
-                <i class="material-icons right">search</i>
-            </button>
-            
-            <table id = "dataKelas" border="1" style="display: hidden">
-            <tr>
-                <?php
-                    if(mysqli_num_rows($listKelas) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>ID Kelas</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Matkul</th>";
-                        echo "<th>Jurusan</th>";
-                        echo "<th>Dosen</th>";
-                        echo "<th>Ruangan</th>";
-                        echo "<th>Kapasitas</th>";
-                        echo "<th>Update</th>";
-                        echo "<th>Delete</th>";
-                    }
-                ?>
-            </tr>
-
-            <?php
-                foreach ($listKelas as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Kelas_ID]</td>";
-                    echo "<td>$value[Kelas_Nama]</td>";
-                    echo "<td>$value[Matkul_Nama]</td>";
-                    echo "<td>$value[Jurusan_Nama]</td>";
-                    echo "<td>$value[Dosen_Nama]</td>";
-                    echo "<td>$value[Kelas_Ruangan]</td>";
-                    echo "<td>$value[Kelas_Kapasitas]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' style='width: 110px;'>Update<i class='material-icons right'>edit</i></button><input type='hidden' name='idKelas' value='$value[Kelas_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' style='width: 110px;'>Delete<i class='material-icons right'>delete</i></button><input type='hidden' name='idKelas' value='$value[Kelas_ID]'></form></td>";
-                    echo "</tr>";
-                }
-
-                $conn->close();
-            ?>
-            </table>
+            <h3><?=$skripsi['Judul_Skripsi']?></h3>
+            <p style="font-size: 25px;">Dibuat oleh <?=$skripsi['Mahasiswa_Nama']?></p><br>
+            <form action="" method="post">
+                <b>Dosen Penguji 1 : </b><br>
+                <div class="input-field col s12" style="width: 500px;">
+                    <select name="dosen1">
+                        <option value="none" disabled selected>Pilih Dosen Penguji</option>
+                        <?php
+                            $query = "SELECT * FROM Dosen";
+                            $dosen1 = $conn->query($query);
+                            foreach ($dosen1 as $key) {
+                                echo "<option value='$key[Dosen_ID]'>$key[Dosen_Nama]</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+                <b>Dosen Penguji 2 : </b><br>
+                <div class="input-field col s12" style="width: 500px;">
+                    <select name="dosen2">
+                        <option value="none" disabled selected>Pilih Dosen Penguji</option>
+                        <?php
+                            $query = "SELECT * FROM Dosen";
+                            $dosen2 = $conn->query($query);
+                            foreach ($dosen2 as $key) {
+                                echo "<option value='$key[Dosen_ID]'>$key[Dosen_Nama]</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+                <b>Dosen Penguji 3 : </b><br>
+                <div class="input-field col s12" style="width: 500px;">
+                    <select name="dosen3">
+                        <option value="none" disabled selected>Pilih Dosen Penguji</option>
+                        <?php
+                            $query = "SELECT * FROM Dosen";
+                            $dosen3 = $conn->query($query);
+                            foreach ($dosen3 as $key) {
+                                echo "<option value='$key[Dosen_ID]'>$key[Dosen_Nama]</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+                <b>Tanggal : </b><br>
+                <input type="date" name="tanggal" id="" style="width: 500px;"><br>
+                <b>Jam Mulai : </b><br>
+                <input type="time" name="mulai" id="" style="width: 500px;"><br>
+                <b>Jam Selesai : </b><br>
+                <input type="time" name="selesai" id="" style="width: 500px;"><br>
+                <b>Ruangan : </b><br>
+                <input type="text" name="ruangan" id="" style="width: 500px;"><br>
+                <button class="btn waves-effect blue lighten-1" type="submit" name="btnSubmit">Submit</button>
+            </form>
         </div>
     </div>
 </body>
