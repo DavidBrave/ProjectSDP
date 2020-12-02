@@ -57,16 +57,23 @@
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
             });
+
+            $("#kelas").change(function () {
+                var kelasID = $("#kelas").val();
+                $.ajax({
+                    method : "post",
+                    url : "showTanggalAbsen.php",
+                    data : {
+                        id : kelasID
+                    },
+                    success : function (hasil) {
+                        $("#jadwal1").html(hasil);
+                    }
+                });
+            });
         });
 
-        $("#select1").change(function() {
-            if ($(this).data('options') === undefined) {
-                $(this).data('options', $('#select2 option').clone());
-            }
-            var id = $(this).val();
-            var options = $(this).data('options').filter('[value=' + id + ']');
-            $('#select2').html(options);
-        });
+        
     </script>
 </head>
 <body>
@@ -140,7 +147,7 @@
                                     ?>
                                 </select>
                             </td>
-                            <td>
+                            <td id="jadwal1">
                                 <select name="jadwal" id="jadwal">
                                     <option value="none" disabled selected>Pilih Tanggal</option>
                                     <?php
@@ -151,6 +158,9 @@
                                         }
                                     ?>
                                 </select>
+                            </td>
+                            <td id="jadwal2">
+                                
                             </td>
                         </tr>
                     </table>
