@@ -3,7 +3,7 @@
     require_once('../Required/Connection.php');
 
     $id = $_POST['id'];
-    $query = "SELECT DISTINCT * FROM Absen WHERE Kelas_ID = '$id'";
+    $query = "SELECT DISTINCT Absen_Date FROM Absen WHERE Kelas_ID = '$id'";
     $tanggal = $conn->query($query);
 ?>
 <script>

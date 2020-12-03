@@ -16,13 +16,44 @@
         header("location: halamanDetailFRS.php");
     }
 
+    if(isset($_POST['btnSubmit'])) {
+        $kelas = $_POST['kelasID'];
+        $mhs = $_POST['kehadiran'];
+        $tanggal = $_POST['tanggalAbsen'];
+        $keterangan = $_POST['keterangan'];
+
+        $query = "SELECT a.Absen_ID, m.Mahasiswa_Nama, m.Mahasiswa_ID
+        FROM Absen a, Mahasiswa m 
+        WHERE a.Kelas_ID = '$kelas' 
+        AND a.Absen_Date = '$tanggal' 
+        AND a.Mahasiswa_ID = m.Mahasiswa_ID";
+        $listMhs = $conn->query($query);
+
+        foreach ($listMhs as $key => $value) {
+            $query = "UPDATE Absen SET Hadir = 0, Absen_Keterangan = '$keterangan' WHERE Absen_ID = $value[Absen_ID]";
+            $conn->query($query);
+        }
+
+        if (isset($_POST['kehadiran'])) {
+            for($i = 0 ; $i < sizeof($mhs) ; $i++) {
+                $query = "UPDATE Absen SET Hadir = 1 WHERE Kelas_ID = '$kelas' AND Mahasiswa_ID = '$mhs[$i]'";
+                $conn->query($query);
+            }
+        }
+
+        echo "<script>alert('Berhasil Edit Absen')</script>";
+    }
+
     $dosenID = $_SESSION['user']['user'];
     $query = "SELECT DISTINCT k.Kelas_Nama, k.Kelas_Ruangan, m.Matkul_Nama, k.Kelas_ID
-    FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d
+    FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk
     WHERE d.Dosen_ID = '$dosenID' 
     AND k.DosenPengajar_ID = d.Dosen_ID
     AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID
-    AND mk.Matkul_ID = m.Matkul_ID";
+    AND mk.Matkul_ID = m.Matkul_ID 
+    AND jk.Kelas_ID = k.Kelas_ID 
+    AND jk.Tanggal_Kuliah = DATE(NOW())
+    AND jk.Jadwal_Selesai < DATE_ADD(CURRENT_TIME, INTERVAL 7 hour)";
     $listKelas = $conn->query($query);
 ?>
 <!DOCTYPE html>
@@ -30,7 +61,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Halaman Absen</title>
+    <title>Insert Absen</title>
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -67,8 +98,7 @@
                         id : kelasID
                     },
                     success : function (hasil) {
-                        $("#jadwal1").hide();
-                        $("#jadwal2").html(hasil);
+                        $("#jadwal1").html(hasil);
                     }
                 });
             });
@@ -108,6 +138,7 @@
             <div id="menu_item2" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Input Absen</a>
                 <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanEditAbsen.php">Edit Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
@@ -127,8 +158,8 @@
             </form>
         </div>
         <div id="container" style="padding: 10px;">
-            <h3>Lihat Absen</h3>
-            <form action="#" method="post" style="width: 75%">
+            <h3>Edit Absen</h3>
+            <form action="#" method="post">
                 <div class="input-field col s12">
                     <table>
                         <tr>
@@ -155,15 +186,14 @@
                                     ?>
                                 </select>
                             </td>
-                            <td id="jadwal2">
-                                
-                            </td>
                         </tr>
                     </table>
                 </div>
             </form>
-            <div class="input-field col s12" id="listAbsen">
-                
+            <div class="input-field col s12">
+                <form action="" method="post" id="listAbsen">
+
+                </form>
             </div>
         </div>
         <div id="footer">
@@ -174,27 +204,12 @@
 </html>
 
 <script>
-    function showAbsen() {
-        var kelas = $("#kelas").val();
-        var jadwal = $("#jadwal").val();
-        $.ajax({
-            method : "post",
-            url : "InputAbsen.php",
-            data : {
-                kelas : kelas
-            },
-            success : function (hasil) {
-                $("#listAbsen").html(hasil);
-            }
-        });
-    }
-
     function gantiTanggal() {
         var kelasID = $("#kelas").val();
         var tanggal = $("#tanggal").val();
         $.ajax({
             method : "post",
-            url : "showAbsen.php",
+            url : "showEditAbsen.php",
             data : {
                 id : kelasID,
                 tanggal : tanggal

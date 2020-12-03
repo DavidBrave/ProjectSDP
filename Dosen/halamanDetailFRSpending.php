@@ -164,16 +164,14 @@
             <a href = "halamanInsertNilai.php" class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ruangan</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Input Absen</a>
                 <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanEditAbsen.php">Edit Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
