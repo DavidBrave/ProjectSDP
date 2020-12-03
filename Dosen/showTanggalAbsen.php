@@ -11,7 +11,7 @@
         $('select').material_select();
     });
 </script>
-<select name='tanggal'>
+<select id='tanggal' onchange="gantiTanggal()">
     <option value='none' disabled selected>Pilih Tanggal</option>
     <?php
         foreach ($tanggal as $key) {

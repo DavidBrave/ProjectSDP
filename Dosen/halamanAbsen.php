@@ -57,15 +57,21 @@
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
             });
-        });
 
-        $("#select1").change(function() {
-            if ($(this).data('options') === undefined) {
-                $(this).data('options', $('#select2 option').clone());
-            }
-            var id = $(this).val();
-            var options = $(this).data('options').filter('[value=' + id + ']');
-            $('#select2').html(options);
+            $("#kelas").change(function () {
+                var kelasID = $("#kelas").val();
+                $.ajax({
+                    method : "post",
+                    url : "showTanggalAbsen.php",
+                    data : {
+                        id : kelasID
+                    },
+                    success : function (hasil) {
+                        $("#jadwal1").hide();
+                        $("#jadwal2").html(hasil);
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -95,15 +101,12 @@
             <a class = "btn dropdown-button blue lighten-2" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ruangan</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Input Absen</a>
                 <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
@@ -125,19 +128,43 @@
         </div>
         <div id="container" style="padding: 10px;">
             <h3>Lihat Absen</h3>
-            <form action="#" method="post" style="width: 50%">
+            <form action="#" method="post" style="width: 75%">
                 <div class="input-field col s12">
-                    <select name="kelas" id="kelas" onchange="showAbsen()">
-                        <option value="none" disabled selected>Pilih Kelas</option>
-                        <?php
-                            foreach ($listKelas as $key => $value) {
-                                echo "<option value='" . $value['Kelas_ID'] . "'>" . $value['Matkul_Nama'] . " - " . $value['Kelas_Ruangan'] . " - " . $value['Kelas_Nama'] . "</option>";
-                            }
-                        ?>
-                    </select>
+                    <table>
+                        <tr>
+                            <td width="70%">
+                                <select name="kelas" id="kelas">
+                                    <option value="none" disabled selected>Pilih Kelas</option>
+                                    <?php
+                                        $kelas = "";
+                                        foreach ($listKelas as $key => $value) {
+                                            echo "<option value='" . $value['Kelas_ID'] . "'>" . $value['Matkul_Nama'] . " - " . $value['Kelas_Ruangan'] . " - " . $value['Kelas_Nama'] . "</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                            <td id="jadwal1">
+                                <select name="jadwal" id="jadwal">
+                                    <option value="none" disabled selected>Pilih Tanggal</option>
+                                    <?php
+                                        $query = "SELECT * FROM Jadwal_Kuliah WHERE Kelas_ID = '$kelas'";
+                                        $listTanggal = $conn->query($query);
+                                        foreach ($listTanggal as $key => $value) {
+                                            echo "<option value='" . $value['Tanggal_Kuliah'] . "'>" . $value['Tanggal_Kuliah'] . "</option>";
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                            <td id="jadwal2">
+                                
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </form>
-            <div id="listAbsen"></div>
+            <div class="input-field col s12" id="listAbsen">
+                
+            </div>
         </div>
         <div id="footer">
 
@@ -149,11 +176,43 @@
 <script>
     function showAbsen() {
         var kelas = $("#kelas").val();
+        var jadwal = $("#jadwal").val();
         $.ajax({
             method : "post",
-            url : "AbsenKelas.php",
+            url : "InputAbsen.php",
             data : {
                 kelas : kelas
+            },
+            success : function (hasil) {
+                $("#listAbsen").html(hasil);
+            }
+        });
+    }
+
+    function getType() {
+        var x = document.getElementById("food").value;
+        var items;
+        if (x === "fruit") {
+            items = ["Apple", "Oranges", "Bananas"];
+        } else {
+            items = ["Eggplants", "Olives"]
+        }
+        var str = ""
+        for (var item of items) {
+            str += "<option>" + item + "</option>"
+        }
+        document.getElementById("pickone").innerHTML = str;
+    }
+
+    function gantiTanggal() {
+        var kelasID = $("#kelas").val();
+        var tanggal = $("#tanggal").val();
+        $.ajax({
+            method : "post",
+            url : "showAbsen.php",
+            data : {
+                id : kelasID,
+                tanggal : tanggal
             },
             success : function (hasil) {
                 $("#listAbsen").html(hasil);
