@@ -12,7 +12,7 @@
         header("location: ../login.php");
     }
     
-    $query = "SELECT * FROM Mahasiswa WHERE Mahasiswa_Semester > 7";
+    $query = "SELECT * FROM Mahasiswa WHERE Mahasiswa_Semester > 7 AND Dosen_Wali_ID = '$dosenID'";
     $listMhs = $conn->query($query);
 
     $query = "SELECT * FROM Dosen";
