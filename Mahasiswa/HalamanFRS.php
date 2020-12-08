@@ -137,30 +137,36 @@
                 $.each($("input[name='matkul']:checked"), function () {
                     var arrSks = $(this).val().split("-");
                     sks.push(arrSks[1]);
-                })
-                if(sks[sks.length-1] <= max){
-                    var matkul = [];
-                    $.each($("input[name='matkul']:checked"), function () {
-                        var arr = $(this).val().split("-");
-                        matkul.push(arr[0]);
-                    })
-                    $("#hidMatkul").val(matkul);
-                    $.ajax({
-                        method : "post",
-                        url : "checkMatkul.php",
-                        data : {
-                            matkuls : matkul,
-                            maxSks : <?=$sksTotal?>
-                        },
-                        success : function (hasil) {
-                            $("#maxSks").html("Max SKS: " + hasil);
-                        }
-                    });
-                }else{
-                    var cb = $("input[name='matkul']:checked");
-                    cb.last().prop("checked", false);
-                    $("input[name='matkul']").prop("disabled", true);
-                    alert("Melebihi Max SKS");
+                }) 
+                if(sks.length > 0) {
+                    if(sks[sks.length-1] <= max){
+                        var matkul = [];
+                        $.each($("input[name='matkul']:checked"), function () {
+                            var arr = $(this).val().split("-");
+                            matkul.push(arr[0]);
+                        })
+                        $("#hidMatkul").val(matkul);
+                        $.ajax({
+                            method : "post",
+                            url : "checkMatkul.php",
+                            data : {
+                                matkuls : matkul,
+                                maxSks : <?=$sksTotal?>
+                            },
+                            success : function (hasil) {
+                                $("#maxSks").html("Max SKS: " + hasil);
+                            }
+                        });
+                    }else{
+                        var cb = $("input[name='matkul']:checked");
+                        $(this).prop("checked", false);
+                        $("input[name='matkul']").prop("disabled", true);
+                        cb.prop("disabled", false);
+                        alert("Melebihi Max SKS");
+                    }
+                }
+                else {
+                    $("#maxSks").html("Max SKS: " + <?=$sksTotal?>);
                 }
             })
         });

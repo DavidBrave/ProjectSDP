@@ -27,7 +27,7 @@
         $str = "";
         for ($i=0; $i < sizeof($selectedMatkuls); $i++) { 
             if($selectedMatkuls[$i] != $matkulkurikulumid){
-                if($i == sizeof($selectedMatkuls)-1){
+                if($i == sizeof($selectedMatkuls)-2){
                     $str = $str.$selectedMatkuls[$i];
                 }else{
                     $str = $str.$selectedMatkuls[$i].",";
