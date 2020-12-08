@@ -13,6 +13,10 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+    $query = "SELECT * FROM Jurusan";
+    $listJurusan = $conn->query($query);
+    $query = "SELECT * FROM Dosen";
+    $listDosen = $conn->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +52,32 @@
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnSearch").click(function () {
+                $.ajax({
+                    method : "post",
+                    url : "searchJurusan.php",
+                    data : {
+                        jurusan : $("#jurusan").val()
+                    },
+                    success : function (hasil) {
+                    }
+                });
+            });
+            $("#btnSearchDosen").click(function () {
+                $.ajax({
+                    method : "post",
+                    url : "searchDosen.php",
+                    data : {
+                        dosen : $("#dosen").val()
+                    },
+                    success : function (hasil) {
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <div id="header">
@@ -137,73 +167,29 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
-            <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
-            <a href="halamanReport.php" class="btn">Report</a>
-            <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">
-                <div id="dosen" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">DOSEN</p>
-                    <?php
-                        $query = "SELECT * FROM Dosen";
-                        $listDosen = $conn->query($query);
-                        $totalDosen = mysqli_num_rows($listDosen);
-                    ?>
-                    <p id="totalDosen" style="margin: 0px;">Jumlah: <?=$totalDosen?></p>
-                </div>
-                <div id="mahasiswa" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">MAHASISWA</p>
-                    <?php
-                        $query = "SELECT * FROM Mahasiswa";
-                        $listMahasiswa = $conn->query($query);
-                        $totalMahasiswa = mysqli_num_rows($listMahasiswa);
-                    ?>
-                    <p id="totalMahasiswa" style="margin: 0px;">Jumlah: <?=$totalMahasiswa?></p>
-                </div>
-                <div id="admin" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">ADMIN</p>
-                    <?php
-                        $query = "SELECT * FROM Administrator";
-                        $listAdministrator = $conn->query($query);
-                        $totalAdministrator = mysqli_num_rows($listAdministrator);
-                    ?>
-                    <p id="totalAdmin" style="margin: 0px;">Jumlah: <?=$totalAdministrator?></p>
-                </div>
-            </div>
-            <div id="piechart"></div>
+            report <br>
+            Jurusan <select name="jurusan" id="jurusan">
+                <?php
+                    foreach ($listJurusan as $key => $value) {
+                        echo "<option value='$value[Jurusan_ID]'>$value[Jurusan_Nama]</option>";
+                    }    
+                    $conn->close();
+                ?>
+            </select> <br>
+            <button id="btnSearch">Search</button> <br>
+            rata-rata ipk per Jurusan <?php if (isset($_SESSION['report']['ipkJurusan'])) echo $_SESSION['report']['ipkJurusan'];?><br>
+            rata-rata sks mahasiswa per Jurusan <?php if (isset($_SESSION['report']['sksJurusan'])) echo $_SESSION['report']['sksJurusan'];?><br>
+            <select name="dosen" id="dosen">
+                <?php
+                    foreach ($listDosen as $key => $value) {
+                        echo "<option value='$value[Dosen_ID]'>$value[Dosen_Nama]</option>";
+                    }
+                    $conn->close();
+                ?>
+            </select> <br>
+            <button id="btnSearchDosen">Search</button> <br>
+            total sks yang diajar dosen <?php if (isset($_SESSION['report']['sksDosen'])) echo $_SESSION['report']['sksDosen'];?>
         </div>
     </div>
 </body>
 </html>
-<script>
-    $("#btn").click(function () {
-        alert('Total administrator : ' + <?=$totalAdministrator?>);
-    });
-    // Load google charts
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    // Draw the chart and set the chart values
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        ['Job', 'Jumlah'],
-        ['Dosen', <?=$totalDosen?>],
-        ['Mahasiswa', <?=$totalMahasiswa?>],
-        ['Admin', <?=$totalAdministrator?>]
-        ]);
-
-        // Optional; add a title and set the width and height of the chart
-        var options = {
-            'title':'Persentase', 
-            'width':600, 
-            'height':450,
-            slices: {
-                0: { color: 'green' },
-                1: { color: 'plum' },
-                2: { color: 'lightblue' }
-            }
-        };
-
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-    }
-</script>
