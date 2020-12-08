@@ -82,9 +82,9 @@
     $bulan = date("m");
     $periodeID = $tahun1 . $tahun2;
     if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
-        $periodeID = $periodeID . "21";
-    } else if ($bulan >= 2 && $bulan <= 7) {
         $periodeID = $periodeID . "11";
+    } else if ($bulan >= 2 && $bulan <= 7) {
+        $periodeID = $periodeID . "21";
     }
 ?>
 <!DOCTYPE html>
