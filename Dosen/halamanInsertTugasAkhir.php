@@ -11,8 +11,8 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
-    
-    $query = "SELECT * FROM Mahasiswa WHERE Mahasiswa_Semester > 7";
+    $id = $_SESSION['user']['user'];
+    $query = "SELECT * FROM Mahasiswa WHERE Dosen_Wali_ID = '$id'";
     $listMhs = $conn->query($query);
 
     $query = "SELECT * FROM Dosen";
