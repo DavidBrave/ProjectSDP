@@ -21,6 +21,7 @@
                 $_SESSION['jadwal']['id'] = $value['Jadwal_ID'];
                 $_SESSION['jadwal']['kelas'] = $value['Kelas_ID'];
                 $_SESSION['jadwal']['hari'] = $value['Jadwal_Hari'];
+                $_SESSION['jadwal']['tanggal'] = $value['Tanggal_Kuliah'];
                 $_SESSION['jadwal']['mulai'] = $value['Jadwal_Mulai'];
                 $_SESSION['jadwal']['selesai'] = $value['Jadwal_Selesai'];
             }

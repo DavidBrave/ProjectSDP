@@ -77,16 +77,25 @@
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
             $("#menu_mahasiswa").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").toggle();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
             $("#menu_frs").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
+               $("#menu_item4").hide();
+            });
+            $("#menu_ta").click(function () {
+               $("#menu_item1").hide();
+               $("#menu_item2").hide();
+               $("#menu_item3").hide();
+               $("#menu_item4").toggle();
             });
 
             $("#kelas").change(function () {
@@ -145,6 +154,11 @@
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
                 <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
+            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_ta"><i class="material-icons left">event_note</i>Tugas Akhir</a>
+            <div id="menu_item4" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanTugasAkhir.php">Lihat TA</a>
+                <a class = "btn dropdown-button blue" href = "halamanInsertTugasAkhir.php">Input TA</a>
             </div>
         </div>
     </div>

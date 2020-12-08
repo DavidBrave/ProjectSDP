@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
+    $dosenID = $_SESSION['user']['user'];
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -11,34 +12,43 @@
         header("location: ../login.php");
     }
 
-    if(isset($_POST['btnDetail'])){
-        $_SESSION['detailFRSpending'] = $_POST['idMahasiswa'];
-        header("location: halamanDetailFRSpending.php");
+    if(isset($_POST['btnDelete'])) {
+        $id = $_POST['idSkripsi'];
+
+        $query = "DELETE FROM Skripsi WHERE Skripsi_ID = $id";
+        $conn->query($query);
+
+        echo "<script>alert(Berhasil delete Skripsi)</script>";
     }
 
-    $dosenID = $_SESSION['user']['user'];
-    $query = "SELECT DISTINCT m.Mahasiswa_ID, m.Mahasiswa_Nama, m.Mahasiswa_Semester 
-    FROM Mahasiswa m, Dosen d, FRS a 
-    WHERE m.Mahasiswa_ID = a.Mahasiswa_ID 
-    AND m.Dosen_Wali_ID = $dosenID
-    AND a.FRS_Status = ''";
-    $listFRS = $conn->query($query);
+    if(isset($_POST['btnUpdate'])) {
+        $_SESSION['TA'] = $_POST['idSkripsi'];
+        header("location: ../Dosen/halamanUpdateTugasAkhir.php");
+    }
+
+    $query = "SELECT s.*, m.Mahasiswa_Nama 
+    FROM Skripsi s, Mahasiswa m 
+    WHERE s.Mahasiswa_ID = m.Mahasiswa_ID 
+    AND (s.Dosen_Penguji1 = '$dosenID' OR s.Dosen_Penguji2 = '$dosenID' OR s.Dosen_Penguji3 = '$dosenID')";
+    $listTA = $conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FRS</title>
+    <title>Halaman Tugas Akhir</title>
     <link rel="stylesheet" href="Dosen.css">
+    <script src="../jquery.js"></script>
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script src="../jquery.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script> 
     <script>
         $(document).ready(function () {
+            $('select').material_select();
+
             $("#menu_jadwal").click(function () {
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
@@ -64,54 +74,6 @@
                $("#menu_item4").toggle();
             });
         });
-
-        function TolakClick(clicked_id)
-        {
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Tolak FRS?");
-            if (result) {
-                $.ajax({
-                    method : "post",
-                    url : "tolakFRS.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("FRS Mahasiswa " + nama + " Berhasil Ditolak");
-                }).fail(function(data){
-                    alert("Tolak FRS Mahasiswa " + nama + " Dibatalkan");
-                });;
-            }
-
-            location.reload();
-            return false;
-        }
-
-        function TerimaClick(clicked_id)
-        {
-            var nama = $("#Nama" + clicked_id).val();
-            var result = confirm("Apakah Yakin Ingin Terima FRS?");
-            if (result) {
-                $.ajax({
-                    method : "post",
-                    url : "terimaFRS.php",
-                    async : false,
-                    data : {
-                        id : clicked_id
-                    },
-
-                }).done(function(data){
-                    alert("FRS Mahasiswa " + nama + " Berhasil Diterima");
-                }).fail(function(data){
-                    alert("Terima FRS Mahasiswa " + nama + " Dibatalkan");
-                });;
-            }
-
-            location.reload();
-            return false;
-        }
     </script>
 </head>
 <body>
@@ -171,43 +133,45 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-            <h3>FRS (Pending)</h3><br>
-            <table id = "dataFRS" border="1" style="display: hidden">
-            <tr>
+        <div id="container" style="padding: 10px;">
+            <h3>List Skripsi</h3>
+            <table>
+                <tr>
+                    <th>Judul Skripsi</th>
+                    <th>Mahasiswa</th>
+                    <th>Tanggal</th>
+                    <th>Mulai</th>
+                    <th>Selesai</th>
+                    <th>Ruangan</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+
                 <?php
-                    if(mysqli_num_rows($listFRS) == 0){
-                        echo "<h4>Tidak ada data</h4>";
-                    }else{
-                        echo "<th>NRP Mahasiswa</th>";
-                        echo "<th>Nama</th>";
-                        echo "<th>Semester</th>";
-                        echo "<th>Detail</th>";
-                        echo "<th>Terima</th>";
-                        echo "<th>Tolak</th>";
+                    foreach($listTA as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Judul_Skripsi]</td>";
+                        echo "<td>$value[Mahasiswa_Nama]</td>";
+                        echo "<td>$value[Tanggal_Skripsi]</td>";
+                        echo "<td>$value[Jam_Mulai]</td>";
+                        echo "<td>$value[Jam_Selesai]</td>";
+                        echo "<td>$value[Ruangan_Skripsi]</td>";
+                        echo "<td><form action='' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnUpdate' id='$value[Skripsi_ID]' style='width: 150px;'>Update<i class='material-icons right'>Update</i></button><input type='hidden' name='idSkripsi' value='$value[Skripsi_ID]'></form></td>";
+                ?>
+                        <td><form action='' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnDelete' id='<?=$value['Skripsi_ID']?>' onClick='return confirm("Apakah yakin ingin delete?")' style='width: 150px;'>Delete<i class='material-icons right'>Delete</i></button><input type='hidden' name='idSkripsi' value='<?=$value['Skripsi_ID']?>'></form></td>
+                <?php 
                     }
                 ?>
-            </tr>
-
-            <?php
-                foreach ($listFRS as $key => $value) {
-                    echo "<tr>";
-                    echo "<td>$value[Mahasiswa_ID]</td>";
-                    echo "<td>$value[Mahasiswa_Nama]</td>";
-                    echo "<td>$value[Mahasiswa_Semester]</td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnDetail' style='width: 150px;'>Detail<i class='material-icons right'>Detail</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_ID]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect waves-light' type='submit' name='btnTerima' id='$value[Mahasiswa_ID]' onClick='TerimaClick(this.id)' style='width: 150px;'>Terima<i class='material-icons right'>Terima</i></button><input type='hidden' name='idMahasiswa' value='$value[Mahasiswa_Nama]'></form></td>";
-                    echo "<td><form action='#' method='post'><button class='btn waves-effect red darken-3' type='submit' name='btnTolak' id='$value[Mahasiswa_ID]' onClick='TolakClick(this.id)' style='width: 150px;'>Tolak<i class='material-icons right'>Tolak</i></button><input type='hidden' id='Nama$value[Mahasiswa_ID]' value='$value[Mahasiswa_Nama]'></form></td>";
-                    echo "</tr>";
-                }
-
-                $conn->close();
-            ?>
             </table>
         </div>
         <div id="footer">
 
         </div>
     </div>
+    <script>
+        function confirmation() {
+            return confirm("Apakah yakin ingin delete?");
+        }
+    </script>
 </body>
 </html>
