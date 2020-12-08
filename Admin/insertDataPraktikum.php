@@ -18,9 +18,10 @@
         $mulai = $_POST['mulai'];
         $selesai = $_POST['selesai'];
         $minimum = $_POST['minimum'];
+        $periode = $_POST['periode'];
 
         if ($nama != "" && $hari != "" && $matkulKurikulum != "" && $mulai != "" && $selesai != "" && $minimum != "") {
-            $query = "SELECT * FROM Praktikum";
+            $query = "SELECT * FROM Praktikum p, Matkul_Kurikulum mk WHERE p.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Periode_ID = '$periode'";
             $praktikum = $conn->query($query);
             $isCollision = false;
             foreach ($praktikum as $key => $value) {

@@ -79,7 +79,19 @@
                 }
             });
             $("#btnInsert").click(function () {
-                if($("#nrp").val() != "" && $("#pass").val() != ""){
+                var nama = $("#nama").val();
+                var dosen = $("#dosen").val();
+                var tgl = $("#tgl").val();
+                var jk = $("input[name='group1']:checked").val();
+                var alamat = $("#alamat").val();
+                var provinsi = $("#provinsi").val();
+                var kota = $("#kota").val();
+                var nohp = $("#nohp").val();
+                var email = $("#email").val();
+                var jurusan = $("#jurusan").val();
+                var agama = $("#agama").val();
+                if($("#nama").val() != "" && $("#dosen").val() != "" && $("#tgl").val() != "" && $("input[name='group1']:checked").val() != "" && $("#alamat").val() != "" 
+                && $("#provinsi").val() != "" && $("#kota").val() != "" && $("#nohp").val() != "" && $("#email").val() != "" && $("#jurusan").val() != "" && $("#agama").val() != ""){
                     $.ajax({
                         method : "post",
                         url : "insertMahasiswa.php",
@@ -100,18 +112,6 @@
                             jurusan : $("#jurusan").val()
                         },
                         success : function (hasil) {
-                            var nama = $("#nama").val();
-                            var dosen = $("#dosen").val();
-                            var tgl = $("#tgl").val();
-                            var jk = $("input[name='group1']:checked").val();
-                            var alamat = $("#alamat").val();
-                            var provinsi = $("#kota").val();
-                            var kota = $("#provinsi").val();
-                            var nohp = $("#nohp").val();
-                            var email = $("#email").val();
-                            var jurusan = $("#jurusan").val();
-                            var agama = $("#agama").val();
-
                             if(hasil == 1){
                                 alert("Berhasil Insert Data Mahasiswa " + nama);
                                 document.getElementById('nama').value = "";
@@ -123,8 +123,7 @@
                                 document.getElementById('rbF').checked = false;
                                 document.getElementById('content-nrp').innerHTML = "";
                                 document.getElementById('content-pass').innerHTML = "";
-                                ocument.getElementById('msgNama').hidden = true;
-                                ocument.getElementById('msgNama').hidden = true;
+                                document.getElementById('msgNama').hidden = true;
                                 document.getElementById('msgAlamat').hidden = true;
                                 document.getElementById('msgEmail').hidden = true;
                                 document.getElementById('msgNohp').hidden = true;
@@ -136,85 +135,88 @@
                                 document.getElementById('msgJK').hidden = true;
                             }else{
                                 alert("Gagal Insert Data Mahasiswa " + nama);
-                                if (nama == "" || nama == null) {
-                                    document.getElementById('msgNama').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgNama').hidden = true;
-                                }
-
-                                if (tgl == "" || tgl == null) {
-                                    document.getElementById('msgTanggal').hidden = false;
-                                }
-                                else {
-                                    ocument.getElementById('msgNama').hidden = true;
-                                }
-
-                                if (alamat == "" || alamat == null) {
-                                    document.getElementById('msgAlamat').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgAlamat').hidden = true;
-                                }
-
-                                if (email == "" || email == null) {
-                                    document.getElementById('msgEmail').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgEmail').hidden = true;
-                                }
-
-                                if (nohp == "" || nohp == null) {
-                                    document.getElementById('msgNohp').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgNohp').hidden = true;
-                                }
-
-                                if (kota == null || kota == "") {
-                                    document.getElementById('msgKota').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgKota').hidden = true;
-                                }
-
-                                if (dosen == null || dosen == "") {
-                                    document.getElementById('msgDosen').hidden = false; 
-                                }
-                                else {
-                                    document.getElementById('msgDosen').hidden = true;
-                                }
-
-                                if (jurusan == null || jurusan == "") {
-                                    document.getElementById('msgJurusan').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgJurusan').hidden = true;
-                                }
-                                
-                                if (agama == null || agama == "") {
-                                    document.getElementById('msgAgama').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgAgama').hidden = true;
-                                }
-
-                                if (provinsi == "" || provinsi == null) {
-                                    document.getElementById('msgProvinsi').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgProvinsi').hidden = true;
-                                }
-
-                                if (jk == "" || jk == null) {
-                                    document.getElementById('msgJK').hidden = false;
-                                }
-                                else {
-                                    document.getElementById('msgJK').hidden = true;
-                                }
                             }
                         }
                     });
+                }else if($("#nama").val() == "" || $("#dosen").val() == "" || $("#tgl").val() == "" || $("input[name='group1']:checked").val() == "" || $("#alamat").val() == "" 
+                || $("#provinsi").val() == "" || $("#kota").val() == "" || $("#nohp").val() == "" || $("#email").val() == "" || $("#jurusan").val() == "" || $("#agama").val() == ""){
+                    if (nama == "" || nama == null) {
+                        document.getElementById('msgNama').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgNama').hidden = true;
+                    }
+
+                    if (tgl == "" || tgl == null) {
+                        document.getElementById('msgTanggal').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgTanggal').hidden = true;
+                    }
+
+                    if (alamat == "" || alamat == null) {
+                        document.getElementById('msgAlamat').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgAlamat').hidden = true;
+                    }
+
+                    if (email == "" || email == null) {
+                        document.getElementById('msgEmail').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgEmail').hidden = true;
+                    }
+
+                    if (nohp == "" || nohp == null) {
+                        document.getElementById('msgNohp').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgNohp').hidden = true;
+                    }
+
+                    if (kota == null || kota == "") {
+                        document.getElementById('msgKota').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgKota').hidden = true;
+                    }
+
+                    if (dosen == null || dosen == "") {
+                        document.getElementById('msgDosen').hidden = false; 
+                    }
+                    else {
+                        document.getElementById('msgDosen').hidden = true;
+                    }
+
+                    if (jurusan == null || jurusan == "") {
+                        document.getElementById('msgJurusan').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgJurusan').hidden = true;
+                    }
+                    
+                    if (agama == null || agama == "") {
+                        document.getElementById('msgAgama').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgAgama').hidden = true;
+                    }
+
+                    if (provinsi == "" || provinsi == null) {
+                        document.getElementById('msgProvinsi').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgProvinsi').hidden = true;
+                    }
+
+                    if (jk == "" || jk == null) {
+                        document.getElementById('msgJK').hidden = false;
+                    }
+                    else {
+                        document.getElementById('msgJK').hidden = true;
+                    }
+                    alert("Gagal Insert Data Mahasiswa " + nama);
                 }
             });
             
