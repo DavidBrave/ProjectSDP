@@ -77,15 +77,18 @@
     }
 
     //Periode Sekarang
-    $tahun1 = date("Y");
-    $tahun2 = $tahun1 + 1;
-    $bulan = date("m");
-    $periodeID = $tahun1 . $tahun2;
-    if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
-        $periodeID = $periodeID . "11";
-    } else if ($bulan >= 2 && $bulan <= 7) {
-        $periodeID = $periodeID . "21";
-    }
+    // $tahun1 = date("Y");
+    // $tahun2 = $tahun1 + 1;
+    // $bulan = date("m");
+    // $periodeID = $tahun1 . $tahun2;
+    // if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
+    //     $periodeID = $periodeID . "11";
+    // } else if ($bulan >= 2 && $bulan <= 7) {
+    //     $periodeID = $periodeID . "21";
+    // }
+    $query = "SELECT * FROM Jadwal_Pengisian_FRS WHERE id = 1";
+    $periode = mysqli_fetch_array($conn->query($query));
+    $periodeID = $periode['Periode_ID'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

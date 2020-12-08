@@ -4,15 +4,18 @@
 
     $id = $_POST['id'];
     //Periode Sekarang
-    $tahun1 = date("Y");
-    $tahun2 = $tahun1 + 1;
-    $bulan = date("m");
-    $periodeID = $tahun1 . $tahun2;
-    if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
-        $periodeID = $periodeID . "11";
-    } else if ($bulan >= 2 && $bulan <= 7) {
-        $periodeID = $periodeID . "21";
-    }
+    // $tahun1 = date("Y");
+    // $tahun2 = $tahun1 + 1;
+    // $bulan = date("m");
+    // $periodeID = $tahun1 . $tahun2;
+    // if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
+    //     $periodeID = $periodeID . "11";
+    // } else if ($bulan >= 2 && $bulan <= 7) {
+    //     $periodeID = $periodeID . "21";
+    // }
+    $query = "SELECT * FROM Jadwal_Pengisian_FRS WHERE id = 1";
+    $periode = mysqli_fetch_array($conn->query($query));
+    $periodeID = $periode['Periode_ID'];
 
     $query = "SELECT kls.Kelas_ID, kls.Kelas_Nama, kls.Matkulkurikulum_ID, mk.Matkul_Nama, j.Jurusan_Nama, kls.Kelas_Ruangan, kls.Kelas_Kapasitas 
         FROM Kelas kls, Matkul_Kurikulum mkl, Matkul mk, Jurusan j
