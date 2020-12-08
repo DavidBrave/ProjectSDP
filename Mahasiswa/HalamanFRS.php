@@ -32,8 +32,8 @@
     $nrp = $mahasiswa['Mahasiswa_ID'];
     $semester = (int)$mahasiswa['Mahasiswa_Semester'];
     $jurusan = $mahasiswa['Jurusan_ID'];
-    $semesterLalu = $semester - 1;
-    if($semester == 1){
+    $semesterLalu = $semester;
+    if($semester == 0){
         $sksTotal = 18;
     }else{
         $query = "SELECT p.Pengambilan_Grade FROM Mahasiswa m, Pengambilan p, Kelas k, Matkul_Kurikulum mk 
@@ -82,9 +82,9 @@
     $bulan = date("m");
     $periodeID = $tahun1 . $tahun2;
     if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
-        $periodeID = $periodeID . "11";
-    } else if ($bulan >= 2 && $bulan <= 7) {
         $periodeID = $periodeID . "21";
+    } else if ($bulan >= 2 && $bulan <= 7) {
+        $periodeID = $periodeID . "11";
     }
 ?>
 <!DOCTYPE html>
@@ -243,7 +243,7 @@
                             echo "<td>$value[Matkul_Kurikulum_ID]</td>";
                             echo "<td>$value[Matkul_Nama]</td>";
                             echo "<td>$value[SKS]</td>";
-                            if($sksSemester["Semester"]%2 != $semester%2){
+                            if($sksSemester["Semester"]%2 == $semester%2){
                                 echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }else{
                                 echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";

@@ -19,7 +19,7 @@
         $photo = $_POST['photo'];
 
 
-        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','$jk','$alamat','$tgl','$agama','$email','$nohp','$pass','$jurusan','$photo',1)";
+        $query = "INSERT INTO Mahasiswa VALUES ('$nrp','$dosen','','$nama','$jk','$alamat','$tgl','$agama','$email','$nohp','$pass','$jurusan','$photo',0)";
         $conn->query($query);
     
         if($conn){

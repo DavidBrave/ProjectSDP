@@ -91,6 +91,12 @@
             }
         }
     </script>
+    <style>
+        #container{
+            min-height: 1000px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <div id="col-kiri">
