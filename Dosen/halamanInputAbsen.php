@@ -170,7 +170,7 @@
             </form>
         </div>
         <div id="container" style="padding: 10px;">
-            <h3>Lihat Absen</h3>
+            <h3>Input Absen</h3>
             <form action="#" method="post">
                 <div class="input-field col s12">
                     <select name="kelas" id="kelas">

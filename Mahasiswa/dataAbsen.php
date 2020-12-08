@@ -2,9 +2,10 @@
     session_start();
     require_once('../Required/Connection.php');
     $id = $_POST['id'];
-
-    $query = "SELECT a.Absen_Keterangan, a.Absen_Date, a.Hadir FROM Absen a, Kelas k, Matkul_Kurikulum mk, Matkul m
-    WHERE a.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = '$id'";
+    $mhs = $_SESSION['user']['user'];
+    $query = "SELECT a.Absen_Keterangan, a.Absen_Date, a.Hadir FROM Absen a, Kelas k, Matkul_Kurikulum mk, Matkul m, Mahasiswa mhs
+    WHERE a.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Matkul_ID = m.Matkul_ID AND mk.Matkul_Kurikulum_ID = '$id'
+    AND mhs.Mahasiswa_ID = a.Mahasiswa_ID AND mhs.Mahasiswa_ID = '$mhs'";
     $absen = $conn->query($query);
     $ctr = 1;
     echo "<table style='width: 800px;'>";

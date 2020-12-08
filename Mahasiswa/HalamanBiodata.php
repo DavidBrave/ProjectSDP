@@ -242,8 +242,22 @@
                 <h6><?=$nrp?></h6>
                 <p><?=$degree?>-<?=$jurusan?></p>
                 <div class="temp">
-                    <h5 style="float: left;"><?=$totalSks['Total']?></h5>
-                    <h5 style="float: right;"><?=substr($totalIPS/$countIPS, 0, 4)?></h5>
+                    <h5 style="float: left;">
+                    <?php
+                        if ($totalSks['Total'] > 0) {
+                            echo $totalSks['Total'];
+                        } else {
+                            echo 0;
+                        }
+                    ?></h5>
+                    <h5 style="float: right;">
+                    <?php
+                        if ($countIPS > 0) {
+                            echo substr($totalIPS/$countIPS, 0, 4);
+                        }else{
+                            echo 0;
+                        }
+                    ?></h5>
                 </div>
                 <div class="temp">
                     <p style="float: left;">Total SKS</p>
