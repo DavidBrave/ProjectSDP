@@ -32,8 +32,8 @@
     $nrp = $mahasiswa['Mahasiswa_ID'];
     $semester = (int)$mahasiswa['Mahasiswa_Semester'];
     $jurusan = $mahasiswa['Jurusan_ID'];
-    $semesterLalu = $semester - 1;
-    if($semester == 1){
+    $semesterLalu = $semester;
+    if($semester == 0){
         $sksTotal = 18;
     }else{
         $query = "SELECT p.Pengambilan_Grade FROM Mahasiswa m, Pengambilan p, Kelas k, Matkul_Kurikulum mk 
@@ -137,30 +137,36 @@
                 $.each($("input[name='matkul']:checked"), function () {
                     var arrSks = $(this).val().split("-");
                     sks.push(arrSks[1]);
-                })
-                if(sks[sks.length-1] <= max){
-                    var matkul = [];
-                    $.each($("input[name='matkul']:checked"), function () {
-                        var arr = $(this).val().split("-");
-                        matkul.push(arr[0]);
-                    })
-                    $("#hidMatkul").val(matkul);
-                    $.ajax({
-                        method : "post",
-                        url : "checkMatkul.php",
-                        data : {
-                            matkuls : matkul,
-                            maxSks : <?=$sksTotal?>
-                        },
-                        success : function (hasil) {
-                            $("#maxSks").html("Max SKS: " + hasil);
-                        }
-                    });
-                }else{
-                    var cb = $("input[name='matkul']:checked");
-                    cb.last().prop("checked", false);
-                    $("input[name='matkul']").prop("disabled", true);
-                    alert("Melebihi Max SKS");
+                }) 
+                if(sks.length > 0) {
+                    if(sks[sks.length-1] <= max){
+                        var matkul = [];
+                        $.each($("input[name='matkul']:checked"), function () {
+                            var arr = $(this).val().split("-");
+                            matkul.push(arr[0]);
+                        })
+                        $("#hidMatkul").val(matkul);
+                        $.ajax({
+                            method : "post",
+                            url : "checkMatkul.php",
+                            data : {
+                                matkuls : matkul,
+                                maxSks : <?=$sksTotal?>
+                            },
+                            success : function (hasil) {
+                                $("#maxSks").html("Max SKS: " + hasil);
+                            }
+                        });
+                    }else{
+                        var cb = $("input[name='matkul']:checked");
+                        $(this).prop("checked", false);
+                        $("input[name='matkul']").prop("disabled", true);
+                        cb.prop("disabled", false);
+                        alert("Melebihi Max SKS");
+                    }
+                }
+                else {
+                    $("#maxSks").html("Max SKS: " + <?=$sksTotal?>);
                 }
             })
         });
@@ -237,7 +243,7 @@
                             echo "<td>$value[Matkul_Kurikulum_ID]</td>";
                             echo "<td>$value[Matkul_Nama]</td>";
                             echo "<td>$value[SKS]</td>";
-                            if($sksSemester["Semester"]%2 != $semester%2){
+                            if($sksSemester["Semester"]%2 == $semester%2){
                                 echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."' disabled/><span></span></label></p></td>";
                             }else{
                                 echo "<td><p><label><input type='checkbox' class='matkul' name='matkul' value='$value[Matkul_Kurikulum_ID]"."-".$value['SKS']."'/><span></span></label></p></td>";

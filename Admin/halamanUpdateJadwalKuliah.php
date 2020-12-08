@@ -276,10 +276,13 @@
                             else {
                                 echo('<option value="saturday">Sabtu</option>');
                             }
-                            
                         ?>
                         
                     </select>
+                </div>
+                <div class="input-field col s12">
+                    Tanggal Mulai Kuliah
+                    <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="<?php echo($_SESSION['jadwal']['tanggal']) ?>">
                 </div>
                 Jadwal Mulai
                 <input type="time" name="waktu_mulai" id="waktu_mulai" value="<?php echo($_SESSION['jadwal']['mulai']) ?>">

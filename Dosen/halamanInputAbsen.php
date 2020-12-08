@@ -16,13 +16,42 @@
         header("location: halamanDetailFRS.php");
     }
 
+    if(isset($_POST['btnSubmit'])) {
+        $kelas = $_POST['kelasID'];
+        $mhs = $_POST['kehadiran'];
+        $keterangan = $_POST['keterangan'];
+
+        $query = "SELECT m.Mahasiswa_ID, m.Mahasiswa_Nama 
+        FROM Pengambilan p, Mahasiswa m 
+        WHERE p.Kelas_ID = '$kelas' 
+        AND p.Mahasiswa_ID = m.Mahasiswa_ID";
+        $listMhs = $conn->query($query);
+
+        foreach ($listMhs as $key => $value) {
+            $query = "INSERT INTO Absen VALUES('', '$value[Mahasiswa_ID]', '$kelas', '$keterangan', CURRENT_DATE, 0)";
+            $conn->query($query);
+        }
+
+        if (isset($_POST['kehadiran'])) {
+            for($i = 0 ; $i < sizeof($mhs) ; $i++) {
+                $query = "UPDATE Absen SET Hadir = 1 WHERE Kelas_ID = '$kelas' AND Mahasiswa_ID = '$mhs[$i]'";
+                $conn->query($query);
+            }
+        }
+
+        echo "<script>alert('Berhasil Input Absen')</script>";
+    }
+
     $dosenID = $_SESSION['user']['user'];
     $query = "SELECT DISTINCT k.Kelas_Nama, k.Kelas_Ruangan, m.Matkul_Nama, k.Kelas_ID
-    FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d
+    FROM Matkul_Kurikulum mk, Matkul m, Kelas k, Dosen d, Jadwal_Kuliah jk
     WHERE d.Dosen_ID = '$dosenID' 
     AND k.DosenPengajar_ID = d.Dosen_ID
     AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID
-    AND mk.Matkul_ID = m.Matkul_ID";
+    AND mk.Matkul_ID = m.Matkul_ID 
+    AND jk.Kelas_ID = k.Kelas_ID 
+    AND jk.Tanggal_Kuliah = DATE(NOW())
+    AND jk.Jadwal_Selesai < DATE_ADD(CURRENT_TIME, INTERVAL 7 hour)";
     $listKelas = $conn->query($query);
 ?>
 <!DOCTYPE html>
@@ -30,7 +59,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Insert Nilai</title>
+    <title>Insert Absen</title>
     <link rel="stylesheet" href="Dosen.css">
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -46,26 +75,40 @@
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
             $("#menu_mahasiswa").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").toggle();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
             $("#menu_frs").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
+               $("#menu_item4").hide();
             });
-        });
+            $("#menu_ta").click(function () {
+               $("#menu_item1").hide();
+               $("#menu_item2").hide();
+               $("#menu_item3").hide();
+               $("#menu_item4").toggle();
+            });
 
-        $("#select1").change(function() {
-            if ($(this).data('options') === undefined) {
-                $(this).data('options', $('#select2 option').clone());
-            }
-            var id = $(this).val();
-            var options = $(this).data('options').filter('[value=' + id + ']');
-            $('#select2').html(options);
+            $("#kelas").change(function () {
+                var kelasID = $("#kelas").val();
+                $.ajax({
+                    method : "post",
+                    url : "showMahasiswaKelas.php",
+                    data : {
+                        id : kelasID
+                    },
+                    success : function (hasil) {
+                        $("#listAbsen").html(hasil);
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -95,22 +138,25 @@
             <a class = "btn dropdown-button blue lighten-2" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ruangan</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Input Absen</a>
                 <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanEditAbsen.php">Edit Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
                 <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
+            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_ta"><i class="material-icons left">event_note</i>Tugas Akhir</a>
+            <div id="menu_item4" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanTugasAkhir.php">Lihat TA</a>
+                <a class = "btn dropdown-button blue" href = "halamanInsertTugasAkhir.php">Input TA</a>
             </div>
         </div>
     </div>
@@ -124,31 +170,25 @@
             </form>
         </div>
         <div id="container" style="padding: 10px;">
-            <h3>Lihat Absen</h3>
-            <form action="#" method="post" style="width: 75%">
+            <h3>Input Absen</h3>
+            <form action="#" method="post">
                 <div class="input-field col s12">
-                    <table>
-                        <tr>
-                            <td width="70%">
-                                <select name="kelas" id="kelas">
-                                    <option value="none" disabled selected>Pilih Kelas</option>
-                                    <?php
-                                        foreach ($listKelas as $key => $value) {
-                                            echo "<option value='" . $value['Kelas_ID'] . "'>" . $value['Matkul_Nama'] . " - " . $value['Kelas_Ruangan'] . " - " . $value['Kelas_Nama'] . "</option>";
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="jadwal" id="jadwal">
-                                    <option value="none" disabled selected>Pilih Tanggal</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </table>
+                    <select name="kelas" id="kelas">
+                        <option value="none" disabled selected>Pilih Kelas</option>
+                        <?php
+                            $kelas = "";
+                            foreach ($listKelas as $key => $value) {
+                                echo "<option value='" . $value['Kelas_ID'] . "'>" . $value['Matkul_Nama'] . " - " . $value['Kelas_Ruangan'] . " - " . $value['Kelas_Nama'] . "</option>";
+                            }
+                        ?>
+                    </select>
                 </div>
             </form>
-            <div id="listAbsen"></div>
+            <div class="input-field col s12">
+                <form action="" method="post" id="listAbsen">
+
+                </form>
+            </div>
         </div>
         <div id="footer">
 
@@ -166,6 +206,22 @@
             url : "InputAbsen.php",
             data : {
                 kelas : kelas
+            },
+            success : function (hasil) {
+                $("#listAbsen").html(hasil);
+            }
+        });
+    }
+
+    function gantiTanggal() {
+        var kelasID = $("#kelas").val();
+        var tanggal = $("#tanggal").val();
+        $.ajax({
+            method : "post",
+            url : "showAbsen.php",
+            data : {
+                id : kelasID,
+                tanggal : tanggal
             },
             success : function (hasil) {
                 $("#listAbsen").html(hasil);

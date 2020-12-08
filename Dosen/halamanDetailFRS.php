@@ -120,16 +120,25 @@
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
             $("#menu_mahasiswa").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").toggle();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
             $("#menu_frs").click(function () {
                $("#menu_item1").hide();
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
+               $("#menu_item4").hide();
+            });
+            $("#menu_ta").click(function () {
+               $("#menu_item1").hide();
+               $("#menu_item2").hide();
+               $("#menu_item3").hide();
+               $("#menu_item4").toggle();
             });
         });
     </script>
@@ -157,25 +166,28 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-            <a href = "halamanInsertNilai.php" class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
+            <a class = "btn dropdown-button blue lighten-2" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Mengajar</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ujian</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Dosen</a>
-                <a class = "btn dropdown-button blue" href = "#">Jadwal Ruangan</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
             <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "#">Lihat Mahasiswa</a>
-                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Input Absen</a>
                 <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanEditAbsen.php">Edit Absen</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
                 <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
                 <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
                 <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
+            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_ta"><i class="material-icons left">event_note</i>Tugas Akhir</a>
+            <div id="menu_item4" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanTugasAkhir.php">Lihat TA</a>
+                <a class = "btn dropdown-button blue" href = "halamanInsertTugasAkhir.php">Input TA</a>
             </div>
         </div>
     </div>

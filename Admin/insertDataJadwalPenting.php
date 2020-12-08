@@ -12,36 +12,25 @@
     }
 
     if (isset($_POST['btnSubmit'])) {
-        if(isset($_POST['jadwal']) && isset($_POST['tanggalQuiz']) && isset($_POST['tanggalUts']) && isset($_POST['tanggalUas'])){
-            $jadwal = $_POST['jadwal'];
+        if(isset($_POST['kelas']) && isset($_POST['tanggalQuiz']) && isset($_POST['tanggalUts']) && isset($_POST['tanggalUas'])){
+            $kelas = $_POST['kelas'];
             $tanggalQuiz = $_POST['tanggalQuiz'];
             $tanggalUts = $_POST['tanggalUts'];
             $tanggalUas = $_POST['tanggalUas'];
-            $query = "SELECT jk.Jadwal_ID, jp.Keterangan, mk.Matkul_Kurikulum_ID FROM Jadwal_Penting jp, Jadwal_Kuliah jk, Kelas k, Matkul_Kurikulum mk
-            WHERE jp.Jadwal_ID = jk.Jadwal_ID AND jk.Kelas_ID = k.Kelas_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID";
-            $jadwalpenting = $conn->query($query);
-            $isCollision = false;
-            foreach ($jadwalpenting as $key => $value) {
-                if($value['Jadwal_ID'] == $jadwal){
-                    $isCollision = true;
-                }
-            }
 
-            if($isCollision){
-                echo "<script>alert('Jadwal sudah ada')</script>";
-            }else{
-                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggalQuiz', 'quiz')";
-                $conn->query($query);
-                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggalUts', 'uts')";
-                $conn->query($query);
-                $query = "INSERT INTO Jadwal_Penting VALUES(null, '$jadwal', '$tanggalUas', 'uas')";
-                $conn->query($query);
-                echo "<script>alert('Berhasil')</script>";
-            }
+            $query = "INSERT INTO Jadwal_Penting VALUES(null, '$kelas', '$tanggalQuiz', 'quiz')";
+            $conn->query($query);
+            $query = "INSERT INTO Jadwal_Penting VALUES(null, '$kelas', '$tanggalUts', 'uts')";
+            $conn->query($query);
+            $query = "INSERT INTO Jadwal_Penting VALUES(null, '$kelas', '$tanggalUas', 'uas')";
+            $conn->query($query);
+            echo "<script>alert('Berhasil')</script>";
         }else{
             echo "<script>alert('Inputan harus dipilih')</script>";
         }
     }
+
+    
 ?>
 
 <!DOCTYPE html>
@@ -75,8 +64,7 @@
                         id : jurusanlId
                     },
                     success : function (hasil) {
-                        $("#jadwal-container1").hide();
-                        $("#jadwal-container2").html(hasil);
+                        $("#jadwal-container1").html(hasil);
                     }
                 });
             });
@@ -191,20 +179,25 @@
                     <h5 style="font-size:20px;">Kelas : </h5>
                     <div class="input-field col s12">
                         <div id="jadwal-container1">
-                            <select name="jadwal" disabled>
+                            <select name="jadwal" id="kelas" disabled>
                                 <option value="none" selected disabled>Pilih Kelas</option>
                             </select>
                         </div>
-                        <div id="jadwal-container2">
-
-                        </div>
                     </div>
-                    <h5 style="font-size:20px;">Tanggal Quiz : </h5>
-                    <input type="date" name="tanggalQuiz"><br>
-                    <h5 style="font-size:20px;">Tanggal UTS : </h5>
-                    <input type="date" name="tanggalUts"><br>
-                    <h5 style="font-size:20px;">Tanggal UAS : </h5>
-                    <input type="date" name="tanggalUas"><br>
+                    <div class="input-field col s12" id="tanggal">
+                        <h5 style="font-size:20px;">Tanggal Quiz : </h5>
+                        <select name='tanggalQuiz'>
+                            <option value='none' disabled selected>Pilih Tanggal Quiz</option>
+                        </select>
+                        <h5 style="font-size:20px;">Tanggal UTS : </h5>
+                        <select name='tanggalUts'>
+                            <option value='none' disabled selected>Pilih Tanggal UTS</option>
+                        </select>
+                        <h5 style="font-size:20px;">Tanggal UAS : </h5>
+                        <select name='tanggalUas'>
+                            <option value='none' disabled selected>Pilih Tanggal UAS</option>
+                        </select>
+                    </div>
                     <button class="btn waves-effect grey lighten-1" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name = "btnSubmit">Submit</button>
                 </form>
             </div>
@@ -212,3 +205,19 @@
     </div>
 </body>
 </html>
+
+<script>
+    function gantiKelas() {
+        var id = $("#kelas").val();
+        $.ajax({
+            method : "post",
+            url : "showJadwalKelas.php",
+            data : {
+                id : id
+            },
+            success : function (hasil) {
+                $("#tanggal").html(hasil);
+            }
+        });
+    }
+</script>

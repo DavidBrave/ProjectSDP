@@ -115,7 +115,7 @@
                 $date = strtolower(date("l"));
                 $query = "SELECT m.Matkul_Nama, jk.Jadwal_Mulai, jk.Jadwal_Selesai, k.Kelas_Ruangan, d.Dosen_Nama FROM Dosen d, Mahasiswa mhs, Kelas k, Matkul_Kurikulum mk, Matkul m, Jadwal_Kuliah jk, Pengambilan p
                 WHERE mhs.Mahasiswa_ID = p.Mahasiswa_ID AND k.Kelas_ID = p.Kelas_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID
-                AND mk.Matkul_ID = m.Matkul_ID AND d.Dosen_ID = k.DosenPengajar_ID AND mhs.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester AND jk.Jadwal_Hari = '$date'";
+                AND mk.Matkul_ID = m.Matkul_ID AND d.Dosen_ID = k.DosenPengajar_ID AND mhs.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester AND jk.Jadwal_Hari = '$date' AND jk.Tanggal_Kuliah = DATE(NOW())";
                 $matkul = $conn->query($query);
             ?>
             <table style="width: 800px;">
