@@ -250,7 +250,7 @@
                         <option value="none" disabled selected>Pilih Kelas</option>
                         <?php
                             $id_dosen = $_SESSION['user']['user'];
-                            $query_kelas = "SELECT * FROM Kelas k, Matkul_Kurikulum mk WHERE k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND k.DosenPengajar_ID = '$id_dosen' AND mk.Periode_ID = '$periodeID'";
+                            $query_kelas = "SELECT * FROM Kelas k, Matkul_Kurikulum mk, Jurusan j WHERE k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND mk.Jurusan_ID = j.Jurusan_ID AND k.DosenPengajar_ID = '$id_dosen' AND mk.Periode_ID = '$periodeID'";
                             $list_kelas = $conn->query($query_kelas);
                             $kelas = null;
                             while ($kelas = $list_kelas->fetch_assoc()) {
@@ -258,11 +258,14 @@
                                 $query_matkul_kurikulum = "SELECT * FROM Matkul_Kurikulum WHERE Matkul_Kurikulum_ID = '$matkul_kurikulum_id'";
                                 $list_matkul_kurikulum = $conn->query($query_matkul_kurikulum);
                                 $matkul_kurikulum = $list_matkul_kurikulum->fetch_assoc();
+
                                 $matkul_id = $matkul_kurikulum['Matkul_ID'];
                                 $query_matkul = "SELECT * FROM Matkul WHERE Matkul_ID = '$matkul_id'";
                                 $list_matkul = $conn->query($query_matkul);
                                 $matkul = $list_matkul->fetch_assoc();
-                                echo "<option value='$kelas[Kelas_ID]'>".$kelas['Kelas_Nama']." - ".$matkul['Matkul_Nama']." - Semester ".$matkul_kurikulum['Semester']."</option>";
+
+                                $jurusan = $kelas['Jurusan_Nama'];
+                                echo "<option value='$kelas[Kelas_ID]'>".$kelas['Kelas_Nama']." - ".$matkul['Matkul_Nama']." - Semester ".$matkul_kurikulum['Semester']." - ".$jurusan."</option>";
                             }
                         ?>
                     </select>

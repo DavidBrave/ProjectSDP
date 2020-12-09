@@ -130,7 +130,6 @@
                             echo "<th>Quiz</th>";
                             echo "<th>Nilai Akhir</th>";
                             echo "<th>Grade</th>";
-                            echo "<th>Pengambilan Ke-</th>";
                         }
                     ?>
                 </tr>
@@ -148,7 +147,6 @@
                             echo "<td>$value[Quiz]</td>";
                             echo "<td>$value[Nilai_Akhir]</td>";
                             echo "<td>$value[Pengambilan_Grade]</td>";
-                            echo "<td>$value[Jumlah_Ambil]</td>";
                         echo "</tr>";
                     }
                     $conn->close();
