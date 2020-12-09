@@ -93,6 +93,48 @@
     for ($i=0; $i < sizeof($arr1); $i++) { 
         array_push($dataPoints, array("label" => $arr2[$i], "y" => (float)$arr1[$i]));
     }
+
+    $query = "SELECT * FROM Jurusan";
+    $jurusan = $conn->query($query);
+    $ctr = 0;
+    $dataKehadiran = [];
+
+    $bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    foreach ($jurusan as $key => $value) {
+        $kehadiran = [];
+        $listTemp = [];
+        $listBulan = [];
+        $query = "SELECT MONTH(a.Absen_Date) as Bulan, COUNT(a.Hadir) as Kehadiran  
+        FROM Absen a, Mahasiswa m 
+        WHERE a.Mahasiswa_ID = m.Mahasiswa_ID 
+        AND m.Mahasiswa_Jurusan = '$value[Jurusan_ID]' 
+        AND a.Hadir = 0
+        GROUP BY m.Mahasiswa_Jurusan, MONTH(a.Absen_Date)";
+
+        $temp = $conn->query($query);
+
+        foreach($temp as $key2 => $value2) {
+            array_push($listTemp, $value2['Kehadiran']);
+            array_push($listBulan, $value2['Bulan']);
+            
+        }
+        
+        for($i = 0 ; $i < 12 ; $i++) {
+            $cek = false;
+            for($j = 0 ; $j < sizeof($listBulan) ; $j++) {
+                if ($listBulan[$j]-1 == $i) {
+                    $cek = true;
+                    array_push($kehadiran, array("label" => $bulan[$i], "y" => $listTemp[$j]));
+                }
+            }
+            if (!$cek) {
+                array_push($kehadiran, array("label" => $bulan[$i], "y" => 0));
+            }
+        }
+
+        array_push($dataKehadiran, $kehadiran);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -150,6 +192,60 @@
                     } 
                 ] 
             });
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                title:{
+                    text: "Jumlah Ketidakhadiran Mahasiswa per Bulan"
+                },
+                axisY:[{
+                    title: "Jumlah Mahasiswa",
+                    lineColor: "#C24642",
+                    tickColor: "#C24642",
+                    labelFontColor: "#C24642",
+                    titleFontColor: "#C24642",
+                    interval: 2,
+                    includeZero: true
+                }],
+                toolTip: {
+                    shared: true
+                },
+                legend: {
+                    cursor: "pointer",
+                    itemclick: toggleDataSeries
+                },
+                data: [{
+                    type: "line",
+                    name: "Sistem Informatika",
+                    color: "#369EAD",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataKehadiran[0], JSON_NUMERIC_CHECK); ?>
+                },
+                {
+                    type: "line",
+                    name: "Desain Komunikasi Visual",
+                    color: "#C24642",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataKehadiran[1], JSON_NUMERIC_CHECK); ?>
+                },
+                {
+                    type: "line",
+                    name: "Desain Produk",
+                    color: "#7F6084",
+                    showInLegend: true,
+                    dataPoints: <?php echo json_encode($dataKehadiran[2], JSON_NUMERIC_CHECK); ?>
+                }]
+            });
+            chart.render();
+
+            function toggleDataSeries(e) {
+                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+                e.chart.render();
+            }
+
         });
     </script>
 </head>
@@ -264,7 +360,8 @@
                     }
                 ?>
             </table><br><br><br>
-            <div class="chartContainer" style="height: 500px; width: 50%"></div>
+            <div class="chartContainer" style="height: 500px; width: 50%"></div><br><br>
+            <div id="chartContainer" style="height: 370px; width: 70%;"></div>
         </div>
     </div>
 </body>
