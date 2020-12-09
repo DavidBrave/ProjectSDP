@@ -93,6 +93,7 @@
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
                 <a class = "btn dropdown-button blue" href = "HalamanTranskripNilai.php">Transkrip Nilai</a>
+                <a class = "btn dropdown-button blue" href = "Laporan.php">Grafik</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
@@ -130,7 +131,6 @@
                             echo "<th>Quiz</th>";
                             echo "<th>Nilai Akhir</th>";
                             echo "<th>Grade</th>";
-                            echo "<th>Pengambilan Ke-</th>";
                         }
                     ?>
                 </tr>
@@ -148,7 +148,6 @@
                             echo "<td>$value[Quiz]</td>";
                             echo "<td>$value[Nilai_Akhir]</td>";
                             echo "<td>$value[Pengambilan_Grade]</td>";
-                            echo "<td>$value[Jumlah_Ambil]</td>";
                         echo "</tr>";
                     }
                     $conn->close();

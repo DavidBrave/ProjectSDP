@@ -1,9 +1,6 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-?>
-
-<?php
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -170,6 +167,7 @@
             </div>
             <div id="piechart"></div>
             <a href="halamanTanggalFRS.php" class="waves-effect blue lighten-1 btn" style="position: absolute; margin: 10px; bottom: 0px">Atur tanggal FRS</a>
+            <a href="Laporan.php" class="waves-effect blue lighten-1 btn" style="position: absolute; margin: 10px 10px 10px 210px; bottom: 0px">Laporan</a>
         </div>
     </div>
 </body>

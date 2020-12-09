@@ -77,15 +77,18 @@
     }
 
     //Periode Sekarang
-    $tahun1 = date("Y");
-    $tahun2 = $tahun1 + 1;
-    $bulan = date("m");
-    $periodeID = $tahun1 . $tahun2;
-    if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
-        $periodeID = $periodeID . "11";
-    } else if ($bulan >= 2 && $bulan <= 7) {
-        $periodeID = $periodeID . "21";
-    }
+    // $tahun1 = date("Y");
+    // $tahun2 = $tahun1 + 1;
+    // $bulan = date("m");
+    // $periodeID = $tahun1 . $tahun2;
+    // if ($bulan >= 8 && $bulan <= 12 || $bulan == 1) {
+    //     $periodeID = $periodeID . "11";
+    // } else if ($bulan >= 2 && $bulan <= 7) {
+    //     $periodeID = $periodeID . "21";
+    // }
+    $query = "SELECT * FROM Jadwal_Pengisian_FRS WHERE id = 1";
+    $periode = mysqli_fetch_array($conn->query($query));
+    $periodeID = $periode['Periode_ID'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -200,6 +203,7 @@
                 <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
                 <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
                 <a class = "btn dropdown-button blue" href = "HalamanTranskripNilai.php">Transkrip Nilai</a>
+                <a class = "btn dropdown-button blue" href = "Laporan.php">Grafik</a>
             </div>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
             <div id="menu_item2" hidden>
