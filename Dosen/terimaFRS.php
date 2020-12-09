@@ -13,15 +13,15 @@
             $semester = $value['Mahasiswa_Semester'];
         }
 
-        $query = "UPDATE FRS SET FRS_Status = 'Diterima' WHERE Mahasiswa_ID = '$id'";
-        $conn->query($query);
-
-        $query = "SELECT * FROM FRS WHERE Mahasiswa_ID = '$id'";
+        $query = "SELECT * FROM FRS WHERE Mahasiswa_ID = '$id' AND FRS_Status = ''";
         $matkuls = $conn->query($query);
         foreach($matkuls as $key => $value) {
             $query = "INSERT INTO Pengambilan VALUES('', '$id', '', 0, 0, 0, 0, '', 0, 0, 1, $semester, '')";
             $conn->query($query);
         }
+
+        $query = "UPDATE FRS SET FRS_Status = 'Diterima' WHERE Mahasiswa_ID = '$id'";
+        $conn->query($query);
 
         $message = "Gagal Delete";
         if($conn){
