@@ -24,6 +24,68 @@
     $mahasiswa = mysqli_fetch_array($conn->query($query));
     $nrp = $mahasiswa['Mahasiswa_ID'];
     $semester = (int)$mahasiswa['Mahasiswa_Semester'];
+
+    $arr1 = [];
+    $arr2 = [];
+    for ($i=1; $i < 9; $i++) { 
+        $query = "SELECT * FROM Pengambilan p, Kelas k,Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+        WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
+        AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $i";
+        $pengambilan = $conn->query($query);
+        $counter = 0;
+        $total = 0;
+        foreach ($pengambilan as $key => $value)
+        {
+            $grade = $value['Pengambilan_Grade'];
+            $sks = $value['SKS'];
+            $matkulId = $value['Matkul_ID'];
+            $sems = $value['Semester_Pengambilan'];
+
+            $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+            WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
+            AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $i AND mk.Matkul_ID = '$matkulId'
+            ORDER BY m.Matkul_Nama ASC";
+            $listNilai2 = $conn->query($query);
+            $hide = false;
+            foreach ($listNilai2 as $key => $value) {
+                if($matkulId == $value['Matkul_ID'] && $sems < $value['Semester_Pengambilan']){
+                    $hide = true;
+                }else if($matkulId == $value['Matkul_ID'] && $sems >= $value['Semester_Pengambilan']){
+                    $hide = false;
+                }
+            }
+
+            if(!$hide){
+                if($grade == "A"){
+                    $total+=4*$sks;
+                }else if($grade == "B" || $grade == "B+"){
+                    $total+=3*$sks;
+                }else if($grade == "C" || $grade == "C+"){
+                    $total+=2*$sks;
+                }else if($grade == "D"){
+                    $total+=1*$sks;
+                }else{
+                    $total+=0;
+                }
+                
+                if($grade != ''){
+                    $counter+=$sks;
+                }
+            }
+        }
+
+        array_push($arr2, $i);
+        if($counter > 0){
+            array_push($arr1, substr($total/$counter, 0, 4));
+        }else{
+            array_push($arr1, "0");
+        }
+    }
+
+    $dataPoints = array();
+    for ($i=0; $i < sizeof($arr1); $i++) { 
+        array_push($dataPoints, array("label" => "Semester ".$arr2[$i], "y" => (float)$arr1[$i]));
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,6 +100,7 @@
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
     <script src="../jquery.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#menu_nilai").click(function () {
@@ -55,6 +118,22 @@
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
             });
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                axisY: {
+                    title: "IP",
+                    interval: 0.50,
+                    includeZero: true 
+                },
+                data: [{
+                    type: "spline",
+                    toolTipContent: "{label}: {y}", 
+                    dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                }]
+            });
+    
+            chart.render();
         });
     </script>
 </head>
@@ -111,108 +190,8 @@
             </form>
         </div>
         <div id="container" style="padding: 20px;">
-            <h4>Jadwal Kuliah Hari Ini</h4>
-            <?php
-                $date = strtolower(date("l"));
-                $query = "SELECT m.Matkul_Nama, jk.Jadwal_Mulai, jk.Jadwal_Selesai, k.Kelas_Ruangan, d.Dosen_Nama FROM Dosen d, Mahasiswa mhs, Kelas k, Matkul_Kurikulum mk, Matkul m, Jadwal_Kuliah jk, Pengambilan p
-                WHERE mhs.Mahasiswa_ID = p.Mahasiswa_ID AND k.Kelas_ID = p.Kelas_ID AND k.Kelas_ID = jk.Kelas_ID AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID
-                AND mk.Matkul_ID = m.Matkul_ID AND d.Dosen_ID = k.DosenPengajar_ID AND mhs.Mahasiswa_ID = '$nrp' AND p.Semester_Pengambilan = $semester AND jk.Jadwal_Hari = '$date' AND jk.Tanggal_Kuliah = DATE(NOW())";
-                $matkul = $conn->query($query);
-            ?>
-            <table style="width: 800px;">
-                <tr>
-                    <th>Matkul</th>
-                    <th>Waktu</th>
-                    <th>Ruangan</th>
-                    <th>Dosen</th>
-                </tr>
-                <?php
-                    if (mysqli_num_rows($matkul) > 0) {
-                        foreach ($matkul as $key => $value) {
-                            echo "<tr>";
-                            echo "<td>$value[Matkul_Nama]</td>";
-                            echo "<td>$value[Jadwal_Mulai] - $value[Jadwal_Selesai]</td>";
-                            echo "<td>$value[Kelas_Ruangan]</td>";
-                            echo "<td>$value[Dosen_Nama]</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr>";
-                        echo "<td colspan='4' style='text-align: center;'>Tidak ada jadwal</td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table><br><br>
-            <h4>Jadwal Praktikum Hari Ini</h4>
-            <?php
-                $date = strtolower(date("l"));
-                if($date == "monday"){
-                    $date = "Senin";
-                }else if($date == "tuesday"){
-                    $date = "Selasa";
-                }else if($date == "wednesday"){
-                    $date = "Rabu";
-                }else if($date == "thursday"){
-                    $date = "Kamis";
-                }else if($date == "friday"){
-                    $date = "Jumat";
-                }else if($date == "saturday"){
-                    $date = "Sabtu";
-                }else if($date == "sunday"){
-                    $date = "Minggu";
-                }
-                $query = "SELECT * FROM Mahasiswa mhs, Praktikum p, Kelas_Praktikum kp, Pengambilan_Praktikum pp, Matkul_Kurikulum mk, Matkul m
-                WHERE mhs.Mahasiswa_ID = pp.Mahasiswa_ID AND pp.Kelas_Praktikum_ID = kp.Kelas_Praktikum_ID AND kp.Praktikum_ID = p.Praktikum_ID 
-                AND p.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID AND p.Praktikum_ID = mk.Praktikum_ID AND mk.Matkul_ID = m.Matkul_ID
-                AND mhs.Mahasiswa_ID = '$nrp' AND pp.Semester_Pengambilan_Praktikum = $semester AND p.Praktikum_Hari = '$date'";
-                $praktikum = $conn->query($query);
-            ?>
-            <table style="width: 800px;">
-                <tr>
-                    <th>Praktikum</th>
-                    <th>Waktu</th>
-                    <th>Ruangan</th>
-                </tr>
-                <?php
-                    if (mysqli_num_rows($praktikum) > 0) {
-                        foreach ($praktikum as $key => $value) {
-                            echo "<tr>";
-                            echo "<td>$value[Praktikum_Nama]</td>";
-                            echo "<td>$value[Praktikum_Jam_Mulai] - $value[Praktikum_Jam_Selesai]</td>";
-                            echo "<td>$value[Kelas_Praktikum_Ruangan]</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr>";
-                        echo "<td colspan='4' style='text-align: center;'>Tidak ada jadwal</td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table><br><br>
-            <?php
-                $query = "SELECT * FROM Skripsi WHERE Mahasiswa_ID = '$nrp'";
-                $skripsi = mysqli_fetch_array($conn->query($query));
-                $count = mysqli_num_rows($conn->query($query));
-                if($count != 0){
-                ?>
-                    <h4>Jadwal Sidang Skripsi</h4>
-                    <table style="width: 800px;">
-                        <tr>
-                            <th>Judul Skripsi</th>
-                            <th>Tanggal</th>
-                            <th>Waktu</th>
-                            <th>Ruangan</th>
-                        </tr>
-                        <tr>
-                            <td><?=$skripsi['Judul_Skripsi']?></td>
-                            <td><?=$skripsi['Tanggal_Skripsi']?></td>
-                            <td><?=substr($skripsi['Jam_Mulai'], 0, 5)?> - <?=substr($skripsi['Jam_Selesai'], 0, 5)?></td>
-                            <td><?=$skripsi['Ruangan_Skripsi']?></td>
-                        </tr>
-                    </table>
-                <?php
-                }
-            ?>
+            <h4>Indeks Prestasi Semester</h4><br><br>
+            <div id="chartContainer" style="height: 370px; width: 70%;"></div>
         </div>
         <div id="footer">
 

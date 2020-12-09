@@ -10,6 +10,89 @@
         unset($_SESSION['user']);
         header("location: ../login.php");
     }
+
+    $arr1 = [];
+    $arr2 = [];
+    $query = "SELECT * FROM Jurusan";
+    $jurusan = $conn->query($query);
+    foreach ($jurusan as $key => $value) {
+        $jurusanId = substr($value['Jurusan_ID'], 1, 3);
+        $jurusanNama = $value['Jurusan_Nama'];
+        $query = "SELECT * FROM Mahasiswa WHERE SUBSTR(Mahasiswa_ID,4,3) = '$jurusanId'";
+        $mahasiswa = $conn->query($query);
+        $totalIPK = 0;
+        $countIPK = 0;
+        foreach ($mahasiswa as $key => $value) {
+            $nrp = $value['Mahasiswa_ID'];
+            $totalIPS = 0;
+            $countIPS = 0;
+            for ($i=1; $i < 9; $i++) { 
+                $query = "SELECT * FROM Pengambilan p, Kelas k,Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+                WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
+                AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $i";
+                $pengambilan = $conn->query($query);
+                $counter = 0;
+                $total = 0;
+                foreach ($pengambilan as $key => $value)
+                {
+                    $grade = $value['Pengambilan_Grade'];
+                    $sks = $value['SKS'];
+                    $matkulId = $value['Matkul_ID'];
+                    $sems = $value['Semester_Pengambilan'];
+        
+                    $query="SELECT * FROM Pengambilan p, Kelas k, Matkul m, Matkul_Kurikulum mk, Mahasiswa mhs , FRS f
+                    WHERE mhs.Mahasiswa_ID='$nrp' AND p.Kelas_ID=k.Kelas_ID AND mk.Matkul_Kurikulum_ID=k.Matkulkurikulum_ID AND m.Matkul_ID=mk.Matkul_ID AND p.Mahasiswa_ID = mhs.Mahasiswa_ID AND f.Mahasiswa_ID = mhs.Mahasiswa_ID
+                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID AND p.Pengambilan_Batal <> 1 AND f.FRS_Status <> 'Batal' AND mk.Semester = $i AND mk.Matkul_ID = '$matkulId'
+                    ORDER BY m.Matkul_Nama ASC";
+                    $listNilai2 = $conn->query($query);
+                    $hide = false;
+                    foreach ($listNilai2 as $key => $value) {
+                        if($matkulId == $value['Matkul_ID'] && $sems < $value['Semester_Pengambilan']){
+                            $hide = true;
+                        }else if($matkulId == $value['Matkul_ID'] && $sems >= $value['Semester_Pengambilan']){
+                            $hide = false;
+                        }
+                    }
+        
+                    if(!$hide){
+                        if($grade == "A"){
+                            $total+=4*$sks;
+                        }else if($grade == "B" || $grade == "B+"){
+                            $total+=3*$sks;
+                        }else if($grade == "C" || $grade == "C+"){
+                            $total+=2*$sks;
+                        }else if($grade == "D"){
+                            $total+=1*$sks;
+                        }else{
+                            $total+=0;
+                        }
+                        
+                        if($grade != ''){
+                            $counter+=$sks;
+                        }
+                    }
+                }
+                if($counter > 0){
+                    $totalIPS += $total/$counter;
+                    $countIPS++;
+                }
+            }
+            if($countIPS > 0){
+                $totalIPK += $totalIPS/$countIPS;
+                $countIPK++;
+            }
+        }
+        array_push($arr2, $jurusanNama);
+        if($countIPK > 0){
+            array_push($arr1, substr($totalIPK/$countIPK, 0, 4));
+        }else{
+            array_push($arr1, "0");
+        }
+    }
+    $dataPoints = array();
+    for ($i=0; $i < sizeof($arr1); $i++) { 
+        array_push($dataPoints, array("label" => $arr2[$i], "y" => (float)$arr1[$i]));
+    }
 ?>
 
 <!DOCTYPE html>
@@ -45,9 +128,33 @@
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
     <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+    <script type = "text/javascript" src = "https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type = "text/javascript" src = "https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".chartContainer").CanvasJSChart({ 
+                animationEnabled: true,
+                title: { 
+                    text: "Rata-rata IPK tiap Jurusan" 
+                }, 
+                axisY: { 
+                    title: "IPK",
+                    interval: 0.5,
+                    includeZero: true 
+                }, 
+                data: [ 
+                    { 
+                        type: "column", 
+                        toolTipContent: "{label}: {y}", 
+                        dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+                    } 
+                ] 
+            });
+        });
+    </script>
 </head>
 <body>
-<div id="header">
+    <div id="header">
         <h5 style="margin-top:10px; float:left; margin-left: 10px;">Sistem Informasi Mahasiswa</h5>
         <form action="#" method="post" style="float: right; margin-top:10px; margin-right: 10px;">
             <button class="btn waves-effect red accent-4" style="width: 140px; height: 30px; padding-bottom: 2px; margin: 0px;" type="submit" name="btnLogout">Logout
@@ -135,74 +242,30 @@
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown12" style="width: 100%; color: black;">Jadwal Ujian & Quiz<i class = "mdi-navigation-arrow-drop-down right"></i></a>
         </div> 
         <div id="col-kanan">
-            <h3 style="margin-top: 0px">Selamat Datang <?=$_SESSION['user']['name']?></h3>
-            <div style="display: grid; grid-template-columns: auto auto auto; width: 600px;">
-                <div id="dosen" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">DOSEN</p>
-                    <?php
-                        $query = "SELECT * FROM Dosen";
-                        $listDosen = $conn->query($query);
-                        $totalDosen = mysqli_num_rows($listDosen);
-                    ?>
-                    <p id="totalDosen" style="margin: 0px;">Jumlah: <?=$totalDosen?></p>
-                </div>
-                <div id="mahasiswa" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">MAHASISWA</p>
-                    <?php
-                        $query = "SELECT * FROM Mahasiswa";
-                        $listMahasiswa = $conn->query($query);
-                        $totalMahasiswa = mysqli_num_rows($listMahasiswa);
-                    ?>
-                    <p id="totalMahasiswa" style="margin: 0px;">Jumlah: <?=$totalMahasiswa?></p>
-                </div>
-                <div id="admin" class="kotak">
-                    <p style="margin-top: 0px; font-size: 15px;">ADMIN</p>
-                    <?php
-                        $query = "SELECT * FROM Administrator";
-                        $listAdministrator = $conn->query($query);
-                        $totalAdministrator = mysqli_num_rows($listAdministrator);
-                    ?>
-                    <p id="totalAdmin" style="margin: 0px;">Jumlah: <?=$totalAdministrator?></p>
-                </div>
-            </div>
-            <div id="piechart"></div>
-            <a href="halamanTanggalFRS.php" class="waves-effect blue lighten-1 btn" style="position: absolute; margin: 10px; bottom: 0px">Atur tanggal FRS</a>
-            <a href="Laporan.php" class="waves-effect blue lighten-1 btn" style="position: absolute; margin: 10px 10px 10px 210px; bottom: 0px">Laporan</a>
+            <h3>Laporan</h3><br>
+            <h4>Beban Ajar Dosen</h4>
+            <table style="width: 50%;">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Beban SKS</th>
+                </tr>
+                <?php
+                    $query = "SELECT d.Dosen_ID, d.Dosen_Nama, SUM(mk.SKS) as total FROM Dosen d, Kelas k, Matkul_Kurikulum mk
+                    WHERE d.Dosen_ID = k.DosenPengajar_ID AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID
+                    GROUP BY d.Dosen_ID";
+                    $laporan1 = $conn->query($query);
+                    foreach ($laporan1 as $key => $value) {
+                        echo "<tr>";
+                        echo "<td>$value[Dosen_ID]</td>";
+                        echo "<td>$value[Dosen_Nama]</td>";
+                        echo "<td>$value[total] SKS</td>";
+                        echo "</tr>";
+                    }
+                ?>
+            </table><br><br><br>
+            <div class="chartContainer" style="height: 500px; width: 50%"></div>
         </div>
     </div>
 </body>
 </html>
-<script>
-    $("#btn").click(function () {
-        alert('Total administrator : ' + <?=$totalAdministrator?>);
-    });
-    // Load google charts
-    google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    // Draw the chart and set the chart values
-    function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        ['Job', 'Jumlah'],
-        ['Dosen', <?=$totalDosen?>],
-        ['Mahasiswa', <?=$totalMahasiswa?>],
-        ['Admin', <?=$totalAdministrator?>]
-        ]);
-
-        // Optional; add a title and set the width and height of the chart
-        var options = {
-            'title':'Persentase', 
-            'width':600, 
-            'height':450,
-            slices: {
-                0: { color: 'green' },
-                1: { color: 'plum' },
-                2: { color: 'lightblue' }
-            }
-        };
-
-        // Display the chart inside the <div> element with id="piechart"
-        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-        chart.draw(data, options);
-    }
-</script>
