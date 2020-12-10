@@ -83,6 +83,11 @@
         p{
             font-size: 20px;
         }
+
+        #col-kanan {
+            min-height: 1300px;
+        }
+
     </style>
     <script src="jquery.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
