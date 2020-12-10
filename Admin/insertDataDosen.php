@@ -327,49 +327,14 @@
 
                     <div class="input-field col s12">
                         <select name="jabatan">
-                            <option value="none" disabled 
-                                <?php
-                                    if (!isset($_SESSION['temp']['dosen'])) {
-                                        echo "selected";
-                                    }
-                                ?>
-                            >Pilih Jabatan</option>
-                            <option value='Dosen'
-                                <?php
-                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
-                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Dosen") {
-                                            echo "selected";
-                                        }
-                                    }
-                                ?>
-                            >Dosen</option>
-                            <option value='Dosen Wali'
-                                <?php
-                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
-                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Dosen Wali") {
-                                            echo "selected";
-                                        }
-                                    }
-                                ?>
-                            >Dosen Wali</option>
-                            <option value='Rektor'
-                                <?php
-                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
-                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Rektor") {
-                                            echo "selected";
-                                        }
-                                    }
-                                ?>
-                            >Rektor</option>
-                            <option value='Wakil Rektor'
-                                <?php
-                                    if (isset($_SESSION['temp']['dosen']['jabatan'])) {
-                                        if ($_SESSION['temp']['dosen']['jabatan'] == "Wakil Rektor") {
-                                            echo "selected";
-                                        }
-                                    }
-                                ?>
-                            >Wakil Rektor</option>
+                            <option value="none" disabled>Pilih Jabatan</option>
+                            <?php
+                                $query = "SELECT * FROM Jabatan";
+                                $jabatans = $conn->query($query);
+                                foreach ($jabatans as $key => $value) {
+                                    echo "<option value='$value[Jabatan_ID]'>$value[Jabatan_Nama]</option>";
+                                }
+                            ?>
                         </select>
                     </div>
 
