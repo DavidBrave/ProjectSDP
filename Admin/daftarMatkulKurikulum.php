@@ -40,7 +40,7 @@
         $periodeNama = $value['Periode_Nama'];
         $semester = $value['Semester'];
         $sks = $value['sks'];
-        if($value['Major_ID'] == ""){
+        if($value['Major_ID'] == "" || $value['Major_ID'] == "none"){
             echo "<td>Tidak Ada</td>";
         }else{
             $query = "SELECT Major_Nama FROM Major WHERE Major_ID = '$value[Major_ID]'";

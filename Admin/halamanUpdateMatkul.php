@@ -19,7 +19,7 @@
     <title>Update Dosen</title>
     <link rel="stylesheet" href="materialize/css/materialize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="admin2.css">
+    <link rel="stylesheet" href="admin.css">
     <style>
         #photo{
             width: 200px;
@@ -54,8 +54,9 @@
                             standar : $("#standar").val()
                         },
                         success : function (hasil) {
+                            var nama = $("#nama").val();
                             if(hasil == 1){
-                                alert("Matkul Berhasil Diperbaharui");
+                                alert("Mata Kuliah " + nama + " Berhasil Diperbaharui");
                             }else{
                                 alert("Pembaharuan Gagal");
                             }
@@ -65,8 +66,6 @@
                     alert("Data tidak boleh kosong!");
                 }
             });
-
-            
         });
     </script>
 </head>
@@ -82,38 +81,32 @@
     <div id="content">
         <div id="col-kiri">
             <a class = "btn dropdown-button blue lighten-2" href = "Admin.php" style="width: 100%; color: black; padding-left: 0px;">Dashboard</a>
-            
             <ul id = "dropdown" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataMahasiswa.php">Data Mahasiswa</a></li>
                 <li><a href = "insertDataMahasiswa.php">Insert Data Mahasiswa</a></li>
                 <li><a href = "halamanSkripsiMahasiswa.php">Skripsi Mahasiswa</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown" style="width: 100%; color: black;">Mahasiswa<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            
             <ul id = "dropdown2" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanDataDosen.php">Data Dosen</a></li>
                 <li><a href = "insertDataDosen.php">Insert Data Dosen</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown2" style="width: 100%; color: black;">Dosen<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            
             <ul id = "dropdown3" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanJurusan.php">Data Jurusan</a></li>
                 <li><a href = "insertDataJurusan.php">Insert Data Jurusan</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown3" style="width: 100%; color: black;">Jurusan<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            
             <ul id = "dropdown4" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMajor.php">Data Major</a></li>
                 <li><a href = "insertDataMajor.php">Insert Data Major</a></li>
             </ul>
             <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown4" style="width: 100%; color: black;">Major<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-
             <ul id = "dropdown5" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanMataKuliah.php">Data Mata Kuliah</a></li>
                 <li><a href = "insertDataMataKuliah.php">Insert Data Mata Kuliah</a></li>
             </ul>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a>
-            
+            <a class = "btn dropdown-button blue lighten-2" href = "#" data-activates = "dropdown5" style="width: 100%; color: black;">Mata Kuliah<i class = "mdi-navigation-arrow-drop-down right"></i></a> 
             <ul id = "dropdown6" class = "dropdown-content blue-grey lighten-4">
                 <li><a href = "halamanKurikulum.php">Data Kurikulum</a></li>
                 <li><a href = "insertDataKurikulum.php">Insert Data Kurikulum</a></li>
@@ -164,7 +157,6 @@
                 ID: <input type="text" id="id" value="<?=$_SESSION['matkul']['id']?>" disabled><br>
                 Nama Matkul: <input type="text" id="nama" value="<?=$_SESSION['matkul']['nama']?>"><br>
                 Nilai Standar: <input type="text" id="standar" value="<?=$_SESSION['matkul']['standar']?>"><br>
-                
                 <button class="btn waves-effect grey lighten-1" style="width: 155px; height: 35px; padding-bottom: 2px; margin: 0px;" type="submit" id="btnUpdate">Update<i class="material-icons right">edit</i></button>
             </div>
         </div>
