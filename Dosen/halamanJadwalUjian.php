@@ -1,6 +1,7 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
+    $dosenID = $_SESSION['user']['user'];
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
@@ -11,57 +12,68 @@
         header("location: ../login.php");
     }
 
-    $nrp = $_SESSION['user']['user'];
-    $query = "SELECT m.*, j.Jurusan_ID, j.Jurusan_Nama FROM Mahasiswa m, Jurusan j
-              WHERE SUBSTR(m.Mahasiswa_ID,4,3) = SUBSTR(j.Jurusan_ID,2,3) AND m.Mahasiswa_ID = '$nrp'";
-    $mahasiswa = mysqli_fetch_array($conn->query($query));
-    $nrp = $mahasiswa['Mahasiswa_ID'];
-    $semester = (int)$mahasiswa['Mahasiswa_Semester'];
-    $jurusan = $mahasiswa['Jurusan_ID'];
+    if(isset($_POST['btnDelete'])) {
+        $id = $_POST['idSkripsi'];
+
+        $query = "DELETE FROM Skripsi WHERE Skripsi_ID = $id";
+        $conn->query($query);
+
+        echo "<script>alert(Berhasil delete Skripsi)</script>";
+    }
+
+    if(isset($_POST['btnUpdate'])) {
+        $_SESSION['TA'] = $_POST['idSkripsi'];
+        header("location: ../Dosen/halamanUpdateTugasAkhir.php");
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jadwal Kuliah</title>
-    <link rel="stylesheet" href="Mahasiswa.css">
+    <title>Halaman Jadwal Ujian</title>
+    <link rel="stylesheet" href="Dosen.css">
+    <script src="../jquery.js"></script>
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script src="../jquery.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script> 
     <script>
         $(document).ready(function () {
-            $("#menu_nilai").click(function () {
-               $("#menu_item1").toggle(); 
+            $('select').material_select();
+
+            $("#menu_jadwal").click(function () {
+               $("#menu_item1").toggle();
                $("#menu_item2").hide();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
-            $("#menu_jadwal").click(function () {
-               $("#menu_item1").hide(); 
+            $("#menu_mahasiswa").click(function () {
+               $("#menu_item1").hide();
                $("#menu_item2").toggle();
                $("#menu_item3").hide();
+               $("#menu_item4").hide();
             });
-            $("#menu_rencana").click(function () {
-               $("#menu_item1").hide(); 
+            $("#menu_frs").click(function () {
+               $("#menu_item1").hide();
                $("#menu_item2").hide();
                $("#menu_item3").toggle();
+               $("#menu_item4").hide();
+            });
+            $("#menu_ta").click(function () {
+               $("#menu_item1").hide();
+               $("#menu_item2").hide();
+               $("#menu_item3").hide();
+               $("#menu_item4").toggle();
             });
         });
     </script>
-    <style>
-        #container{
-            min-height: 937px;
-            height: auto;
-        }
-    </style>
 </head>
 <body>
     <div id="col-kiri">
         <div id="menu">
-            <a href="HalamanBiodata.php" style="width: 100%; color: black; padding-left: 0px;">
+            <a href="#" style="width: 100%; color: black; padding-left: 0px;">
                 <div id="profile">
                     <?php 
                         if($_SESSION['user']['photo'] == ""){
@@ -81,23 +93,28 @@
                 </div>
             </a>
             <a class = "btn dropdown-button blue lighten-2" href = "Home.php"><i class="material-icons left">home</i>Beranda</a>
-            <a class = "btn dropdown-button blue lighten-2" id="menu_nilai"><i class="material-icons left">school</i>Nilai</a>
-            <div id="menu_item1" hidden>
-                <a class = "btn dropdown-button blue" href = "HalamanNilai.php">Laporan Nilai</a>
-                <a class = "btn dropdown-button blue" href = "HalamanNilaiPraktikum.php">Nilai Praktikum</a>
-                <a class = "btn dropdown-button blue" href = "HalamanTranskripNilai.php">Transkrip Nilai</a>
-                <a class = "btn dropdown-button blue" href = "Laporan.php">Grafik</a>
-            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "halamanInsertNilai.php"><i class="material-icons left">school</i>Nilai</a>
             <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_jadwal"><i class="material-icons left">schedule</i>Jadwal</a>
-            <div id="menu_item2" hidden>
-                <a class = "btn dropdown-button blue" href = "HalamanJadwalKuliah.php">Jadwal Kuliah</a>
-                <a class = "btn dropdown-button blue" href = "HalamanJadwalUjian.php">Jadwal Ujian</a>
+            <div id="menu_item1" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalMengajar.php">Jadwal Mengajar</a>
+                <a class = "btn dropdown-button blue" href = "halamanJadwalUjian.php">Jadwal Ujian</a>
             </div>
-            <a class = "btn dropdown-button blue lighten-2" href = "HalamanAbsen.php"><i class="material-icons left">event_available</i>Absen</a>
-            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_rencana"><i class="material-icons left">event_note</i>Rencana Studi</a>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_mahasiswa"><i class="material-icons left">event_note</i>Mahasiswa</a>
+            <div id="menu_item2" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanInputAbsen.php">Input Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanAbsen.php">Lihat Absen</a>
+                <a class = "btn dropdown-button blue" href = "halamanEditAbsen.php">Edit Absen</a>
+            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_frs"><i class="material-icons left">event_note</i>FRS</a>
             <div id="menu_item3" hidden>
-                <a class = "btn dropdown-button blue" href = "HalamanFRS.php">FRS</a>
-                <a class = "btn dropdown-button blue" href = "HalamanBatalTambah.php">Batal Tambah</a>
+                <a class = "btn dropdown-button blue" href = "halamanFRSpending.php">FRS Pending</a>
+                <a class = "btn dropdown-button blue" href = "halamanFRS.php">Lihat FRS</a>
+                <a class = "btn dropdown-button blue" href = "halamanBatalTambah.php">Batal Tambah</a>
+            </div>
+            <a class = "btn dropdown-button blue lighten-2" href = "#" id="menu_ta"><i class="material-icons left">event_note</i>Tugas Akhir</a>
+            <div id="menu_item4" hidden>
+                <a class = "btn dropdown-button blue" href = "halamanTugasAkhir.php">Lihat TA</a>
+                <a class = "btn dropdown-button blue" href = "halamanInsertTugasAkhir.php">Input TA</a>
             </div>
         </div>
     </div>
@@ -110,24 +127,18 @@
                 </button>
             </form>
         </div>
-        <div id="container" style="padding: 20px;">
+        <div id="container" style="padding: 10px;">
             <h4>Jadwal Quiz</h4>
             <table border="1" style="width: 500px;">
             <tr>
                 <?php
                     $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date, k.Kelas_Ruangan 
-                    FROM Jadwal_Penting jp, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
-                    WHERE p.Kelas_ID = k.Kelas_ID 
-                    AND jp.Kelas_ID = k.Kelas_ID 
+                    FROM Jadwal_Penting jp, Kelas k, Matkul_Kurikulum mk, Matkul m 
+                    WHERE jp.Kelas_ID = k.Kelas_ID 
                     AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID 
                     AND mk.Matkul_ID = m.Matkul_ID 
-                    AND jp.Keterangan = 'quiz' 
-                    AND p.Kelas_ID = k.Kelas_ID 
-                    AND p.Mahasiswa_ID = '$nrp' 
-                    AND p.Semester_Pengambilan = '$semester'
-                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID 
-                    AND p.Pengambilan_Batal <> 1 
-                    AND f.FRS_Status <> 'Batal'
+                    AND jp.Keterangan = 'quiz'
+                    AND k.DosenPengajar_ID = '$dosenID' 
                     ORDER BY Penting_Date";
                     $listQuiz = $conn->query($query);
                     if(mysqli_num_rows($listQuiz) == 0){
@@ -155,18 +166,12 @@
             <tr>
                 <?php
                     $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date, k.Kelas_Ruangan 
-                    FROM Jadwal_Penting jp, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
-                    WHERE p.Kelas_ID = k.Kelas_ID 
-                    AND jp.Kelas_ID = k.Kelas_ID 
+                    FROM Jadwal_Penting jp, Kelas k, Matkul_Kurikulum mk, Matkul m 
+                    WHERE jp.Kelas_ID = k.Kelas_ID 
                     AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID 
                     AND mk.Matkul_ID = m.Matkul_ID 
-                    AND jp.Keterangan = 'uts' 
-                    AND p.Kelas_ID = k.Kelas_ID 
-                    AND p.Mahasiswa_ID = '$nrp' 
-                    AND p.Semester_Pengambilan = '$semester'
-                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID 
-                    AND p.Pengambilan_Batal <> 1 
-                    AND f.FRS_Status <> 'Batal'
+                    AND jp.Keterangan = 'uts'
+                    AND k.DosenPengajar_ID = '$dosenID' 
                     ORDER BY Penting_Date";
                     $listUts = $conn->query($query);
                     if(mysqli_num_rows($listUts) == 0){
@@ -194,18 +199,12 @@
             <tr>
                 <?php
                     $query = "SELECT DISTINCT m.Matkul_Nama, jp.Penting_Date, k.Kelas_Ruangan 
-                    FROM Jadwal_Penting jp, Kelas k, Matkul_Kurikulum mk, Matkul m, Pengambilan p, FRS f
-                    WHERE p.Kelas_ID = k.Kelas_ID 
-                    AND jp.Kelas_ID = k.Kelas_ID 
+                    FROM Jadwal_Penting jp, Kelas k, Matkul_Kurikulum mk, Matkul m 
+                    WHERE jp.Kelas_ID = k.Kelas_ID 
                     AND k.Matkulkurikulum_ID = mk.Matkul_Kurikulum_ID 
                     AND mk.Matkul_ID = m.Matkul_ID 
-                    AND jp.Keterangan = 'uas' 
-                    AND p.Kelas_ID = k.Kelas_ID 
-                    AND p.Mahasiswa_ID = '$nrp' 
-                    AND p.Semester_Pengambilan = '$semester'
-                    AND k.Matkulkurikulum_ID = f.Matkul_Kurikulum_ID 
-                    AND p.Pengambilan_Batal <> 1 
-                    AND f.FRS_Status <> 'Batal'
+                    AND jp.Keterangan = 'uas'
+                    AND k.DosenPengajar_ID = '$dosenID' 
                     ORDER BY Penting_Date";
                     $listUas = $conn->query($query);
                     if(mysqli_num_rows($listUas) == 0){

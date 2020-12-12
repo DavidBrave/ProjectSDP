@@ -1,19 +1,29 @@
 <?php
     session_start();
     require_once('../Required/Connection.php');
-    $id = "";
+    $dosenID = $_SESSION['user']['user'];
 
     if(!isset($_SESSION['user']['user'])){
         header("location: ../login.php");
-    }
-
-    if (isset($_SESSION['user']['user'])){
-        $id = $_SESSION['user']['user'];
-    }
+    } 
 
     if(isset($_POST['btnLogout'])){
         unset($_SESSION['user']);
         header("location: ../login.php");
+    }
+
+    if(isset($_POST['btnDelete'])) {
+        $id = $_POST['idSkripsi'];
+
+        $query = "DELETE FROM Skripsi WHERE Skripsi_ID = $id";
+        $conn->query($query);
+
+        echo "<script>alert(Berhasil delete Skripsi)</script>";
+    }
+
+    if(isset($_POST['btnUpdate'])) {
+        $_SESSION['TA'] = $_POST['idSkripsi'];
+        header("location: ../Dosen/halamanUpdateTugasAkhir.php");
     }
 ?>
 <!DOCTYPE html>
@@ -21,16 +31,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Halaman Jadwal Mengajar</title>
     <link rel="stylesheet" href="Dosen.css">
+    <script src="../jquery.js"></script>
     <link rel="stylesheet" href="../materialize/css/materialize.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
     <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
-    <script src="../jquery.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script> 
     <script>
         $(document).ready(function () {
+            $('select').material_select();
+
             $("#menu_jadwal").click(function () {
                $("#menu_item1").toggle();
                $("#menu_item2").hide();
@@ -115,23 +127,23 @@
                 </button>
             </form>
         </div>
-        <div id="container">
-            <h4>Jadwal Mengajar Hari Ini</h4>
+        <div id="container" style="padding: 10px;">
+        <h4>Jadwal Mengajar</h4>
             <?php
                 $date = strtolower(date("l"));
-                $query = "SELECT m.Matkul_Nama, jk.Jadwal_Mulai, jk.Jadwal_Selesai, k.Kelas_Ruangan, jk.Jadwal_Hari , jk.Tanggal_Kuliah
+                $query = "SELECT m.Matkul_Nama, jk.Jadwal_Mulai, jk.Jadwal_Selesai, k.Kelas_Ruangan, jk.Jadwal_Hari, DAYOFWEEK(jk.Tanggal_Kuliah) 
                 FROM Kelas k, Matkul_Kurikulum mk, Matkul m, Jadwal_Kuliah jk
                 WHERE k.Kelas_ID = jk.Kelas_ID 
                 AND mk.Matkul_Kurikulum_ID = k.Matkulkurikulum_ID
                 AND mk.Matkul_ID = m.Matkul_ID 
-                AND k.DosenPengajar_ID = '$id' 
-                AND jk.Tanggal_Kuliah = DATE(NOW())";
+                AND k.DosenPengajar_ID = '$dosenID'
+                GROUP BY jk.Jadwal_Hari
+                ORDER BY DAYOFWEEK(jk.Tanggal_Kuliah)";
                 $matkul = $conn->query($query);
             ?>
             <table style="width: 800px;">
                 <tr>
-                    <th>Matkul</th>
-                    <th>Tanggal</th>
+                    <th>Mata Kuliah</th>
                     <th>Hari</th>
                     <th>Waktu</th>
                     <th>Ruangan</th>
@@ -158,46 +170,9 @@
 
                             echo "<tr>";
                             echo "<td>$value[Matkul_Nama]</td>";
-                            echo "<td>$value[Tanggal_Kuliah]</td>";
                             echo "<td>$date</td>";
                             echo "<td>$value[Jadwal_Mulai] - $value[Jadwal_Selesai]</td>";
                             echo "<td>$value[Kelas_Ruangan]</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr>";
-                        echo "<td colspan='4' style='text-align: center;'>Tidak ada jadwal</td>";
-                        echo "</tr>";
-                    }
-                ?>
-            </table><br><br>
-            <?php
-                $query = "SELECT s.Judul_Skripsi, m.Mahasiswa_Nama, s.Tanggal_Skripsi, s.Jam_Mulai, s.Jam_Selesai, s.Ruangan_Skripsi 
-                FROM Skripsi s, Mahasiswa m 
-                WHERE (Dosen_Penguji1 = '$id' 
-                OR Dosen_Penguji2 = '$id' 
-                OR Dosen_Penguji3 = '$id') 
-                AND s.Mahasiswa_ID = m.Mahasiswa_ID";
-                $skripsi = $conn->query($query);
-            ?>
-            <h4>Jadwal Sidang Skripsi</h4>
-            <table style="width: 800px;">
-                <tr>
-                    <th>Judul Skripsi</th>
-                    <th>Mahasiswa</th>
-                    <th>Tanggal</th>
-                    <th>Waktu</th>
-                    <th>Ruangan</th>
-                </tr>
-                <?php
-                    if (mysqli_num_rows($skripsi) > 0) {
-                        foreach ($skripsi as $key => $value) {
-                            echo "<tr>";
-                            echo "<td>$value[Judul_Skripsi]</td>";
-                            echo "<td>$value[Mahasiswa_Nama]</td>";
-                            echo "<td>$value[Tanggal_Skripsi]</td>";
-                            echo "<td>$value[Jam_Mulai] - $value[Jam_Selesai]</td>";
-                            echo "<td>$value[Ruangan_Skripsi]</td>";
                             echo "</tr>";
                         }
                     } else {
